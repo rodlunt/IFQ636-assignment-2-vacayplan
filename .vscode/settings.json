@@ -1,0 +1,68 @@
+{
+  "githubIssues.queries": [
+    {
+      "label": "My issues",
+      "query": "is:open is:issue assignee:${user} repo:${owner}/${repository} sort:updated-desc"
+    },
+    {
+      "label": "Rodney",
+      "query": "is:open is:issue assignee:rodlunt repo:${owner}/${repository} sort:updated-desc"
+    },
+    {
+      "label": "Lance",
+      "query": "is:open is:issue assignee:LDMasina repo:${owner}/${repository} sort:updated-desc"
+    },
+    {
+      "label": "Joe",
+      "query": "is:open is:issue assignee:jrmilburn repo:${owner}/${repository} sort:updated-desc"
+    },
+    {
+      "label": "Unassigned",
+      "query": "is:open is:issue no:assignee repo:${owner}/${repository} sort:updated-desc"
+    },
+    {
+      "label": "Section: SRS",
+      "query": "is:open is:issue label:srs repo:${owner}/${repository}"
+    },
+    {
+      "label": "Section: Design patterns",
+      "query": "is:open is:issue label:design-patterns repo:${owner}/${repository}"
+    },
+    {
+      "label": "Section: OOP",
+      "query": "is:open is:issue label:oop repo:${owner}/${repository}"
+    },
+    {
+      "label": "Section: Collaboration",
+      "query": "is:open is:issue label:collaboration repo:${owner}/${repository}"
+    },
+    {
+      "label": "Section: Unit testing",
+      "query": "is:open is:issue label:unit-testing repo:${owner}/${repository}"
+    },
+    {
+      "label": "Section: API testing",
+      "query": "is:open is:issue label:api-testing repo:${owner}/${repository}"
+    },
+    {
+      "label": "Section: CI/CD",
+      "query": "is:open is:issue label:ci-cd repo:${owner}/${repository}"
+    },
+    {
+      "label": "Section: Report",
+      "query": "is:open is:issue label:report repo:${owner}/${repository}"
+    },
+    {
+      "label": "Section: Video",
+      "query": "is:open is:issue label:video repo:${owner}/${repository}"
+    },
+    {
+      "label": "Section: Declaration",
+      "query": "is:open is:issue label:declaration repo:${owner}/${repository}"
+    },
+    {
+      "label": "Section: Admin",
+      "query": "is:open is:issue label:admin repo:${owner}/${repository}"
+    }
+  ]
+}

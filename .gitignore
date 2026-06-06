@@ -1,0 +1,68 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies (root and any sub-package)
+node_modules/
+**/node_modules/
+/.pnp
+.pnp.js
+
+# testing
+coverage/
+**/coverage/
+
+# production builds (root and any sub-package)
+build/
+**/build/
+dist/
+**/dist/
+
+# misc
+.DS_Store
+Thumbs.db
+
+# env files — never commit
+.env
+.env.*
+!.env.example
+!**/.env.example
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+
+# editor / IDE — ignore personal config but keep shared team files
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+
+# OS / temp
+*.tmp
+*.bak
+
+# local secrets / keys (defence-in-depth)
+*.pem
+*.key
+
+# playwright artifacts (HTML report, failure screenshots, traces, per-project cache)
+frontend/playwright-report/
+frontend/test-results/
+frontend/playwright/.cache/
+
+# --- A2 additions ---
+
+# Local AI-assistant instructions (Rodney's local layer only; never shared/committed)
+CLAUDE.md
+.claude/
+
+# QUT-owned assessment materials. Present locally for convenience, but NOT published:
+# the repo is public and every team member already has these on Canvas. Republishing
+# QUT's assessment items publicly is a copyright / academic-integrity risk.
+documents/
+planning/A2_Brief.md
+planning/A2_Rubric.md
