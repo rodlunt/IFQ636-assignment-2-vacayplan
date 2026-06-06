@@ -16,7 +16,8 @@
 |-------|-------|--------|
 | Team members (names + student IDs) | Rodney; Lance; Joseph — *(full names + student IDs held privately for the Part C declaration, not published in this public repo)* | 🟡 partial |
 | Base A1 project chosen | **VacayPlan** (`rodlunt/vacationplan_IFQ636`), agreed 2026-06-06 | ✅ |
-| Shared GitHub repo URL | `IFQ636-assignment-2-vacayplan` (public) — *(URL populate after repo creation)* | 🟡 partial |
+| Shared GitHub repo URL | https://github.com/rodlunt/IFQ636-assignment-2-vacayplan (public) | ✅ |
+| Project board (kanban) | https://github.com/users/rodlunt/projects/12 | ✅ |
 | Public IP / live URL | *(populate after deploy)* | ⬜ |
 | Postman collection link (GitHub) | *(populate after export)* | ⬜ |
 | Figma / wireframe link | *(populate)* | ⬜ |

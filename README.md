@@ -122,7 +122,7 @@ deploy/       Nginx site config used by the deploy job
 
 ## Related project resources
 
-- **Project board (kanban):** *(populate after the GitHub Project is created)*
+- **Project board (kanban):** https://github.com/users/rodlunt/projects/12
 - **Issues:** tracked in this repo; filter by person or assignment section using the saved VS Code queries in `.vscode/settings.json` (install the recommended GitHub Pull Requests and Issues extension)
 - **Planning docs:** [`planning/`](planning/) — delivery plan, checklist, live report notes, meeting log
 - **Working report draft:** [`document_draft.md`](document_draft.md)
