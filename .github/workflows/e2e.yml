@@ -1,0 +1,80 @@
+name: e2e Playwright
+
+# Manual-trigger workflow that runs the Playwright test pack against the
+# specified URL (defaults to the live EC2 deploy). Uses GitHub-hosted
+# ubuntu-latest runner — does NOT compete with the self-hosted runner
+# used by the CI/CD Pipeline workflow.
+#
+# Trigger from the Actions UI ("Run workflow" button) or via:
+#   gh workflow run e2e.yml
+#   gh workflow run e2e.yml -f base_url=http://staging.example.com
+
+on:
+  workflow_dispatch:
+    inputs:
+      base_url:
+        description: 'Base URL to run Playwright against'
+        required: false
+        default: 'http://3.106.8.108'
+        type: string
+
+jobs:
+  playwright:
+    name: Run Playwright pack
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: yarn
+          cache-dependency-path: frontend/yarn.lock
+
+      - name: Install yarn deps
+        run: yarn install --frozen-lockfile
+
+      - name: Cache Playwright browsers
+        id: playwright-cache
+        uses: actions/cache@v5
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('frontend/yarn.lock') }}
+
+      - name: Install Playwright browsers (chromium + firefox)
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: yarn playwright install --with-deps chromium firefox
+
+      - name: Install Playwright system deps (cached binaries path)
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: yarn playwright install-deps chromium firefox
+
+      - name: Run Playwright tests against ${{ inputs.base_url }}
+        env:
+          PLAYWRIGHT_BASE_URL: ${{ inputs.base_url }}
+          CI: 'true'
+        run: yarn playwright test
+
+      - name: Upload HTML report
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: playwright-report
+          path: frontend/playwright-report/
+          retention-days: 14
+
+      - name: Upload failure traces
+        if: failure()
+        uses: actions/upload-artifact@v6
+        with:
+          name: playwright-traces
+          path: frontend/test-results/
+          retention-days: 14

@@ -1,0 +1,102 @@
+const User = require('../models/User');
+const Trip = require('../models/Trip');
+const Activity = require('../models/Activity');
+
+const createUser = async (req, res) => {
+    const { name, email, password, isAdmin } = req.body;
+    if (!name || !email || !password) {
+        return res.status(400).json({ message: 'Name, email, and password are required' });
+    }
+    try {
+        const userExists = await User.findOne({ email });
+        if (userExists) return res.status(409).json({ message: 'Email already registered' });
+
+        const user = await User.create({ name, email, password, isAdmin: !!isAdmin });
+        res.status(201).json({
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            isAdmin: !!user.isAdmin,
+            status: user.status,
+        });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+const listAllUsers = async (req, res) => {
+    try {
+        const users = await User.find({}).select('-password').sort({ createdAt: -1 });
+        res.json(users);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+const getUserDetail = async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id).select('-password');
+        if (!user) return res.status(404).json({ message: 'User not found' });
+        const trips = await Trip.find({ userId: user._id }).sort({ startDate: -1 });
+        res.json({ ...user.toObject(), trips });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+const updateUserStatus = async (req, res) => {
+    try {
+        const { status } = req.body;
+        if (status !== 'deactivated' && status !== 'active') {
+            return res.status(400).json({ message: "status must be 'active' or 'deactivated'" });
+        }
+        const user = await User.findById(req.params.id);
+        if (!user) return res.status(404).json({ message: 'User not found' });
+        if (status === 'active' && user.status !== 'deactivated') {
+            return res.status(400).json({ message: 'User is already active' });
+        }
+        user.status = status;
+        const updated = await user.save();
+        res.json({
+            _id: updated._id,
+            name: updated.name,
+            email: updated.email,
+            isAdmin: !!updated.isAdmin,
+            status: updated.status,
+        });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+const listAllTrips = async (req, res) => {
+    try {
+        const trips = await Trip.find({})
+            .populate('userId', 'name email')
+            .sort({ createdAt: -1 });
+        res.json(trips);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+const deleteUser = async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id);
+        if (!user) return res.status(404).json({ message: 'User not found' });
+
+        const trips = await Trip.find({ userId: user._id }).select('_id');
+        const tripIds = trips.map((t) => t._id);
+        await Activity.deleteMany({ tripId: { $in: tripIds } });
+        await Trip.deleteMany({ userId: user._id });
+        await user.deleteOne();
+
+        console.log(`[AUDIT] User ${user.email} (id ${user._id}) deleted by admin ${req.user.email} (id ${req.user._id}) at ${new Date().toISOString()}`);
+
+        res.status(204).send();
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+module.exports = { createUser, listAllUsers, getUserDetail, updateUserStatus, deleteUser, listAllTrips };
