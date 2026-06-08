@@ -80,6 +80,8 @@ npm run dev          # dev mode with nodemon backend hot-reload
 
 In production these are injected via the `PROD` GitHub Actions environment secret at deploy time; the local `.env` is not committed.
 
+**Team convention:** for local dev each member uses their **own** MongoDB Atlas free cluster (or their own DB user) — no shared secrets, nobody shares their `.env`. The shared cluster is used only by the live deploy, via GitHub Actions Secrets. Run `npm run seed` after pointing `MONGO_URI` at your cluster to populate the test accounts and demo trips.
+
 ---
 
 ## Running the test suites
