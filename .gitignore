@@ -70,3 +70,7 @@ planning/A2_Rubric.md
 # GenAI disclosure running log — Rodney's personal working record of his own AI use.
 # Source material for the report's §9 disclosure; kept local (per-member, not shared).
 planning/A2_GenAI_Log.md
+
+# Local-only working drafts (agendas, scratch notes). Kept out of commits;
+# shared by other means (email / WhatsApp), not via the repo.
+planning/local/
