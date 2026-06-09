@@ -52,9 +52,24 @@ as our own work; the disclosure section is where AI use is declared.
   owns it.
 - Track progress on the **GitHub Project board** (kanban: Todo → In progress →
   In review → Done).
-- In VS Code, install the recommended **GitHub Pull Requests and Issues**
-  extension; `.vscode/settings.json` ships saved queries so each of us can see
-  *My issues* and filter by person or by section.
+### VS Code issue filters
+
+`.vscode/settings.json` ships saved issue queries (committed to the repo, so
+they travel with `main` — no copying needed). Each of us gets the same named
+filters: *My issues*, one per person, *Unassigned*, and one per assignment
+section. To use them:
+
+1. Pull `main`.
+2. Install the recommended **GitHub Pull Requests and Issues** extension
+   (`github.vscode-pull-request-github`). VS Code prompts to install it from
+   `.vscode/extensions.json` when you open the repo.
+3. Click the **GitHub** icon in the Activity Bar and sign in to GitHub when
+   asked. The filters appear under the **Issues** section.
+
+*My issues* auto-adapts to whoever is signed in. If your filters come up empty,
+check you opened the repo's **root folder** (the one with the GitHub remote) —
+the queries resolve the owner/repo from that remote, so opening a sub-folder or
+a remote-less clone makes them return nothing.
 
 ## Meeting cadence
 
