@@ -1,5 +1,6 @@
 const Trip = require('../models/Trip');
 const Activity = require('../models/Activity');
+const { TripQueryBuilder, TripUpdateBuilder } = require('../builders/tripBuilders');
 
 const createTrip = async (req, res) => {
     const { title, destination, startDate, endDate, budget, notes, status, coverPhoto } = req.body;
@@ -26,7 +27,12 @@ const createTrip = async (req, res) => {
 
 const getTrips = async (req, res) => {
     try {
-        const trips = await Trip.find({ userId: req.user._id }).sort({ createdAt: -1 });
+        const tripQuery = new TripQueryBuilder()
+            .forUser(req.user._id)
+            .newestFirst()
+            .build();
+
+        const trips = await Trip.find(tripQuery.filter).sort(tripQuery.sort);
         res.json(trips);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -54,15 +60,9 @@ const updateTrip = async (req, res) => {
             return res.status(404).json({ message: 'Trip not found' });
         }
 
-        const { title, destination, startDate, endDate, budget, notes, status, coverPhoto } = req.body;
-        trip.title = title ?? trip.title;
-        trip.destination = destination ?? trip.destination;
-        trip.startDate = startDate ?? trip.startDate;
-        trip.endDate = endDate ?? trip.endDate;
-        trip.budget = budget ?? trip.budget;
-        trip.notes = notes ?? trip.notes;
-        trip.status = status ?? trip.status;
-        trip.coverPhoto = coverPhoto ?? trip.coverPhoto;
+        new TripUpdateBuilder(trip)
+            .withFields(req.body)
+            .build();
 
         const updated = await trip.save();
         res.json(updated);
