@@ -71,7 +71,7 @@ straight into the template on build day.
 ### 3.1 Design pattern
 *Minimum 7 patterns, each justified and demonstrated in backend code. Pattern-count ladder: 7=HD, 6=D, 5=C, 4=P. Live committed list lives in `planning/A2_Checklist.md` pattern tracker.*
 
-*(draft here)*
+Adapter is used as a structural pattern to wrap an external weather service. `WeatherProvider` defines the forecast interface the application depends on, and `OpenMeteoWeatherAdapter` translates Open-Meteo's coordinate-based, parallel-array, WMO-coded responses into a single normalised forecast object. The implementation lives in `backend/adapters/weatherAdapter.js` and is used by `backend/controllers/weatherController.js` to serve `GET /api/trips/:id/weather` (commit `37b337c`). This is appropriate for VacayPlan because trip weather is a new feature that should stay decoupled from any one vendor; changing weather providers means adding another `WeatherProvider` subclass without touching controllers, routes, or the frontend.
 
 ### 3.2 Implementation of OOP
 *Classes, Objects, Inheritance, Encapsulation, Polymorphism with code examples and justification.*

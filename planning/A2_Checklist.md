@@ -27,7 +27,7 @@ Provisional carry-overs from A1 *process* (not marks, A1 unmarked):
 | # | Pattern | Project feature it serves | Backend file/class | Justified in report | Code-demonstrated |
 |---|---------|---------------------------|--------------------|--------------------|-------------------|
 | 1 | *(TBD)* | | | [ ] | [ ] |
-| 2 | *(TBD)* | | | [ ] | [ ] |
+| 2 | Adapter | External weather data for a trip (vendor-decoupled forecasts) | `backend/adapters/weatherAdapter.js` (`WeatherProvider`, `OpenMeteoWeatherAdapter`) | [x] | [x] |
 | 3 | *(TBD)* | | | [ ] | [ ] |
 | 4 | *(TBD)* | | | [ ] | [ ] |
 | 5 | *(TBD)* | | | [ ] | [ ] |

@@ -104,6 +104,8 @@ Requirement: **minimum 7 patterns**, each justified AND demonstrated in backend 
 
 **Talking points / justifications:** *(populate per committed pattern)*
 
+- Adapter (structural): implemented in commit `37b337c`. `OpenMeteoWeatherAdapter` wraps the Open-Meteo geocoding and forecast API behind the `WeatherProvider` interface, reconciling the vendor's coordinate lookup, parallel-array response, and integer WMO weather codes into a normalised forecast DTO (`backend/adapters/weatherAdapter.js:49`, `backend/adapters/weatherAdapter.js:64`). The trip-scoped endpoint `GET /api/trips/:id/weather` resolves a trip's destination and dates through that interface without depending on the concrete vendor (`backend/controllers/weatherController.js:9`, `backend/routes/tripRoutes.js:17`). This fits VacayPlan because the trip detail page needs destination weather as a new feature while staying decoupled from any single provider; swapping vendors means adding another `WeatherProvider` subclass, leaving the controller, route, and frontend untouched.
+
 ### 3.2 Implementation of OOP (~250–300 words)
 Demonstrate Classes, Objects, Inheritance, Encapsulation, Polymorphism with code examples and justification.
 
