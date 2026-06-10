@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Disclosure } from '@headlessui/react';
-import { ArrowPathIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
+import { ArrowPathIcon, CalendarDaysIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
 import axiosInstance from '../../axiosConfig';
 import Card from '../ui/Card';
 
@@ -141,9 +141,13 @@ const WeatherForecast = ({ trip }) => {
                 <p className="text-sm text-ink-muted italic">{error}</p>
               ) : null}
               {!loading && !error && days.length === 0 ? (
-                <p className="text-sm text-ink-subtle italic">
-                  No forecast available for these dates yet — weather is only forecast about two weeks ahead.
-                </p>
+                <div className="flex flex-col items-center gap-1.5 rounded-lg border border-dashed border-surface-border bg-surface-muted px-4 py-6 text-center">
+                  <CalendarDaysIcon className="h-7 w-7 text-ink-subtle" aria-hidden="true" />
+                  <p className="text-sm font-medium text-ink">Weather data not available yet</p>
+                  <p className="text-xs text-ink-muted">
+                    We&apos;ll show the daily forecast as your trip gets closer — forecasts only reach about two weeks ahead.
+                  </p>
+                </div>
               ) : null}
               {!loading && days.length > 0 ? (
                 <ul className="flex flex-col gap-2">
