@@ -216,6 +216,31 @@ describe('OpenMeteoWeatherAdapter (Adapter pattern)', () => {
         expect(error.message).to.equal('Service temporarily unavailable');
     });
 
+    it('aborts and reports a timeout when the vendor does not respond in time', async () => {
+        // A fetch that never settles on its own; it only rejects once aborted.
+        const hangingFetch = (url, options) =>
+            new Promise((_, reject) => {
+                if (options && options.signal) {
+                    options.signal.addEventListener('abort', () => {
+                        const abortError = new Error('The operation was aborted');
+                        abortError.name = 'AbortError';
+                        reject(abortError);
+                    });
+                }
+            });
+        const adapter = new OpenMeteoWeatherAdapter({ fetchFn: hangingFetch, timeoutMs: 20 });
+
+        let error;
+        try {
+            await adapter.getForecast({ location: 'Kyoto' });
+        } catch (err) {
+            error = err;
+        }
+
+        expect(error).to.be.an('error');
+        expect(error.message).to.match(/timed out/i);
+    });
+
     it('the WeatherProvider target interface refuses to be used directly', async () => {
         let error;
         try {

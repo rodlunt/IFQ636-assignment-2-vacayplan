@@ -47,11 +47,13 @@ class OpenMeteoWeatherAdapter extends WeatherProvider {
         fetchFn = globalThis.fetch,
         geocodingUrl = OPEN_METEO_GEOCODING_URL,
         forecastUrl = OPEN_METEO_FORECAST_URL,
+        timeoutMs = 8000,
     } = {}) {
         super();
         this.fetchFn = fetchFn;
         this.geocodingUrl = geocodingUrl;
         this.forecastUrl = forecastUrl;
+        this.timeoutMs = timeoutMs;
     }
 
     async getForecast({ location, startDate, endDate } = {}) {
@@ -126,19 +128,32 @@ class OpenMeteoWeatherAdapter extends WeatherProvider {
         return matched || results[0];
     }
 
+    // Abort the request if the vendor does not respond within timeoutMs so a slow
+    // or hanging Open-Meteo call cannot block the trip weather request indefinitely.
     async _getJson(url, label) {
-        const response = await this.fetchFn(url);
-        if (!response.ok) {
-            let reason = `${label} request failed (${response.status})`;
-            try {
-                const body = await response.json();
-                if (body && body.reason) reason = body.reason;
-            } catch (_) {
-                // response body was not JSON; keep the status-based message
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), this.timeoutMs);
+        try {
+            const response = await this.fetchFn(url, { signal: controller.signal });
+            if (!response.ok) {
+                let reason = `${label} request failed (${response.status})`;
+                try {
+                    const body = await response.json();
+                    if (body && body.reason) reason = body.reason;
+                } catch (_) {
+                    // response body was not JSON; keep the status-based message
+                }
+                throw new Error(reason);
             }
-            throw new Error(reason);
+            return await response.json();
+        } catch (error) {
+            if (error.name === 'AbortError') {
+                throw new Error(`${label} request timed out`);
+            }
+            throw error;
+        } finally {
+            clearTimeout(timer);
         }
-        return response.json();
     }
 
     // Open-Meteo returns each metric as its own array aligned to daily.time by
