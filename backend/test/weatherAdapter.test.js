@@ -175,25 +175,45 @@ describe('OpenMeteoWeatherAdapter (Adapter pattern)', () => {
         expect(error.message).to.match(/could not find a location/i);
     });
 
-    it('surfaces the vendor reason when the forecast request is rejected (e.g. dates out of range)', async () => {
+    it('returns an empty forecast when the trip dates are outside Open-Meteo\'s allowed range', async () => {
         const fetchFn = makeFetch([
             jsonResponse(GEOCODE_BODY),
             jsonResponse(
-                { error: true, reason: 'Parameter end_date is out of allowed range' },
+                { error: true, reason: "Parameter 'start_date' is out of allowed range from 2026-03-09 to 2026-06-25" },
                 { ok: false, status: 400 },
+            ),
+        ]);
+        const adapter = new OpenMeteoWeatherAdapter({ fetchFn });
+
+        const forecast = await adapter.getForecast({
+            location: 'Kyoto, Japan',
+            startDate: '2026-12-01',
+            endDate: '2026-12-04',
+        });
+
+        expect(forecast.location).to.equal('Kyoto, Japan');
+        expect(forecast.daily).to.deep.equal([]);
+    });
+
+    it('surfaces the vendor reason when the forecast request fails for another reason', async () => {
+        const fetchFn = makeFetch([
+            jsonResponse(GEOCODE_BODY),
+            jsonResponse(
+                { error: true, reason: 'Service temporarily unavailable' },
+                { ok: false, status: 503 },
             ),
         ]);
         const adapter = new OpenMeteoWeatherAdapter({ fetchFn });
 
         let error;
         try {
-            await adapter.getForecast({ location: 'Kyoto', endDate: '2099-01-01' });
+            await adapter.getForecast({ location: 'Kyoto' });
         } catch (err) {
             error = err;
         }
 
         expect(error).to.be.an('error');
-        expect(error.message).to.equal('Parameter end_date is out of allowed range');
+        expect(error.message).to.equal('Service temporarily unavailable');
     });
 
     it('the WeatherProvider target interface refuses to be used directly', async () => {

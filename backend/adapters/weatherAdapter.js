@@ -66,7 +66,19 @@ class OpenMeteoWeatherAdapter extends WeatherProvider {
         if (startDate) params.set('start_date', toIsoDate(startDate));
         if (endDate) params.set('end_date', toIsoDate(endDate));
 
-        const data = await this._getJson(`${this.forecastUrl}?${params.toString()}`, 'Weather');
+        let data;
+        try {
+            data = await this._getJson(`${this.forecastUrl}?${params.toString()}`, 'Weather');
+        } catch (error) {
+            // Open-Meteo only forecasts a limited window (roughly three months back
+            // to about two weeks ahead). A trip outside that window has no forecast
+            // yet — that is a normal empty result, not a vendor failure.
+            if (/out of allowed range/i.test(error.message)) {
+                return { location: place.resolvedName, daily: [] };
+            }
+            throw error;
+        }
+
         return {
             location: place.resolvedName,
             daily: this._normaliseDaily(data.daily),
