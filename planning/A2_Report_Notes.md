@@ -104,6 +104,8 @@ Requirement: **minimum 7 patterns**, each justified AND demonstrated in backend 
 
 **Talking points / justifications:** *(populate per committed pattern)*
 
+- Builder (creational): implemented in commit `6965ef3`. `TripQueryBuilder` assembles the authenticated user's trip list query and newest-first sort before `getTrips` passes the built filter/sort to Mongoose (`backend/builders/tripBuilders.js:31`, `backend/controllers/tripController.js:28`). `TripUpdateBuilder` centralises partial update rules for `updateTrip`, applying only supplied non-null fields while preserving omitted values and falsey values such as `0` (`backend/builders/tripBuilders.js:12`, `backend/controllers/tripController.js:55`). This fits VacayPlan because trip update/query construction was previously inline controller assignment logic; moving construction behind fluent builders keeps the controller focused on request flow and makes the allowed update fields explicit.
+
 ### 3.2 Implementation of OOP (~250–300 words)
 Demonstrate Classes, Objects, Inheritance, Encapsulation, Polymorphism with code examples and justification.
 

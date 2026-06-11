@@ -229,6 +229,30 @@ describe('Trip Controller (/api/trips)', () => {
             expect(trip.save.calledOnce).to.be.true;
         });
 
+        it('uses partial update semantics without overwriting omitted fields', async () => {
+            const tripId = new mongoose.Types.ObjectId();
+            const trip = {
+                _id: tripId,
+                destination: 'Sydney',
+                budget: 1500,
+                notes: 'Original note',
+                userId,
+                save: sinon.stub().resolvesThis(),
+            };
+            sinon.stub(Trip, 'findById').resolves(trip);
+
+            const res = await chai.request(app)
+                .put(`/api/trips/${tripId}`)
+                .set('Authorization', `Bearer ${token}`)
+                .send({ budget: 0 });
+
+            expect(res).to.have.status(200);
+            expect(trip.destination).to.equal('Sydney');
+            expect(trip.budget).to.equal(0);
+            expect(trip.notes).to.equal('Original note');
+            expect(trip.save.calledOnce).to.be.true;
+        });
+
         it('VP-105: updating status changes the status field on the saved doc', async () => {
             const tripId = new mongoose.Types.ObjectId();
             const trip = {
