@@ -104,6 +104,8 @@ Requirement: **minimum 7 patterns**, each justified AND demonstrated in backend 
 
 **Talking points / justifications:** *(populate per committed pattern)*
 
+- Factory Method (creational): commit `e0b85f0`. `UserResponseFactory` in `backend/factories/userResponseFactory.js` centralises user response construction previously duplicated inline across `authController.js` (registerUser, loginUser, updateUserProfile) and `adminController.js` (createUser, updateUserStatus). Type argument (`auth` or `admin`) controls output shape. Removes `id` vs `_id` inconsistency between controllers. Consumed by both controllers. Justified via Shvets (2021).
+
 ### 3.2 Implementation of OOP (~250–300 words)
 Demonstrate Classes, Objects, Inheritance, Encapsulation, Polymorphism with code examples and justification.
 
@@ -196,7 +198,7 @@ Critical insight into the development process, challenges, decisions, learning. 
 
 ### References (APA 7th: append as sources are used)
 
-*(No sources confirmed yet. Add full APA entries here as material is cited. No invented references.)*
+Shvets, A. (2021). Factory method. Refactoring.Guru. https://refactoring.guru/design-patterns/factory-method
 
 ---
 
