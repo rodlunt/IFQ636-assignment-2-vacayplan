@@ -131,7 +131,7 @@ Factory Method is used as a creational pattern to centralise user response objec
 ## Reflection
 *Critical insight into the development process, challenges, decisions, learning. Source: the running reflection log in `planning/A2_Report_Notes.md` §9.*
 
-*(draft here)*
+Shvets, A. (2021). Factory method. Refactoring.Guru. https://refactoring.guru/design-patterns/factory-method
 
 ---
 
