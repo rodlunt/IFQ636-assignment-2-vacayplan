@@ -198,7 +198,7 @@ Critical insight into the development process, challenges, decisions, learning. 
 
 ### References (APA 7th: append as sources are used)
 
-Shvets, A. (2021). Factory method. Refactoring.Guru. https://refactoring.guru/design-patterns/factory-method
+Shvets, A. (2021). *Factory method*. Refactoring.Guru. https://refactoring.guru/design-patterns/factory-method
 
 ---
 
