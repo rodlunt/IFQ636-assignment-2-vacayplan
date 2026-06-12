@@ -16,7 +16,7 @@ straight into the template on build day.
 - The final report is built into the template via the python-docx pipeline, not by
   pasting from here into Word by hand.
 
-> Status: skeleton only. No prose written yet — that's the team's to write.
+> Status: section 3.1 underway (Builder and Factory Method written). All other sections still to draft.
 
 ---
 
@@ -132,6 +132,8 @@ Factory Method is used as a creational pattern to centralise user response objec
 
 ## Reflection
 *Critical insight into the development process, challenges, decisions, learning. Source: the running reflection log in `planning/A2_Report_Notes.md` §9.*
+
+*(draft here)*
 
 ---
 

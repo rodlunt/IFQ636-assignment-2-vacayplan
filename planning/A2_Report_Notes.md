@@ -21,7 +21,7 @@
 | Public IP / live URL | *(populate after deploy)* | ⬜ |
 | Postman collection link (GitHub) | *(populate after export)* | ⬜ |
 | Figma / wireframe link | *(populate)* | ⬜ |
-| Rodney's contribution scope | *(populate after role split - feeds Part C)* | ⬜ |
+| Rodney's contribution scope | Patterns: Singleton (#52), Decorator (#56), Chain of Responsibility (#58); further roles (tests / CI-CD / SRS sections) pending split | 🟡 partial |
 
 ### Team contacts
 
@@ -90,17 +90,22 @@ Requirement: **minimum 7 patterns**, each justified AND demonstrated in backend 
 
 **Pattern selection (lock at Phase 1):** see `A2_Checklist.md` pattern tracker for the live committed list.
 
-**Working shortlist for the VacayPlan base** (base decided; patterns still to be validated against the code surface and locked at Phase 1, each must map to a genuine feature, no contrivance):
-- Singleton: single MongoDB connection / logger / config instance
-- Factory: instantiate user object by role (traveller vs administrator)
-- Strategy: interchangeable itinerary sort/filter (by day, by status)
-- Proxy: role-gated access to admin-only operations
-- Middleware / Chain of Responsibility, Express request pipeline (auth → validation → handler)
-- Observer: notify on state change (e.g. trip updated → itinerary refresh)
-- Decorator: wrap trip/activity objects with derived presentation (booked vs wishlist styling)
-- Facade: single service interface hiding trip + itinerary submodules
+**Pattern selection locked** (ownership confirmed via email check-in; selection issue #21 closed with the full record - see its closing comment):
 
-> Validate each candidate against the actual code surface before committing. A pattern only earns marks if backend code demonstrates it and the report justifies the choice. Drop any that would be contrived.
+| Pattern | Category | Owner | Issue |
+|---------|----------|-------|-------|
+| Builder | Creational | Joe | #54 (merged, PR #64) |
+| Factory Method | Creational | Lance | #53 (merged, PR #66) |
+| Singleton | Creational | Rodney | #52 |
+| Decorator | Structural | Rodney | #56 |
+| Chain of Responsibility | Behavioural | Rodney | #58 |
+| Facade | Structural | Lance | #55 |
+| Adapter | Structural | Joe | #57 |
+| *(Lance's 3rd - pending)* | - | Lance | #59 |
+
+Lance's 3rd pattern is the one open slot: Proxy was proposed in place of State (#59), but Proxy overlaps Chain of Responsibility (#58) on the admin-auth path, and two patterns demonstrated on the same code risks a marker discounting one. Options under discussion: Proxy rescoped clear of the route middleware, Observer (anchored to the existing [AUDIT] log), Command (admin operations as command objects), or keep State.
+
+**Decided:** each member owns an individually attributable slice of the patterns (feeds the Part C contribution split).
 
 **Talking points / justifications:** *(populate per committed pattern)*
 
@@ -126,11 +131,12 @@ Needs: feature branches; PRs; **minimum 2 merge conflicts resolved**; commit his
 | Date | Attendees | Decisions | Action items (owner) |
 |------|-----------|-----------|----------------------|
 | 2026-06-06 3:00pm AEST | Rodney, Lance, Joe | Base project = VacayPlan; new shared repo `IFQ636-assignment-2-vacayplan` (public); cadence = Tue email + Sat 3pm AEST WhatsApp call + Thu 2 Jul buffer night kept clear (availability sanity-check at prior sync); git workflow = no squash-merge, one open PR at a time, branch-per-task, review before merge, own-identity commits | Rodney: create repo + add Lance/Joe; roles + student-ID collection carried to next sync |
+| 2026-06-09 email check-in | Rodney, Lance, Joe | Pattern ownership confirmed (7 of 8): Rodney Singleton/Decorator/CoR (#52/#56/#58), Lance Factory Method/Facade (#53/#55), Joe Builder/Adapter (#54/#57); Proxy proposal flagged as overlapping CoR on the admin-auth path; options for Lance's 3rd = Proxy rescoped / Observer / Command / keep State; #21 closed with the record | Lance: lock 3rd pattern, land outcome in #59 |
 
 **Merge-conflict log (need ≥2 genuine):**
 | # | Branches | What conflicted | Who resolved | Commit/PR |
 |---|----------|-----------------|--------------|-----------|
-| 1 | feature/factory-method-user-response vs origin/main | document_draft.md (section 3.1), planning/A2_Checklist.md (pattern tracker rows 1-2), planning/A2_Report_Notes.md (talking points) | LDMasina | commit `394d5e5`, PR #65 |
+| 1 | feature/factory-method-user-response vs origin/main | document_draft.md (section 3.1), planning/A2_Checklist.md (pattern tracker rows 1-2), planning/A2_Report_Notes.md (talking points) | LDMasina | commit `394d5e5`, PR #66 |
 
 ---
 
@@ -196,6 +202,8 @@ Append every GenAI use: tool, prompt category, task, project area, how verified.
 Critical insight into the development process, challenges, decisions, learning. The marker wants genuine reflection, not a summary.
 
 - 2026-06-04: A2 workspace created; A1 archived. *(append real moments as they happen)*
+- 2026-06-13 (Rodney): After Joe suggested the weather API as the Adapter anchor, it was clear there is real benefit in wider ideas being included in the application - one person can't think of everything. It is almost an obvious addition, and not something I had seen in a travel application before, yet such an obviously beneficial one.
+- 2026-06-13 (Rodney): Post-merge review of PR #66 caught a frontend regression that both green test suites missed (detail raised as a comment on the PR). Lesson: backend unit tests prove handler behaviour, not API contract safety - the frontend tests mock the old response shape, so a contract change can pass everything and still break the app.
 
 ### References (APA 7th: append as sources are used)
 
@@ -207,4 +215,3 @@ Shvets, A. (2021). *Factory method*. Refactoring.Guru. https://refactoring.guru/
 
 - Word-count inclusion rules for A2, confirm same as A1 ruling (includes headings/tables/captions, excludes cover/ToC/references) or re-ask coordinator.
 - Template numbering typo: API testing section lists two "6.2" headings, confirm intended 6.1/6.2 before submission.
-- Does each member need an individually attributable slice of the 7 patterns, or is collective ownership acceptable for the pattern criterion? (Affects Part C contribution split.)
