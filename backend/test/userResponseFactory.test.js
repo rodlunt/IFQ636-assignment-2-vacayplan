@@ -30,7 +30,7 @@ describe('UserResponseFactory', () => {
       const user = { _id: id, name: 'Lance', email: 'lance@test.com', isAdmin: true, status: 'active' };
       const result = UserResponseFactory.create('admin', user);
       expect(result).to.deep.equal({
-        id,
+        _id: id,
         name: 'Lance',
         email: 'lance@test.com',
         isAdmin: true,
