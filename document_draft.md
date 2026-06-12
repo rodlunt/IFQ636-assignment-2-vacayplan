@@ -73,6 +73,8 @@ straight into the template on build day.
 
 Builder is used as a creational pattern for trip query/update assembly. `TripQueryBuilder` builds the authenticated user's trip list filter and newest-first sort, while `TripUpdateBuilder` builds partial trip updates from request data without overwriting omitted fields. The implementation lives in `backend/builders/tripBuilders.js` and is used by `backend/controllers/tripController.js` in `getTrips` and `updateTrip` (commit `6965ef3`). This is appropriate for VacayPlan because controllers should coordinate HTTP flow, not repeatedly encode object construction rules for trip queries and update payloads.
 
+Factory Method is used as a creational pattern to centralise user response object construction across VacayPlan's backend. Prior to this implementation, `authController.js` and `adminController.js` each built user response objects inline across five handler functions, producing inconsistent field names between controllers (notably `id` versus `_id`). `UserResponseFactory.create()` accepts a type argument and returns a guaranteed object shape, removing that inconsistency and keeping each controller focused on request flow. As Shvets (2021) notes, the pattern decouples creators from the objects they produce, which is precisely the problem this refactor addresses. The implementation lives in `backend/factories/userResponseFactory.js` (commit `e0b85f0`).
+
 ### 3.2 Implementation of OOP
 *Classes, Objects, Inheritance, Encapsulation, Polymorphism with code examples and justification.*
 
@@ -131,11 +133,10 @@ Builder is used as a creational pattern for trip query/update assembly. `TripQue
 ## Reflection
 *Critical insight into the development process, challenges, decisions, learning. Source: the running reflection log in `planning/A2_Report_Notes.md` §9.*
 
-*(draft here)*
-
 ---
 
 ## References
 *APA 7th. Alphabetical, hanging indent. No invented references.*
 
-*(draft here)*
+Shvets, A. (2021). *Factory method*. Refactoring.Guru.
+    https://refactoring.guru/design-patterns/factory-method

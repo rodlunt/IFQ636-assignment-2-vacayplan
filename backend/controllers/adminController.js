@@ -1,6 +1,7 @@
 const User = require('../models/User');
 const Trip = require('../models/Trip');
 const Activity = require('../models/Activity');
+const UserResponseFactory = require('../factories/userResponseFactory');
 
 const createUser = async (req, res) => {
     const { name, email, password, isAdmin } = req.body;
@@ -12,13 +13,7 @@ const createUser = async (req, res) => {
         if (userExists) return res.status(409).json({ message: 'Email already registered' });
 
         const user = await User.create({ name, email, password, isAdmin: !!isAdmin });
-        res.status(201).json({
-            _id: user._id,
-            name: user.name,
-            email: user.email,
-            isAdmin: !!user.isAdmin,
-            status: user.status,
-        });
+        res.status(201).json(UserResponseFactory.create('admin', user));
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -57,13 +52,7 @@ const updateUserStatus = async (req, res) => {
         }
         user.status = status;
         const updated = await user.save();
-        res.json({
-            _id: updated._id,
-            name: updated.name,
-            email: updated.email,
-            isAdmin: !!updated.isAdmin,
-            status: updated.status,
-        });
+        res.json(UserResponseFactory.create('admin', updated));
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
