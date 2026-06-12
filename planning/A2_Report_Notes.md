@@ -130,7 +130,7 @@ Needs: feature branches; PRs; **minimum 2 merge conflicts resolved**; commit his
 **Merge-conflict log (need ≥2 genuine):**
 | # | Branches | What conflicted | Who resolved | Commit/PR |
 |---|----------|-----------------|--------------|-----------|
-| 1 | feature/factory-method-user-response vs origin/main | document_draft.md (section 3.1), planning/A2_Checklist.md (pattern tracker rows 1-2), planning/A2_Report_Notes.md (talking points) | LDMasina | commit `394d5e5`, PR #65 |
+| 1 | feature/factory-method-user-response vs origin/main | document_draft.md (section 3.1), planning/A2_Checklist.md (pattern tracker rows 1-2), planning/A2_Report_Notes.md (talking points) | LDMasina | commit `394d5e5`, PR #66 |
 
 ---
 
