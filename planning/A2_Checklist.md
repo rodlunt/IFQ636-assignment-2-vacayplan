@@ -26,7 +26,7 @@ Provisional carry-overs from A1 *process* (not marks, A1 unmarked):
 
 | # | Pattern | Project feature it serves | Backend file/class | Justified in report | Code-demonstrated |
 |---|---------|---------------------------|--------------------|--------------------|-------------------|
-| 1 | *(TBD)* | | | [ ] | [ ] |
+| 1 | Builder | Trip list query assembly + partial trip updates | `backend/builders/tripBuilders.js` (`TripQueryBuilder`, `TripUpdateBuilder`) | [x] | [x] |
 | 2 | Factory Method | Centralise user response construction across auth and admin controllers | `backend/factories/userResponseFactory.js` (`UserResponseFactory`) | [x] | [x] |
 | 3 | *(TBD)* | | | [ ] | [ ] |
 | 4 | *(TBD)* | | | [ ] | [ ] |
