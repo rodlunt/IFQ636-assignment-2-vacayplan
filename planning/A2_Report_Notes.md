@@ -202,6 +202,8 @@ Append every GenAI use: tool, prompt category, task, project area, how verified.
 Critical insight into the development process, challenges, decisions, learning. The marker wants genuine reflection, not a summary.
 
 - 2026-06-04: A2 workspace created; A1 archived. *(append real moments as they happen)*
+- 2026-06-13 (Rodney): After Joe suggested the weather API as the Adapter anchor, it was clear there is real benefit in wider ideas being included in the application - one person can't think of everything. It is almost an obvious addition, and not something I had seen in a travel application before, yet such an obviously beneficial one.
+- 2026-06-13 (Rodney): Post-merge review of PR #66 caught a frontend regression that both green test suites missed (detail raised as a comment on the PR). Lesson: backend unit tests prove handler behaviour, not API contract safety - the frontend tests mock the old response shape, so a contract change can pass everything and still break the app.
 
 ### References (APA 7th: append as sources are used)
 
