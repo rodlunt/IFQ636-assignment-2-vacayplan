@@ -24,16 +24,16 @@ Provisional carry-overs from A1 *process* (not marks, A1 unmarked):
 
 ### Pattern tracker (target ≥7: fill as the team selects)
 
-| # | Pattern | Project feature it serves | Backend file/class | Justified in report | Code-demonstrated |
-|---|---------|---------------------------|--------------------|--------------------|-------------------|
-| 1 | Builder | Trip list query assembly + partial trip updates | `backend/builders/tripBuilders.js` (`TripQueryBuilder`, `TripUpdateBuilder`) | [x] | [x] |
-| 2 | Factory Method | Centralise user response construction across auth and admin controllers | `backend/factories/userResponseFactory.js` (`UserResponseFactory`) | [x] | [x] |
-| 3 | *(TBD)* | | | [ ] | [ ] |
-| 4 | *(TBD)* | | | [ ] | [ ] |
-| 5 | *(TBD)* | | | [ ] | [ ] |
-| 6 | *(TBD)* | | | [ ] | [ ] |
-| 7 | *(TBD)* | | | [ ] | [ ] |
-| +  | *(buffer - aim for 1 spare)* | | | [ ] | [ ] |
+| # | Pattern | Owner | Project feature it serves | Backend file/class | Justified in report | Code-demonstrated |
+|---|---------|-------|---------------------------|--------------------|--------------------|-------------------|
+| 1 | Builder | Joe (#54) | Trip list query assembly + partial trip updates | `backend/builders/tripBuilders.js` (`TripQueryBuilder`, `TripUpdateBuilder`) | [x] | [x] |
+| 2 | Factory Method | Lance (#53) | Centralise user response construction across auth and admin controllers | `backend/factories/userResponseFactory.js` (`UserResponseFactory`) | [x] | [x] |
+| 3 | Singleton | Rodney (#52) | Single shared MongoDB connection, guarded against re-init | *(on implementation)* | [ ] | [ ] |
+| 4 | Decorator | Rodney (#56) | Ownership/audit handler wrappers replacing duplicated checks across trip + activity controllers | *(on implementation)* | [ ] | [ ] |
+| 5 | Chain of Responsibility | Rodney (#58) | Express middleware pipeline (protect -> adminProtect -> validate -> handler) | *(on implementation)* | [ ] | [ ] |
+| 6 | Facade | Lance (#55) | Service layer hiding multi-model cascade operations (trip/user deletes) | *(on implementation)* | [ ] | [ ] |
+| 7 | Adapter | Joe (#57) | External weather API wrapped behind a common interface (new feature) | *(on implementation)* | [ ] | [ ] |
+| 8 | *(Lance's 3rd - pending: Proxy rescoped / Observer / Command / keep State, see #21 closing comment and #59)* | Lance | | | [ ] | [ ] |
 
 ### Screenshot tracker (template-mandated)
 
@@ -72,7 +72,8 @@ Provisional carry-overs from A1 *process* (not marks, A1 unmarked):
 
 - [x] Team allocation confirmed, **2026-06-04: Rodney + Lance + Joseph** (confirm team is complete; collect Lance + Joe student IDs for Part C)
 - [x] Base project selected: **VacayPlan** (most feature surface for 7 patterns + CI/CD & unit-test head start), agreed 2026-06-06
-- [ ] Roles assigned per member (who owns which patterns / tests / CI-CD / SRS sections)
-- [ ] Shared GitHub repo created; all members have write access; per-member commit identity verified
+- [x] Pattern ownership assigned per member (Rodney #52/#56/#58; Lance #53/#55 + 3rd pending in #59; Joe #54/#57) - confirmed via email check-in, recorded in #21
+- [ ] Remaining role split still open (tests / CI-CD / SRS sections)
+- [x] Shared GitHub repo created; all members have write access; per-member commit identity verified (merged PRs under each identity: #63 rodlunt, #64 jrmilburn, #65/#66 LDMasina)
 - [x] Meeting cadence agreed 2026-06-06: **Tuesday email check-in (minimum) + standing Saturday 3pm AEST WhatsApp group call**; night before the due night (Thu 2 Jul) kept clear as a buffer session with an availability sanity-check at the preceding sync; meeting log started (feeds section 4.2)
 - [ ] Contribution-tracking method agreed so Part C is evidence-backed, not reconstructed at the end
