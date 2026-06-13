@@ -1,7 +1,7 @@
 const User = require('../models/User');
 const Trip = require('../models/Trip');
-const Activity = require('../models/Activity');
 const UserResponseFactory = require('../factories/userResponseFactory');
+const userService = require('../services/userService');
 
 const createUser = async (req, res) => {
     const { name, email, password, isAdmin } = req.body;
@@ -74,14 +74,7 @@ const deleteUser = async (req, res) => {
         const user = await User.findById(req.params.id);
         if (!user) return res.status(404).json({ message: 'User not found' });
 
-        const trips = await Trip.find({ userId: user._id }).select('_id');
-        const tripIds = trips.map((t) => t._id);
-        await Activity.deleteMany({ tripId: { $in: tripIds } });
-        await Trip.deleteMany({ userId: user._id });
-        await user.deleteOne();
-
-        console.log(`[AUDIT] User ${user.email} (id ${user._id}) deleted by admin ${req.user.email} (id ${req.user._id}) at ${new Date().toISOString()}`);
-
+        await userService.deleteUserWithCascade(user, req.user);
         res.status(204).send();
     } catch (error) {
         res.status(500).json({ message: error.message });
