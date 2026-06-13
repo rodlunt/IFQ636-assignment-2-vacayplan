@@ -101,9 +101,9 @@ Requirement: **minimum 7 patterns**, each justified AND demonstrated in backend 
 | Chain of Responsibility | Behavioural | Rodney | #58 |
 | Facade | Structural | Lance | #55 |
 | Adapter | Structural | Joe | #57 |
-| *(Lance's 3rd - pending)* | - | Lance | #59 |
+| State | Behavioural | Lance | #59 |
 
-Lance's 3rd pattern is the one open slot: Proxy was proposed in place of State (#59), but Proxy overlaps Chain of Responsibility (#58) on the admin-auth path, and two patterns demonstrated on the same code risks a marker discounting one. Options under discussion: Proxy rescoped clear of the route middleware, Observer (anchored to the existing [AUDIT] log), Command (admin operations as command objects), or keep State.
+Lance's 3rd pattern confirmed as State (email 2026-06-09, reiterated at 13 Jun call). Anchor: `updateUserStatus` in `adminController` - trip status lifecycle. Zero overlap with CoR; zero net-new build. Proxy was considered but rejected due to overlap with CoR on the admin-auth path.
 
 **Decided:** each member owns an individually attributable slice of the patterns (feeds the Part C contribution split).
 
@@ -133,6 +133,7 @@ Needs: feature branches; PRs; **minimum 2 merge conflicts resolved**; commit his
 |------|-----------|-----------|----------------------|
 | 2026-06-06 3:00pm AEST | Rodney, Lance, Joe | Base project = VacayPlan; new shared repo `IFQ636-assignment-2-vacayplan` (public); cadence = Tue email + Sat 3pm AEST WhatsApp call + Thu 2 Jul buffer night kept clear (availability sanity-check at prior sync); git workflow = no squash-merge, one open PR at a time, branch-per-task, review before merge, own-identity commits | Rodney: create repo + add Lance/Joe; roles + student-ID collection carried to next sync |
 | 2026-06-09 email check-in | Rodney, Lance, Joe | Pattern ownership confirmed (7 of 8): Rodney Singleton/Decorator/CoR (#52/#56/#58), Lance Factory Method/Facade (#53/#55), Joe Builder/Adapter (#54/#57); Proxy proposal flagged as overlapping CoR on the admin-auth path; options for Lance's 3rd = Proxy rescoped / Observer / Command / keep State; #21 closed with the record | Lance: lock 3rd pattern, land outcome in #59 |
+| 2026-06-13 3:00pm AEST | Rodney, Lance, Joe | Sequencing resolved: Facade (#55, Lance) merges first, Decorator (#56, Rodney) follows - will be conflict #2 on tripController; CI/CD ownership: Lance (#60, includes AWS EC2 setup, aiming to start tonight); Postman collation: Joe; unit test table (#33): Lance; video: each member records own segment, Rodney stitches via OBS + uploads via Canvas Studio (Naveed to confirm stitch-and-upload is permitted); word-count rules confirmed (includes figures/tables text, excludes headings/refs/ToC/cover); test-inventory convention (#33) confirmed with team; Joe's Adapter PR #71 open; #59 confirmed as State (pre-call email: Lance reverted from Proxy to State - tripController/updateUserStatus anchor, zero overlap with CoR, zero net-new build) | Lance: open Facade PR; Lance: CI/CD setup (#60); Lance: SRS 2.6-2.7 + FR cascade + ID numbering fix; Joe: tag Rodney + Lance on PR #71; next meeting Tuesday 2026-06-17 |
 
 **Merge-conflict log (need ≥2 genuine):**
 | # | Branches | What conflicted | Who resolved | Commit/PR |
@@ -218,5 +219,5 @@ Shvets, A. (2021). *Singleton*. Refactoring.Guru. https://refactoring.guru/desig
 
 ## Open questions for the team / coordinator
 
-- Word-count inclusion rules for A2, confirm same as A1 ruling (includes headings/tables/captions, excludes cover/ToC/references) or re-ask coordinator.
+- ~~Word-count inclusion rules for A2~~ - **RESOLVED 2026-06-13**: Naveed confirmed includes body text + figures/tables text; excludes headings, references, ToC, title page. Figure captions count. Budget accordingly.
 - Template numbering typo: API testing section lists two "6.2" headings, confirm intended 6.1/6.2 before submission.
