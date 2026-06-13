@@ -113,6 +113,7 @@ Lance's 3rd pattern is the one open slot: Proxy was proposed in place of State (
 - Factory Method (creational): commit `e0b85f0`. `UserResponseFactory` in `backend/factories/userResponseFactory.js` centralises user response construction previously duplicated inline across `authController.js` (registerUser, loginUser, updateUserProfile) and `adminController.js` (createUser, updateUserStatus). Type argument (`auth` or `admin`) controls output shape. Removes `id` vs `_id` inconsistency between controllers. Consumed by both controllers. Justified via Shvets (2021).
 - Facade (structural): commit `30fe755`. `TripService` in `backend/services/tripService.js` encapsulates trip cascade delete (activities then trip) behind `deleteTripWithActivities(trip)`. `UserService` in `backend/services/userService.js` encapsulates user cascade delete (activities, trips, user, plus audit log) behind `deleteUserWithCascade(user, adminUser)`. Both `tripController.deleteTrip` and `adminController.deleteUser` now delegate to one service method instead of coordinating multiple models inline. Anchored to FR-11 (trip cascade) and FR-19 (user cascade). Justified via Shvets (2021).
 - Singleton (creational): commit `ccd56e0`. `Database` class in `backend/config/db.js` turns the shared Mongoose connection from an accidental property (one call site) into a designed guarantee: `getInstance()` is the sole access point, the constructor throws on a second instantiation, and `connect()` stores the first connection promise and reuses it on every later call. `connectDB()` keeps its signature so `server.js` is unchanged - and `server.js` already guards startup behind `require.main`, so production has exactly one call site (latent invariant made explicit). Four unit tests in `backend/test/dbSingleton.test.js` prove instance identity, the construction guard, and the single-connection guarantee. Justified via Shvets (2021).
+- Chain of Responsibility (behavioural): commit `c42bf6d`. `validate(rules)` in `backend/middleware/validateMiddleware.js` completes the admin pipeline: `protect` -> `adminProtect` -> `validate` -> handler. Each link follows the same contract - terminate with the appropriate error code or call `next()`. Validation previously sat duplicated inside controllers, enmeshed with business logic; the new link externalises it into the chain. Wired per route in `adminRoutes.js`; four unit tests verify the validate link in isolation; existing admin route tests pass unchanged through the new link. Justified via Shvets (2021).
 
 ### 3.2 Implementation of OOP (~250–300 words)
 Demonstrate Classes, Objects, Inheritance, Encapsulation, Polymorphism with code examples and justification.
@@ -134,11 +135,13 @@ Needs: feature branches; PRs; **minimum 2 merge conflicts resolved**; commit his
 |------|-----------|-----------|----------------------|
 | 2026-06-06 3:00pm AEST | Rodney, Lance, Joe | Base project = VacayPlan; new shared repo `IFQ636-assignment-2-vacayplan` (public); cadence = Tue email + Sat 3pm AEST WhatsApp call + Thu 2 Jul buffer night kept clear (availability sanity-check at prior sync); git workflow = no squash-merge, one open PR at a time, branch-per-task, review before merge, own-identity commits | Rodney: create repo + add Lance/Joe; roles + student-ID collection carried to next sync |
 | 2026-06-09 email check-in | Rodney, Lance, Joe | Pattern ownership confirmed (7 of 8): Rodney Singleton/Decorator/CoR (#52/#56/#58), Lance Factory Method/Facade (#53/#55), Joe Builder/Adapter (#54/#57); Proxy proposal flagged as overlapping CoR on the admin-auth path; options for Lance's 3rd = Proxy rescoped / Observer / Command / keep State; #21 closed with the record | Lance: lock 3rd pattern, land outcome in #59 |
+| 2026-06-13 3:00pm AEST | Rodney, Lance, Joe | Sequencing resolved: Facade (#55, Lance) merges first, Decorator (#56, Rodney) follows - will be conflict #2 on tripController; CI/CD ownership: Lance (#60, includes AWS EC2 setup, aiming to start tonight); Postman tidy-up: Lance; video: each member records own segment, Rodney stitches via OBS + uploads via Canvas Studio (Naveed to confirm stitch-and-upload is permitted); word-count rules confirmed (includes figures/tables text, excludes headings/refs/ToC/cover); test-inventory convention (#33) confirmed with team; Joe's Adapter PR #71 open | Lance: open Facade PR; Lance: CI/CD setup (#60); Lance: SRS FR cascade + ID numbering fix; Joe: tag Rodney + Lance on PR #71 |
 
 **Merge-conflict log (need ≥2 genuine):**
 | # | Branches | What conflicted | Who resolved | Commit/PR |
 |---|----------|-----------------|--------------|-----------|
 | 1 | feature/factory-method-user-response vs origin/main | document_draft.md (section 3.1), planning/A2_Checklist.md (pattern tracker rows 1-2), planning/A2_Report_Notes.md (talking points) | LDMasina | commit `394d5e5`, PR #66 |
+| 2 | feature/facade-service-layer vs origin/main | planning/A2_Checklist.md (pattern tracker rows 5-6), planning/A2_Report_Notes.md (references section) | LDMasina | commit TBC, PR #72 |
 
 ---
 
@@ -213,6 +216,7 @@ Critical insight into the development process, challenges, decisions, learning. 
 
 ### References (APA 7th: append as sources are used)
 
+Shvets, A. (2021). *Chain of responsibility*. Refactoring.Guru. https://refactoring.guru/design-patterns/chain-of-responsibility
 Shvets, A. (2021). *Facade*. Refactoring.Guru. https://refactoring.guru/design-patterns/facade
 Shvets, A. (2021). *Factory method*. Refactoring.Guru. https://refactoring.guru/design-patterns/factory-method
 Shvets, A. (2021). *Singleton*. Refactoring.Guru. https://refactoring.guru/design-patterns/singleton
