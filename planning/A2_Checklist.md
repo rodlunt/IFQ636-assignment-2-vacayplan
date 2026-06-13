@@ -28,7 +28,7 @@ Provisional carry-overs from A1 *process* (not marks, A1 unmarked):
 |---|---------|-------|---------------------------|--------------------|--------------------|-------------------|
 | 1 | Builder | Joe (#54) | Trip list query assembly + partial trip updates | `backend/builders/tripBuilders.js` (`TripQueryBuilder`, `TripUpdateBuilder`) | [x] | [x] |
 | 2 | Factory Method | Lance (#53) | Centralise user response construction across auth and admin controllers | `backend/factories/userResponseFactory.js` (`UserResponseFactory`) | [x] | [x] |
-| 3 | Singleton | Rodney (#52) | Single shared MongoDB connection, guarded against re-init | *(on implementation)* | [ ] | [ ] |
+| 3 | Singleton | Rodney (#52) | Single shared MongoDB connection, guarded against re-init | `backend/config/db.js` (`Database`) | [x] | [x] |
 | 4 | Decorator | Rodney (#56) | Ownership/audit handler wrappers replacing duplicated checks across trip + activity controllers | *(on implementation)* | [ ] | [ ] |
 | 5 | Chain of Responsibility | Rodney (#58) | Express middleware pipeline (protect -> adminProtect -> validate -> handler) | *(on implementation)* | [ ] | [ ] |
 | 6 | Facade | Lance (#55) | Service layer hiding multi-model cascade operations (trip/user deletes) | *(on implementation)* | [ ] | [ ] |

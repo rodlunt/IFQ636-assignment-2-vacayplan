@@ -75,6 +75,8 @@ Builder is used as a creational pattern for trip query/update assembly. `TripQue
 
 Factory Method is used as a creational pattern to centralise user response object construction across VacayPlan's backend. Prior to this implementation, `authController.js` and `adminController.js` each built user response objects inline across five handler functions, producing inconsistent field names between controllers (notably `id` versus `_id`). `UserResponseFactory.create()` accepts a type argument and returns a guaranteed object shape, removing that inconsistency and keeping each controller focused on request flow. As Shvets (2021) notes, the pattern decouples creators from the objects they produce, which is precisely the problem this refactor addresses. The implementation lives in `backend/factories/userResponseFactory.js` (commit `e0b85f0`).
 
+Singleton is used as a creational pattern to enforce a single Mongoose connection across the backend. The previous `connectDB()` opened one connection by coincidence of having a single call site rather than by design; this implementation makes that guarantee explicit. `Database.getInstance()` becomes the sole access point, direct construction of a second instance throws, and `connect()` stores the first connection and reuses it on every subsequent call. The implementation lives in `backend/config/db.js` (commit `ccd56e0`) with four unit tests in `backend/test/dbSingleton.test.js`, and `server.js` remains unchanged. A shared database connection is an expensive resource, and Singleton ensures a class has exactly one instance with a single global access point (Shvets, 2021), turning an accidental property of the codebase into a designed, testable guarantee.
+
 ### 3.2 Implementation of OOP
 *Classes, Objects, Inheritance, Encapsulation, Polymorphism with code examples and justification.*
 
@@ -92,6 +94,10 @@ Factory Method is used as a creational pattern to centralise user response objec
 *Feature branches; PRs; minimum 2 resolved merge conflicts; commit history graph; meeting times/dates. Meeting log + merge-conflict log are kept in `planning/A2_Report_Notes.md` §4.2.*
 
 *(draft here — plus figures: commit graph, PR list, merge-conflict resolution)*
+
+*(figure: kanban board 13 Jun - Blocked column in use with blocked-by comments, EPICs in flight - `planning/screenshots/2026-06-13-kanban-blocked-column.png`)*
+*(figure: PR list 13 Jun - two PRs open, #69 approved fix referencing the #66 review flag)*
+*(figure: PR #66 review thread - review flag, fix PR #69, approval cross-references)*
 
 ---
 
@@ -142,3 +148,6 @@ Factory Method is used as a creational pattern to centralise user response objec
 
 Shvets, A. (2021). *Factory method*. Refactoring.Guru.
     https://refactoring.guru/design-patterns/factory-method
+
+Shvets, A. (2021). *Singleton*. Refactoring.Guru.
+    https://refactoring.guru/design-patterns/singleton
