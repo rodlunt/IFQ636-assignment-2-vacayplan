@@ -111,6 +111,7 @@ Lance's 3rd pattern is the one open slot: Proxy was proposed in place of State (
 
 - Builder (creational): implemented in commit `6965ef3`. `TripQueryBuilder` assembles the authenticated user's trip list query and newest-first sort before `getTrips` passes the built filter/sort to Mongoose (`backend/builders/tripBuilders.js:31`, `backend/controllers/tripController.js:28`). `TripUpdateBuilder` centralises partial update rules for `updateTrip`, applying only supplied non-null fields while preserving omitted values and falsey values such as `0` (`backend/builders/tripBuilders.js:12`, `backend/controllers/tripController.js:55`). This fits VacayPlan because trip update/query construction was previously inline controller assignment logic; moving construction behind fluent builders keeps the controller focused on request flow and makes the allowed update fields explicit.
 - Factory Method (creational): commit `e0b85f0`. `UserResponseFactory` in `backend/factories/userResponseFactory.js` centralises user response construction previously duplicated inline across `authController.js` (registerUser, loginUser, updateUserProfile) and `adminController.js` (createUser, updateUserStatus). Type argument (`auth` or `admin`) controls output shape. Removes `id` vs `_id` inconsistency between controllers. Consumed by both controllers. Justified via Shvets (2021).
+- Facade (structural): commit `30fe755`. `TripService` in `backend/services/tripService.js` encapsulates trip cascade delete (activities then trip) behind `deleteTripWithActivities(trip)`. `UserService` in `backend/services/userService.js` encapsulates user cascade delete (activities, trips, user, plus audit log) behind `deleteUserWithCascade(user, adminUser)`. Both `tripController.deleteTrip` and `adminController.deleteUser` now delegate to one service method instead of coordinating multiple models inline. Anchored to FR-11 (trip cascade) and FR-19 (user cascade). Justified via Shvets (2021).
 - Singleton (creational): commit `ccd56e0`. `Database` class in `backend/config/db.js` turns the shared Mongoose connection from an accidental property (one call site) into a designed guarantee: `getInstance()` is the sole access point, the constructor throws on a second instantiation, and `connect()` stores the first connection promise and reuses it on every later call. `connectDB()` keeps its signature so `server.js` is unchanged - and `server.js` already guards startup behind `require.main`, so production has exactly one call site (latent invariant made explicit). Four unit tests in `backend/test/dbSingleton.test.js` prove instance identity, the construction guard, and the single-connection guarantee. Justified via Shvets (2021).
 - Chain of Responsibility (behavioural): commit `c42bf6d`. `validate(rules)` in `backend/middleware/validateMiddleware.js` completes the admin pipeline: `protect` -> `adminProtect` -> `validate` -> handler. Each link follows the same contract - terminate with the appropriate error code or call `next()`. Validation previously sat duplicated inside controllers, enmeshed with business logic; the new link externalises it into the chain. Wired per route in `adminRoutes.js`; four unit tests verify the validate link in isolation; existing admin route tests pass unchanged through the new link. Justified via Shvets (2021).
 
@@ -140,6 +141,7 @@ Needs: feature branches; PRs; **minimum 2 merge conflicts resolved**; commit his
 | # | Branches | What conflicted | Who resolved | Commit/PR |
 |---|----------|-----------------|--------------|-----------|
 | 1 | feature/factory-method-user-response vs origin/main | document_draft.md (section 3.1), planning/A2_Checklist.md (pattern tracker rows 1-2), planning/A2_Report_Notes.md (talking points) | LDMasina | commit `394d5e5`, PR #66 |
+| 2 | feature/facade-service-layer vs origin/main | planning/A2_Checklist.md (pattern tracker rows 5-6), planning/A2_Report_Notes.md (references section) | LDMasina | commit `4e2d810`, PR #72 |
 
 ---
 
@@ -215,9 +217,8 @@ Critical insight into the development process, challenges, decisions, learning. 
 ### References (APA 7th: append as sources are used)
 
 Shvets, A. (2021). *Chain of responsibility*. Refactoring.Guru. https://refactoring.guru/design-patterns/chain-of-responsibility
-
+Shvets, A. (2021). *Facade*. Refactoring.Guru. https://refactoring.guru/design-patterns/facade
 Shvets, A. (2021). *Factory method*. Refactoring.Guru. https://refactoring.guru/design-patterns/factory-method
-
 Shvets, A. (2021). *Singleton*. Refactoring.Guru. https://refactoring.guru/design-patterns/singleton
 
 *(Note for final assembly: multiple same-author same-year Shvets entries need APA 2021a/2021b/... suffixes, assigned alphabetically by title, with in-text citations updated to match. Do once, at write-up, when the full set is known.)*
