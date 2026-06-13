@@ -96,8 +96,7 @@ Singleton is used as a creational pattern to enforce a single Mongoose connectio
 *(draft here — plus figures: commit graph, PR list, merge-conflict resolution)*
 
 *(figure: kanban board 13 Jun - Blocked column in use with blocked-by comments, EPICs in flight - `planning/screenshots/2026-06-13-kanban-blocked-column.png`)*
-*(figure: PR list 13 Jun - two PRs open, #69 approved fix referencing the #66 review flag)*
-*(figure: PR #66 review thread - review flag, fix PR #69, approval cross-references)*
+*(figure: PR #66 review thread - review flag, fix PR #69, approval cross-references - `planning/screenshots/2026-06-13-pr66-review-thread.png` + `-fix-ref.png`)*
 
 ---
 

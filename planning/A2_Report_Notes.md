@@ -196,7 +196,11 @@ Append every GenAI use: tool, prompt category, task, project area, how verified.
 
 | Date | Tool | Prompt category | Task | Project area | How verified |
 |------|------|-----------------|------|--------------|--------------|
-| *(populate per use)* | | | | | |
+| 2026-06-13 | Claude Code | Copyediting | Copyedit of Rodney-drafted 3.1 Singleton and CoR paragraphs (CoR rationalised to ~95 words) | Report 3.1 | Facts checked against commits ccd56e0/c42bf6d and test files before approval |
+| 2026-06-13 | Claude Code | Drafting | PR #70 description drafted from branch contents | GitHub workflow | Test count verified by running the suite (106 passing); reviewed before posting |
+| 2026-06-13 | Claude Code | Data assembly | Test inventory table on #33 extended (per-file test counts, pending-branch rows) | Section 5 prep | Counts cross-checked against grep of each test file |
+| 2026-06-13 | Claude Code | Diagram generation | 2.9 system overview + use case diagram drafted in diagrams.net format, A1-derived naming | SRS 2.8/2.9 | Components checked against codebase and branches; layout reviewed and hand-adjusted by Rodney |
+| 2026-06-13 | Claude Code | Research summary | A2 task sheet and rubric reviewed to confirm SysML not required and figure obligations | Report planning | Read directly from the task sheet PDF and template |
 
 ### Reflection (running log: append verbatim, no embellishment)
 
