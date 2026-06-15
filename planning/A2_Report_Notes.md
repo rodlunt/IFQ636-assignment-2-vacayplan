@@ -154,7 +154,10 @@ Mocha/Chai unit tests for all CRUD functions; terminal pass/fail screenshots (5.
 **Test case table (ID, Expected Output, Actual Output):**
 | Test Case ID | Function | Expected Output | Actual Output | Pass/Fail |
 |--------------|----------|-----------------|---------------|-----------|
-| *(populate)* | | | | |
+| TC-DEC-01 | `withOwnership` - user owns trip | Attaches trip to `req.trip`; calls wrapped handler; no error response | req.trip set; handler called once; res.status not called | Pass |
+| TC-DEC-02 | `withOwnership` - trip not found | Returns 404 JSON `{ message: 'Trip not found' }`; handler not called | 404 returned; handler not called | Pass |
+| TC-DEC-03 | `withOwnership` - user does not own trip | Returns 404 JSON `{ message: 'Trip not found' }`; handler not called | 404 returned; handler not called | Pass |
+| TC-DEC-04 | `withOwnership` - activity route (`req.params.tripId`) | Resolves trip via `tripId` param; attaches to `req.trip`; calls handler | req.trip set; handler called once | Pass |
 
 **Talking points:** *(populate, test strategy, coverage of create/update/delete/fetch)*
 
