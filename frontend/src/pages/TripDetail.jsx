@@ -14,6 +14,7 @@ import TripHeroCover from '../components/trips/TripHeroCover';
 import TripStatsRow from '../components/trips/TripStatsRow';
 import TripInfo from '../components/trips/TripInfo';
 import BudgetTracker from '../components/trips/BudgetTracker';
+import WeatherForecast from '../components/trips/WeatherForecast';
 
 const TripDetail = () => {
   const { id } = useParams();
@@ -178,6 +179,7 @@ const TripDetail = () => {
           </section>
           <aside className="lg:col-span-1 flex flex-col gap-4">
             <BudgetTracker trip={trip} />
+            <WeatherForecast trip={trip} />
             <TripInfo trip={trip} />
           </aside>
         </div>
