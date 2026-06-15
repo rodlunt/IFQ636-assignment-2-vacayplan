@@ -1,7 +1,9 @@
-
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
+// First link in the request chain (Chain of Responsibility - see
+// middleware/validateMiddleware.js): handles unauthenticated requests
+// with 401, passes authenticated ones to the next link via next().
 const protect = async (req, res, next) => {
     let token;
 

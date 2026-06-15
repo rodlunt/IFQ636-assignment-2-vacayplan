@@ -75,7 +75,11 @@ Builder is used as a creational pattern for trip query/update assembly. `TripQue
 
 Factory Method is used as a creational pattern to centralise user response object construction across VacayPlan's backend. Prior to this implementation, `authController.js` and `adminController.js` each built user response objects inline across five handler functions, producing inconsistent field names between controllers (notably `id` versus `_id`). `UserResponseFactory.create()` accepts a type argument and returns a guaranteed object shape, removing that inconsistency and keeping each controller focused on request flow. As Shvets (2021) notes, the pattern decouples creators from the objects they produce, which is precisely the problem this refactor addresses. The implementation lives in `backend/factories/userResponseFactory.js` (commit `e0b85f0`).
 
+Facade is used as a structural pattern to hide the multi-model cascade complexity of trip and user deletion behind a simplified service interface. Prior to this implementation, `tripController.deleteTrip` and `adminController.deleteUser` each coordinated Trip, Activity, and User models inline, coupling HTTP flow logic directly to data management concerns. `TripService.deleteTripWithActivities()` and `UserService.deleteUserWithCascade()` encapsulate those operations behind single method calls, leaving each controller responsible only for request handling. As Shvets (2021) notes, the Facade pattern provides a simplified interface to a complex subsystem, which is precisely the separation this refactor achieves. The implementation lives in `backend/services/` (commit `30fe755`).
+
 Singleton is used as a creational pattern to enforce a single Mongoose connection across the backend. The previous `connectDB()` opened one connection by coincidence of having a single call site rather than by design; this implementation makes that guarantee explicit. `Database.getInstance()` becomes the sole access point, direct construction of a second instance throws, and `connect()` stores the first connection and reuses it on every subsequent call. The implementation lives in `backend/config/db.js` (commit `ccd56e0`) with four unit tests in `backend/test/dbSingleton.test.js`, and `server.js` remains unchanged. A shared database connection is an expensive resource, and Singleton ensures a class has exactly one instance with a single global access point (Shvets, 2021), turning an accidental property of the codebase into a designed, testable guarantee.
+
+Chain of Responsibility is used as a behavioural pattern to ensure admin requests clear authentication, authorisation, and request-shape validation before business logic runs. Express middleware itself embodies this pattern: `protect` and `adminProtect` already formed a latent chain, but validation sat duplicated inside the controllers, enmeshed with business logic. A new `validate(rules)` link completes the chain, with every link following the same contract - terminate with the appropriate error code, or pass the request along via `next()` (Shvets, 2021). The implementation lives in `backend/middleware/validateMiddleware.js`, wired per route in `adminRoutes.js` (commit `c42bf6d`, four unit tests); the existing admin route tests pass unchanged through the new link.
 
 ### 3.2 Implementation of OOP
 *Classes, Objects, Inheritance, Encapsulation, Polymorphism with code examples and justification.*
@@ -96,8 +100,7 @@ Singleton is used as a creational pattern to enforce a single Mongoose connectio
 *(draft here — plus figures: commit graph, PR list, merge-conflict resolution)*
 
 *(figure: kanban board 13 Jun - Blocked column in use with blocked-by comments, EPICs in flight - `planning/screenshots/2026-06-13-kanban-blocked-column.png`)*
-*(figure: PR list 13 Jun - two PRs open, #69 approved fix referencing the #66 review flag)*
-*(figure: PR #66 review thread - review flag, fix PR #69, approval cross-references)*
+*(figure: PR #66 review thread - review flag, fix PR #69, approval cross-references - `planning/screenshots/2026-06-13-pr66-review-thread.png` + `-fix-ref.png`)*
 
 ---
 
@@ -146,8 +149,13 @@ Singleton is used as a creational pattern to enforce a single Mongoose connectio
 ## References
 *APA 7th. Alphabetical, hanging indent. No invented references.*
 
+Shvets, A. (2021). *Facade*. Refactoring.Guru.
+    https://refactoring.guru/design-patterns/facade
 Shvets, A. (2021). *Factory method*. Refactoring.Guru.
     https://refactoring.guru/design-patterns/factory-method
+
+Shvets, A. (2021). *Chain of responsibility*. Refactoring.Guru.
+    https://refactoring.guru/design-patterns/chain-of-responsibility
 
 Shvets, A. (2021). *Singleton*. Refactoring.Guru.
     https://refactoring.guru/design-patterns/singleton

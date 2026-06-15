@@ -1,13 +1,12 @@
 const User = require('../models/User');
 const Trip = require('../models/Trip');
-const Activity = require('../models/Activity');
 const UserResponseFactory = require('../factories/userResponseFactory');
+const userService = require('../services/userService');
 
+// Required-field validation now runs in the validate chain link (see
+// middleware/validateMiddleware.js + adminRoutes.js) before this handler.
 const createUser = async (req, res) => {
     const { name, email, password, isAdmin } = req.body;
-    if (!name || !email || !password) {
-        return res.status(400).json({ message: 'Name, email, and password are required' });
-    }
     try {
         const userExists = await User.findOne({ email });
         if (userExists) return res.status(409).json({ message: 'Email already registered' });
@@ -39,12 +38,11 @@ const getUserDetail = async (req, res) => {
     }
 };
 
+// Status-value validation now runs in the validate chain link; only the
+// stateful rule (already-active check, needs the DB record) stays here.
 const updateUserStatus = async (req, res) => {
     try {
         const { status } = req.body;
-        if (status !== 'deactivated' && status !== 'active') {
-            return res.status(400).json({ message: "status must be 'active' or 'deactivated'" });
-        }
         const user = await User.findById(req.params.id);
         if (!user) return res.status(404).json({ message: 'User not found' });
         if (status === 'active' && user.status !== 'deactivated') {
@@ -74,14 +72,7 @@ const deleteUser = async (req, res) => {
         const user = await User.findById(req.params.id);
         if (!user) return res.status(404).json({ message: 'User not found' });
 
-        const trips = await Trip.find({ userId: user._id }).select('_id');
-        const tripIds = trips.map((t) => t._id);
-        await Activity.deleteMany({ tripId: { $in: tripIds } });
-        await Trip.deleteMany({ userId: user._id });
-        await user.deleteOne();
-
-        console.log(`[AUDIT] User ${user.email} (id ${user._id}) deleted by admin ${req.user.email} (id ${req.user._id}) at ${new Date().toISOString()}`);
-
+        await userService.deleteUserWithCascade(user, req.user);
         res.status(204).send();
     } catch (error) {
         res.status(500).json({ message: error.message });

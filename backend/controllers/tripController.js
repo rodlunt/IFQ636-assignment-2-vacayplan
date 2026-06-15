@@ -1,6 +1,7 @@
 const Trip = require('../models/Trip');
 const Activity = require('../models/Activity');
 const { TripQueryBuilder, TripUpdateBuilder } = require('../builders/tripBuilders');
+const tripService = require('../services/tripService');
 
 const createTrip = async (req, res) => {
     const { title, destination, startDate, endDate, budget, notes, status, coverPhoto } = req.body;
@@ -81,8 +82,7 @@ const deleteTrip = async (req, res) => {
         if (trip.userId.toString() !== req.user._id.toString()) {
             return res.status(404).json({ message: 'Trip not found' });
         }
-        await Activity.deleteMany({ tripId: trip._id });
-        await trip.deleteOne();
+        await tripService.deleteTripWithActivities(trip);
         res.status(204).send();
     } catch (error) {
         res.status(500).json({ message: error.message });
