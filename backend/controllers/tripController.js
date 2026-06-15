@@ -2,6 +2,7 @@ const Trip = require('../models/Trip');
 const Activity = require('../models/Activity');
 const { TripQueryBuilder, TripUpdateBuilder } = require('../builders/tripBuilders');
 const tripService = require('../services/tripService');
+const { isValidTransition } = require('../state/tripState');
 
 const createTrip = async (req, res) => {
     const { title, destination, startDate, endDate, budget, notes, status, coverPhoto } = req.body;
@@ -59,6 +60,17 @@ const updateTrip = async (req, res) => {
         if (!trip) return res.status(404).json({ message: 'Trip not found' });
         if (trip.userId.toString() !== req.user._id.toString()) {
             return res.status(404).json({ message: 'Trip not found' });
+        }
+
+        // STATE PATTERN (FR-10): only check transition validity if status is
+        // part of this update and is actually changing.
+        if (req.body.status !== undefined && req.body.status !== trip.status) {
+            if (!isValidTransition(trip.status, req.body.status)) {
+                // NFR-10: meaningful error message without exposing internals.
+                return res.status(400).json({
+                    message: `Cannot transition trip from '${trip.status}' to '${req.body.status}'`,
+                });
+            }
         }
 
         new TripUpdateBuilder(trip)
