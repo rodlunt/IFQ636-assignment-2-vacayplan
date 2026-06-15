@@ -2,6 +2,7 @@ const Trip = require('../models/Trip');
 const Activity = require('../models/Activity');
 const { TripQueryBuilder, TripUpdateBuilder } = require('../builders/tripBuilders');
 const tripService = require('../services/tripService');
+const { isValidTransition } = require('../state/tripState');
 
 const createTrip = async (req, res) => {
     const { title, destination, startDate, endDate, budget, notes, status, coverPhoto } = req.body;
@@ -46,10 +47,20 @@ const getTripById = (req, res) => {
 
 const updateTrip = async (req, res) => {
     try {
-        new TripUpdateBuilder(req.trip)
+        const trip = req.trip;
+
+        if (req.body.status !== undefined && req.body.status !== trip.status) {
+            if (!isValidTransition(trip.status, req.body.status)) {
+                return res.status(400).json({
+                    message: `Cannot transition trip from '${trip.status}' to '${req.body.status}'`,
+                });
+            }
+        }
+
+        new TripUpdateBuilder(trip)
             .withFields(req.body)
             .build();
-        const updated = await req.trip.save();
+        const updated = await trip.save();
         res.json(updated);
     } catch (error) {
         if (error.name === 'ValidationError') {

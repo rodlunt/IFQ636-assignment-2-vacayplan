@@ -32,8 +32,8 @@ Provisional carry-overs from A1 *process* (not marks, A1 unmarked):
 | 4 | Decorator | Rodney (#56) | Ownership/audit handler wrappers replacing duplicated checks across trip + activity controllers | `backend/middleware/ownershipDecorator.js` (`withOwnership`) | [x] | [x] |
 | 5 | Chain of Responsibility | Rodney (#58) | Express middleware pipeline (protect -> adminProtect -> validate -> handler) | `backend/middleware/validateMiddleware.js` (`validate` + rules) | [x] | [x] |
 | 6 | Facade | Lance (#55) | Service layer hiding multi-model cascade operations (trip/user deletes) | `backend/services/tripService.js`, `backend/services/userService.js` | [x] | [x] |
-| 7 | Adapter | Joe (#57) | External weather API wrapped behind a common interface (new feature) | *(on implementation)* | [ ] | [ ] |
-| 8 | *(Lance's 3rd - pending: Proxy rescoped / Observer / Command / keep State, see #21 closing comment and #59)* | Lance | | | [ ] | [ ] |
+| 7 | Adapter | Joe (#57) | External weather data for a trip (vendor-decoupled forecasts) | `backend/adapters/weatherAdapter.js` (`WeatherProvider`, `OpenMeteoWeatherAdapter`) | [x] | [x] |
+| 8 | State | Lance (#59) | Trip lifecycle transition validation (FR-10) | `backend/state/tripState.js`, `backend/controllers/tripController.js` | [x] | [x] |
 
 ### Screenshot tracker (template-mandated)
 
