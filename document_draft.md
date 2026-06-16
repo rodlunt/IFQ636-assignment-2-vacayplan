@@ -83,6 +83,8 @@ Singleton is used as a creational pattern to enforce a single Mongoose connectio
 
 Chain of Responsibility is used as a behavioural pattern to ensure admin requests clear authentication, authorisation, and request-shape validation before business logic runs. Express middleware itself embodies this pattern: `protect` and `adminProtect` already formed a latent chain, but validation sat duplicated inside the controllers, enmeshed with business logic. A new `validate(rules)` link completes the chain, with every link following the same contract - terminate with the appropriate error code, or pass the request along via `next()` (Shvets, 2021). The implementation lives in `backend/middleware/validateMiddleware.js`, wired per route in `adminRoutes.js` (commit `c42bf6d`, four unit tests); the existing admin route tests pass unchanged through the new link.
 
+Decorator is used as a structural pattern to eliminate the ownership-check block duplicated across eight trip and activity handlers. Prior to this implementation, each of the three trip handlers (`getTripById`, `updateTrip`, `deleteTrip`) and all five activity handlers independently fetched the trip, returned 404 if not found, and re-verified that the requesting user owned the record - entwining authorisation with business logic in every function. `withOwnership(handler)` in `backend/middleware/ownershipDecorator.js` encapsulates those three steps - fetch, verify, attach as `req.trip` - and returns a new function that delegates to the original handler only when the guard passes. Routes declare the decoration explicitly: `withOwnership(getTripById)` reads as a statement of intent rather than an embedded conditional. As Shvets (2021) notes, the Decorator pattern attaches new behaviour to an object by placing it inside a wrapper; applied to Express handlers, the wrapper is a higher-order function and the added behaviour is the ownership guard. The implementation is wired in `backend/routes/tripRoutes.js` and `activityRoutes.js` (commit `e64ca7d`), with four unit tests in `backend/test/ownershipDecorator.test.js`.
+
 State is used as a behavioural pattern to enforce the trip lifecycle defined in FR-10 (planning -> active -> completed, with completed as terminal). Without this pattern, enforcing valid transitions would require an if/else chain checked against `trip.status` inside `tripController.updateTrip` every time a status update is requested - the exact maintenance problem Shvets (2021) identifies, where "any change to the transition logic may require changing state conditionals in every method." Instead, `PlanningState`, `ActiveState`, and `CompletedState` in `backend/state/tripState.js` each implement `canTransitionTo(newStatus)`, mirroring the Context/State structure of the canonical Python example (Shvets, 2021) where concrete state classes encapsulate state-specific behaviour rather than the context handling it directly. `tripController.updateTrip` checks `isValidTransition()` before applying a status change via `TripUpdateBuilder`, rejecting invalid transitions with a 400 and descriptive message (NFR-10). The implementation lives in `backend/state/tripState.js` (commit `23a0d48`) with six unit tests in `backend/test/trip.test.js` covering valid forward transitions and rejected skips or backward moves.
 
 ### 3.2 Implementation of OOP
@@ -160,6 +162,9 @@ Shvets, A. (2021). *Factory method*. Refactoring.Guru.
 
 Shvets, A. (2021). *Chain of responsibility*. Refactoring.Guru.
     https://refactoring.guru/design-patterns/chain-of-responsibility
+
+Shvets, A. (2021). *Decorator*. Refactoring.Guru.
+    https://refactoring.guru/design-patterns/decorator
 
 Shvets, A. (2021). *Singleton*. Refactoring.Guru.
     https://refactoring.guru/design-patterns/singleton

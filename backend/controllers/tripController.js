@@ -41,32 +41,16 @@ const getTrips = async (req, res) => {
     }
 };
 
-const getTripById = async (req, res) => {
-    try {
-        const trip = await Trip.findById(req.params.id);
-        if (!trip) return res.status(404).json({ message: 'Trip not found' });
-        if (trip.userId.toString() !== req.user._id.toString()) {
-            return res.status(404).json({ message: 'Trip not found' });
-        }
-        res.json(trip);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
+const getTripById = (req, res) => {
+    res.json(req.trip);
 };
 
 const updateTrip = async (req, res) => {
     try {
-        const trip = await Trip.findById(req.params.id);
-        if (!trip) return res.status(404).json({ message: 'Trip not found' });
-        if (trip.userId.toString() !== req.user._id.toString()) {
-            return res.status(404).json({ message: 'Trip not found' });
-        }
+        const trip = req.trip;
 
-        // STATE PATTERN (FR-10): only check transition validity if status is
-        // part of this update and is actually changing.
         if (req.body.status !== undefined && req.body.status !== trip.status) {
             if (!isValidTransition(trip.status, req.body.status)) {
-                // NFR-10: meaningful error message without exposing internals.
                 return res.status(400).json({
                     message: `Cannot transition trip from '${trip.status}' to '${req.body.status}'`,
                 });
@@ -76,7 +60,6 @@ const updateTrip = async (req, res) => {
         new TripUpdateBuilder(trip)
             .withFields(req.body)
             .build();
-
         const updated = await trip.save();
         res.json(updated);
     } catch (error) {
@@ -89,12 +72,7 @@ const updateTrip = async (req, res) => {
 
 const deleteTrip = async (req, res) => {
     try {
-        const trip = await Trip.findById(req.params.id);
-        if (!trip) return res.status(404).json({ message: 'Trip not found' });
-        if (trip.userId.toString() !== req.user._id.toString()) {
-            return res.status(404).json({ message: 'Trip not found' });
-        }
-        await tripService.deleteTripWithActivities(trip);
+        await tripService.deleteTripWithActivities(req.trip);
         res.status(204).send();
     } catch (error) {
         res.status(500).json({ message: error.message });

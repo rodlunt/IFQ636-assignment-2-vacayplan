@@ -1,14 +1,8 @@
-const Trip = require('../models/Trip');
 const Activity = require('../models/Activity');
 
 const addActivity = async (req, res) => {
     try {
-        const trip = await Trip.findById(req.params.tripId);
-        if (!trip) return res.status(404).json({ message: 'Trip not found' });
-        if (trip.userId.toString() !== req.user._id.toString()) {
-            return res.status(404).json({ message: 'Trip not found' });
-        }
-
+        const trip = req.trip;
         const { date, time, location, description, status } = req.body;
 
         if (!date) {
@@ -37,12 +31,7 @@ const addActivity = async (req, res) => {
 
 const listActivitiesForTrip = async (req, res) => {
     try {
-        const trip = await Trip.findById(req.params.tripId);
-        if (!trip) return res.status(404).json({ message: 'Trip not found' });
-        if (trip.userId.toString() !== req.user._id.toString()) {
-            return res.status(404).json({ message: 'Trip not found' });
-        }
-        const activities = await Activity.find({ tripId: trip._id }).sort({ date: 1, time: 1 });
+        const activities = await Activity.find({ tripId: req.trip._id }).sort({ date: 1, time: 1 });
         res.json(activities);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -51,15 +40,9 @@ const listActivitiesForTrip = async (req, res) => {
 
 const updateActivity = async (req, res) => {
     try {
-        const trip = await Trip.findById(req.params.tripId);
-        if (!trip) return res.status(404).json({ message: 'Trip not found' });
-        if (trip.userId.toString() !== req.user._id.toString()) {
-            return res.status(404).json({ message: 'Trip not found' });
-        }
-
         const activity = await Activity.findById(req.params.activityId);
         if (!activity) return res.status(404).json({ message: 'Activity not found' });
-        if (activity.tripId.toString() !== trip._id.toString()) {
+        if (activity.tripId.toString() !== req.trip._id.toString()) {
             return res.status(404).json({ message: 'Activity not found' });
         }
 
@@ -67,7 +50,7 @@ const updateActivity = async (req, res) => {
 
         if (date !== undefined) {
             const activityDate = new Date(date);
-            if (activityDate < trip.startDate || activityDate > trip.endDate) {
+            if (activityDate < req.trip.startDate || activityDate > req.trip.endDate) {
                 return res.status(400).json({ message: 'Activity date must fall within the trip date range' });
             }
             activity.date = activityDate;
@@ -86,15 +69,9 @@ const updateActivity = async (req, res) => {
 
 const deleteActivity = async (req, res) => {
     try {
-        const trip = await Trip.findById(req.params.tripId);
-        if (!trip) return res.status(404).json({ message: 'Trip not found' });
-        if (trip.userId.toString() !== req.user._id.toString()) {
-            return res.status(404).json({ message: 'Trip not found' });
-        }
-
         const activity = await Activity.findById(req.params.activityId);
         if (!activity) return res.status(404).json({ message: 'Activity not found' });
-        if (activity.tripId.toString() !== trip._id.toString()) {
+        if (activity.tripId.toString() !== req.trip._id.toString()) {
             return res.status(404).json({ message: 'Activity not found' });
         }
 
@@ -107,15 +84,9 @@ const deleteActivity = async (req, res) => {
 
 const updateActivityStatus = async (req, res) => {
     try {
-        const trip = await Trip.findById(req.params.tripId);
-        if (!trip) return res.status(404).json({ message: 'Trip not found' });
-        if (trip.userId.toString() !== req.user._id.toString()) {
-            return res.status(404).json({ message: 'Trip not found' });
-        }
-
         const activity = await Activity.findById(req.params.activityId);
         if (!activity) return res.status(404).json({ message: 'Activity not found' });
-        if (activity.tripId.toString() !== trip._id.toString()) {
+        if (activity.tripId.toString() !== req.trip._id.toString()) {
             return res.status(404).json({ message: 'Activity not found' });
         }
 
