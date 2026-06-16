@@ -57,7 +57,7 @@ straight into the template on build day.
 *(draft here — figure)*
 
 ### 2.10 Safety considerations (~100 words)
-*(draft here)*
+VacayPlan's safety approach operates at three layers. At the network layer, Nginx terminates HTTPS before traffic reaches the Express backend; MongoDB Atlas uses TLS on all connections. At the application layer, every authenticated route passes through a three-link middleware chain - `protect` validates the JWT, `adminProtect` enforces role boundaries, and `validate` checks request shape before business logic executes. Trip and activity ownership is verified by `withOwnership` before handlers run, preventing cross-user data access. At the data layer, the Facade pattern ensures deletions cascade across related models, eliminating orphaned records. The weather adapter enforces an 8-second timeout against hung external requests.
 
 ### 2.11 Risk management (~60 words + table)
 *(draft here — table)*
