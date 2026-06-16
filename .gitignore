@@ -59,6 +59,8 @@ frontend/playwright/.cache/
 # Local AI-assistant instructions (Rodney's local layer only; never shared/committed)
 CLAUDE.md
 .claude/
+nextsession.md
+next-session.md
 
 # QUT-owned assessment materials. Present locally for convenience, but NOT published:
 # the repo is public and every team member already has these on Canvas. Republishing
