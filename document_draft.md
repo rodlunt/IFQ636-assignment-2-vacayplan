@@ -60,7 +60,16 @@ straight into the template on build day.
 VacayPlan's safety approach operates at three layers. At the network layer, Nginx terminates HTTPS before traffic reaches the Express backend; MongoDB Atlas uses TLS on all connections. At the application layer, every authenticated route passes through a three-link middleware chain - `protect` validates the JWT, `adminProtect` enforces role boundaries, and `validate` checks request shape before business logic executes. Trip and activity ownership is verified by `withOwnership` before handlers run, preventing cross-user data access. At the data layer, the Facade pattern ensures deletions cascade across related models, eliminating orphaned records. The weather adapter enforces an 8-second timeout against hung external requests.
 
 ### 2.11 Risk management (~60 words + table)
-*(draft here — table)*
+Risk management uses the STRIDE threat model. Each category maps to a VacayPlan-specific risk and the control in place, or a gap where none exists.
+
+| Threat | Risk | Mitigation |
+|--------|------|------------|
+| Spoofing | Forged identity or stolen JWT accesses protected routes | bcrypt hashing; JWT with 30-day expiry; `protect` validates every request |
+| Tampering | User modifies another user's trip or activity | `withOwnership` checks ownership before write handlers run |
+| Repudiation | User denies a trip or activity change | No audit log (risk gap); JWT validates identity |
+| Information disclosure | Trip data exposed to wrong user; credentials leaked | Ownership check on all read routes; TLS on Atlas; `.env` gitignored |
+| Denial of service | Unbounded requests exhaust server; weather API calls hang | 8-second timeout on weather adapter; no bulk endpoints |
+| Elevation of privilege | Regular user accesses admin-only routes | `adminProtect` checks `isAdmin` flag; admin routes mounted separately |
 
 ---
 
