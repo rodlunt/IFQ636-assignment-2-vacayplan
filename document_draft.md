@@ -62,14 +62,14 @@ VacayPlan's safety approach operates at three layers. At the network layer, Ngin
 ### 2.11 Risk management (~60 words + table)
 Risk management uses the STRIDE threat model. Each category maps to a VacayPlan-specific risk and the control in place, or a gap where none exists.
 
-| Threat | Risk | Mitigation |
-|--------|------|------------|
-| Spoofing | Forged identity or stolen JWT accesses protected routes | bcrypt hashing; JWT with 30-day expiry; `protect` validates every request |
-| Tampering | User modifies another user's trip or activity | `withOwnership` checks ownership before write handlers run |
-| Repudiation | User denies a trip or activity change | No audit log (risk gap); JWT validates identity |
-| Information disclosure | Trip data exposed to wrong user; credentials leaked | Ownership check on all read routes; TLS on Atlas; `.env` gitignored |
-| Denial of service | Unbounded requests exhaust server; weather API calls hang | 8-second timeout on weather adapter; no bulk endpoints |
-| Elevation of privilege | Regular user accesses admin-only routes | `adminProtect` checks `isAdmin` flag; admin routes mounted separately |
+| Threat                  | VacayPlan risk                                            | Mitigation                                                       | Status    |
+|:------------------------|:----------------------------------------------------------|:-----------------------------------------------------------------|:---------:|
+| Spoofing                | Forged identity or stolen JWT accesses protected routes   | bcrypt hashing; JWT 30-day expiry; `protect` on every request    | Mitigated |
+| Tampering               | User modifies another user's trip or activity             | `withOwnership` checks ownership before write handlers run       | Mitigated |
+| Repudiation             | User denies a trip or activity change                     | No audit log implemented                                         | Gap       |
+| Information disclosure  | Trip data exposed to wrong user; credentials leaked       | Ownership checks on all routes; TLS on Atlas; `.env` gitignored  | Mitigated |
+| Denial of service       | Unbounded requests exhaust server; weather API hangs      | 8-second timeout on weather adapter; no bulk endpoints           | Mitigated |
+| Elevation of privilege  | Regular user accesses admin-only routes                   | `adminProtect` checks `isAdmin`; admin routes mounted separately | Mitigated |
 
 ---
 
