@@ -20,55 +20,54 @@ straight into the template on build day.
 
 ---
 
-## Project overview
-*Budget ~150–200 words.* Real-world application, what it does, who it serves, why VacayPlan was chosen as the base to extend.
+## Project overview (~150-200 words)
+*Real-world application, what it does, who it serves, why VacayPlan was chosen as the base to extend.*
 
 *(draft here)*
 
 ---
 
-## SRS documentation
-*Budget ~600–800 words across 2.1–2.11.*
+## SRS documentation (~600-800 words total across 2.1-2.11)
 
-### 2.1 Purpose
+### 2.1 Purpose (~40 words)
 *(draft here)*
 
-### 2.2 Problem statement
+### 2.2 Problem statement (~80 words)
 *(draft here)*
 
-### 2.3 Scope
+### 2.3 Scope (~60 words)
 *(draft here)*
 
-### 2.4 User characteristics
+### 2.4 User characteristics (~50 words)
 *(draft here)*
 
-### 2.5 Constraints
+### 2.5 Constraints (~50 words)
 *(draft here)*
 
-### 2.6 Functional requirements
+### 2.6 Functional requirements (~30 words + table)
 *(draft here)*
 
-### 2.7 Non-functional requirements (NFRs)
+### 2.7 Non-functional requirements (~30 words + table)
 *(draft here)*
 
-### 2.8 User interface mockups/wireframes (Low Fidelity Design)
+### 2.8 User interface mockups/wireframes (~20 words + figure)
 *(draft here — figure)*
 
-### 2.9 Complete system diagram
+### 2.9 Complete system diagram (~20 words + figure)
 *(draft here — figure)*
 
-### 2.10 Safety considerations
+### 2.10 Safety considerations (~100 words)
 *(draft here)*
 
-### 2.11 Risk management
+### 2.11 Risk management (~60 words + table)
 *(draft here — table)*
 
 ---
 
-## Implementation (coding) using design pattern and OOP principles
-*Budget ~650–800 words. This is the 28-pt criterion.*
+## Implementation (coding) using design pattern and OOP principles (~650-800 words)
+*This is the 28-pt criterion.*
 
-### 3.1 Design pattern
+### 3.1 Design pattern (~400-500 words, currently ~891 - trim before submission)
 *Minimum 7 patterns, each justified and demonstrated in backend code. Pattern-count ladder: 7=HD, 6=D, 5=C, 4=P. Live committed list lives in `planning/A2_Checklist.md` pattern tracker.*
 
 Adapter is used as a structural pattern to wrap an external weather service. `WeatherProvider` defines the forecast interface the application depends on, and `OpenMeteoWeatherAdapter` translates Open-Meteo's coordinate-based, parallel-array, WMO-coded responses into a single normalised forecast object. The implementation lives in `backend/adapters/weatherAdapter.js` and is used by `backend/controllers/weatherController.js` to serve `GET /api/trips/:id/weather` (commit `37b337c`). This is appropriate for VacayPlan because trip weather is a new feature that should stay decoupled from any one vendor; changing weather providers means adding another `WeatherProvider` subclass without touching controllers, routes, or the frontend.
@@ -87,15 +86,14 @@ Decorator is used as a structural pattern to eliminate the ownership-check block
 
 State is used as a behavioural pattern to enforce the trip lifecycle defined in FR-10 (planning -> active -> completed, with completed as terminal). Without this pattern, enforcing valid transitions would require an if/else chain checked against `trip.status` inside `tripController.updateTrip` every time a status update is requested - the exact maintenance problem Shvets (2021) identifies, where "any change to the transition logic may require changing state conditionals in every method." Instead, `PlanningState`, `ActiveState`, and `CompletedState` in `backend/state/tripState.js` each implement `canTransitionTo(newStatus)`, mirroring the Context/State structure of the canonical Python example (Shvets, 2021) where concrete state classes encapsulate state-specific behaviour rather than the context handling it directly. `tripController.updateTrip` checks `isValidTransition()` before applying a status change via `TripUpdateBuilder`, rejecting invalid transitions with a 400 and descriptive message (NFR-10). The implementation lives in `backend/state/tripState.js` (commit `23a0d48`) with six unit tests in `backend/test/trip.test.js` covering valid forward transitions and rejected skips or backward moves.
 
-### 3.2 Implementation of OOP
+### 3.2 Implementation of OOP (~250-300 words)
 *Classes, Objects, Inheritance, Encapsulation, Polymorphism with code examples and justification.*
 
 *(draft here)*
 
 ---
 
-## Team collaboration via GitHub
-*Budget ~200–250 words.*
+## Team collaboration via GitHub (~200-250 words)
 
 ### 4.1 Team collaboration statement
 *(draft here)*
@@ -110,35 +108,35 @@ State is used as a behavioural pattern to enforce the trip lifecycle defined in 
 
 ---
 
-## Functional testing (only unit testing)
-*Budget ~200–250 words. Mocha/Chai unit tests for all CRUD functions.*
+## Functional testing (only unit testing) (~200-250 words)
+*Mocha/Chai unit tests for all CRUD functions.*
 
 *(draft here — plus 5.1 terminal pass/fail screenshots and the test-case table)*
 
 ---
 
-## API testing using Postman
-*Budget ~150–200 words. All endpoints incl. error handling; exported collection committed.*
+## API testing using Postman (~150-200 words)
+*All endpoints incl. error handling; exported collection committed.*
 
 *(draft here — plus 6.1 request/response screenshots and the 6.2 collection link)*
 
 ---
 
-## CI/CD pipeline setup
-*Budget ~150–200 words. GitHub Actions build/test/deploy on push; public URL; pm2 status.*
+## CI/CD pipeline setup (~150-200 words)
+*GitHub Actions build/test/deploy on push; public URL; pm2 status.*
 
 *(draft here — plus 7.1 workflow YML, 7.2 pm2 status, 7.3 Run Test page, 7.4 app with public IP)*
 
 ---
 
-## Discussion and conclusion
-*Budget ~200–250 words. Team discussion of the development process; conclusion.*
+## Discussion and conclusion (~200-250 words)
+*Team discussion of the development process; conclusion.*
 
 *(draft here)*
 
 ---
 
-## Use of GenAI
+## Use of GenAI + Reflection (~150-200 words, counted in total)
 *Mandatory disclosure. Source table: `planning/A2_Report_Notes.md` §9. QUT CiteWrite AI-citation format.*
 
 *(draft here)*
