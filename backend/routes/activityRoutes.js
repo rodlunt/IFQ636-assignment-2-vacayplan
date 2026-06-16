@@ -7,13 +7,14 @@ const {
     deleteActivity,
     updateActivityStatus,
 } = require('../controllers/activityController');
+const { withOwnership } = require('../middleware/ownershipDecorator');
 
 const router = express.Router({ mergeParams: true });
 
-router.post('/', protect, addActivity);
-router.get('/', protect, listActivitiesForTrip);
-router.put('/:activityId', protect, updateActivity);
-router.delete('/:activityId', protect, deleteActivity);
-router.patch('/:activityId/status', protect, updateActivityStatus);
+router.post('/', protect, withOwnership(addActivity));
+router.get('/', protect, withOwnership(listActivitiesForTrip));
+router.put('/:activityId', protect, withOwnership(updateActivity));
+router.delete('/:activityId', protect, withOwnership(deleteActivity));
+router.patch('/:activityId/status', protect, withOwnership(updateActivityStatus));
 
 module.exports = router;

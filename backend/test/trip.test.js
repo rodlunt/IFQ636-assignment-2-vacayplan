@@ -290,6 +290,133 @@ describe('Trip Controller (/api/trips)', () => {
         });
     });
 
+    describe('Trip status transitions (State pattern, FR-10)', () => {
+        it('allows planning to active transition', async () => {
+            const tripId = new mongoose.Types.ObjectId();
+            const trip = {
+                _id: tripId,
+                destination: 'Sydney',
+                status: 'planning',
+                userId,
+                save: sinon.stub().resolvesThis(),
+            };
+            sinon.stub(Trip, 'findById').resolves(trip);
+
+            const res = await chai.request(app)
+                .put(`/api/trips/${tripId}`)
+                .set('Authorization', `Bearer ${token}`)
+                .send({ status: 'active' });
+
+            expect(res).to.have.status(200);
+            expect(trip.status).to.equal('active');
+        });
+
+        it('allows active to completed transition', async () => {
+            const tripId = new mongoose.Types.ObjectId();
+            const trip = {
+                _id: tripId,
+                destination: 'Sydney',
+                status: 'active',
+                userId,
+                save: sinon.stub().resolvesThis(),
+            };
+            sinon.stub(Trip, 'findById').resolves(trip);
+
+            const res = await chai.request(app)
+                .put(`/api/trips/${tripId}`)
+                .set('Authorization', `Bearer ${token}`)
+                .send({ status: 'completed' });
+
+            expect(res).to.have.status(200);
+            expect(trip.status).to.equal('completed');
+        });
+
+        it('rejects planning to completed transition (skipping active)', async () => {
+            const tripId = new mongoose.Types.ObjectId();
+            const trip = {
+                _id: tripId,
+                destination: 'Sydney',
+                status: 'planning',
+                userId,
+                save: sinon.stub().resolvesThis(),
+            };
+            sinon.stub(Trip, 'findById').resolves(trip);
+
+            const res = await chai.request(app)
+                .put(`/api/trips/${tripId}`)
+                .set('Authorization', `Bearer ${token}`)
+                .send({ status: 'completed' });
+
+            expect(res).to.have.status(400);
+            expect(res.body.message).to.match(/cannot transition/i);
+            expect(trip.status).to.equal('planning');
+        });
+
+        it('rejects completed to active transition (backwards)', async () => {
+            const tripId = new mongoose.Types.ObjectId();
+            const trip = {
+                _id: tripId,
+                destination: 'Sydney',
+                status: 'completed',
+                userId,
+                save: sinon.stub().resolvesThis(),
+            };
+            sinon.stub(Trip, 'findById').resolves(trip);
+
+            const res = await chai.request(app)
+                .put(`/api/trips/${tripId}`)
+                .set('Authorization', `Bearer ${token}`)
+                .send({ status: 'active' });
+
+            expect(res).to.have.status(400);
+            expect(trip.status).to.equal('completed');
+        });
+
+        it('applies other field changes when status is unchanged', async () => {
+            const tripId = new mongoose.Types.ObjectId();
+            const trip = {
+                _id: tripId,
+                destination: 'Sydney',
+                notes: 'old notes',
+                status: 'planning',
+                userId,
+                save: sinon.stub().resolvesThis(),
+            };
+            sinon.stub(Trip, 'findById').resolves(trip);
+
+            const res = await chai.request(app)
+                .put(`/api/trips/${tripId}`)
+                .set('Authorization', `Bearer ${token}`)
+                .send({ status: 'planning', notes: 'updated notes' });
+
+            expect(res).to.have.status(200);
+            expect(trip.notes).to.equal('updated notes');
+            expect(trip.status).to.equal('planning');
+        });
+
+        it('applies other field changes when status is absent from the request', async () => {
+            const tripId = new mongoose.Types.ObjectId();
+            const trip = {
+                _id: tripId,
+                destination: 'Sydney',
+                notes: 'old notes',
+                status: 'active',
+                userId,
+                save: sinon.stub().resolvesThis(),
+            };
+            sinon.stub(Trip, 'findById').resolves(trip);
+
+            const res = await chai.request(app)
+                .put(`/api/trips/${tripId}`)
+                .set('Authorization', `Bearer ${token}`)
+                .send({ notes: 'updated notes' });
+
+            expect(res).to.have.status(200);
+            expect(trip.notes).to.equal('updated notes');
+            expect(trip.status).to.equal('active');
+        });
+    });
+
     describe('DELETE /api/trips/:id', () => {
         it('deletes the trip when owned by the authenticated user and returns 204 No Content', async () => {
             const tripId = new mongoose.Types.ObjectId();

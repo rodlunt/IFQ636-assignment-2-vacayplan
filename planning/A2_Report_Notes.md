@@ -109,11 +109,14 @@ Lance's 3rd pattern confirmed as State (email 2026-06-09, reiterated at 13 Jun c
 
 **Talking points / justifications:** *(populate per committed pattern)*
 
+- Adapter (structural): implemented in commit `37b337c`. `OpenMeteoWeatherAdapter` wraps the Open-Meteo geocoding and forecast API behind the `WeatherProvider` interface, reconciling the vendor's coordinate lookup, parallel-array response, and integer WMO weather codes into a normalised forecast DTO (`backend/adapters/weatherAdapter.js:49`, `backend/adapters/weatherAdapter.js:64`). The trip-scoped endpoint `GET /api/trips/:id/weather` resolves a trip's destination and dates through that interface without depending on the concrete vendor (`backend/controllers/weatherController.js:9`, `backend/routes/tripRoutes.js:17`). This fits VacayPlan because the trip detail page needs destination weather as a new feature while staying decoupled from any single provider; swapping vendors means adding another `WeatherProvider` subclass, leaving the controller, route, and frontend untouched.
 - Builder (creational): implemented in commit `6965ef3`. `TripQueryBuilder` assembles the authenticated user's trip list query and newest-first sort before `getTrips` passes the built filter/sort to Mongoose (`backend/builders/tripBuilders.js:31`, `backend/controllers/tripController.js:28`). `TripUpdateBuilder` centralises partial update rules for `updateTrip`, applying only supplied non-null fields while preserving omitted values and falsey values such as `0` (`backend/builders/tripBuilders.js:12`, `backend/controllers/tripController.js:55`). This fits VacayPlan because trip update/query construction was previously inline controller assignment logic; moving construction behind fluent builders keeps the controller focused on request flow and makes the allowed update fields explicit.
 - Factory Method (creational): commit `e0b85f0`. `UserResponseFactory` in `backend/factories/userResponseFactory.js` centralises user response construction previously duplicated inline across `authController.js` (registerUser, loginUser, updateUserProfile) and `adminController.js` (createUser, updateUserStatus). Type argument (`auth` or `admin`) controls output shape. Removes `id` vs `_id` inconsistency between controllers. Consumed by both controllers. Justified via Shvets (2021).
 - Facade (structural): commit `30fe755`. `TripService` in `backend/services/tripService.js` encapsulates trip cascade delete (activities then trip) behind `deleteTripWithActivities(trip)`. `UserService` in `backend/services/userService.js` encapsulates user cascade delete (activities, trips, user, plus audit log) behind `deleteUserWithCascade(user, adminUser)`. Both `tripController.deleteTrip` and `adminController.deleteUser` now delegate to one service method instead of coordinating multiple models inline. Anchored to FR-11 (trip cascade) and FR-19 (user cascade). Justified via Shvets (2021).
 - Singleton (creational): commit `ccd56e0`. `Database` class in `backend/config/db.js` turns the shared Mongoose connection from an accidental property (one call site) into a designed guarantee: `getInstance()` is the sole access point, the constructor throws on a second instantiation, and `connect()` stores the first connection promise and reuses it on every later call. `connectDB()` keeps its signature so `server.js` is unchanged - and `server.js` already guards startup behind `require.main`, so production has exactly one call site (latent invariant made explicit). Four unit tests in `backend/test/dbSingleton.test.js` prove instance identity, the construction guard, and the single-connection guarantee. Justified via Shvets (2021).
 - Chain of Responsibility (behavioural): commit `c42bf6d`. `validate(rules)` in `backend/middleware/validateMiddleware.js` completes the admin pipeline: `protect` -> `adminProtect` -> `validate` -> handler. Each link follows the same contract - terminate with the appropriate error code or call `next()`. Validation previously sat duplicated inside controllers, enmeshed with business logic; the new link externalises it into the chain. Wired per route in `adminRoutes.js`; four unit tests verify the validate link in isolation; existing admin route tests pass unchanged through the new link. Justified via Shvets (2021).
+- Decorator (structural): commit `e64ca7d`. `withOwnership(handler)` in `backend/middleware/ownershipDecorator.js` eliminates the trip-ownership check duplicated across 8 handlers (3 in tripController, 5 in activityController). The decorator fetches the trip, verifies `trip.userId === req.user._id`, attaches it as `req.trip`, then delegates to the wrapped handler - or terminates with 404. Routes wire it explicitly: `withOwnership(getTripById)` in `tripRoutes.js`, `withOwnership(addActivity)` etc. in `activityRoutes.js`. Controllers simplified to use `req.trip` rather than fetching the trip themselves. Four unit tests in `backend/test/ownershipDecorator.test.js` cover the happy path, 404 not-found, 404 not-owned, and tripId param alias. Justified via Shvets (2021).
+- State (behavioural): commit `23a0d48`. `PlanningState`, `ActiveState`, and `CompletedState` in `backend/state/tripState.js` encapsulate which trip lifecycle transitions are valid (FR-10: planning -> active -> completed, completed is terminal). `tripController.updateTrip` checks this before applying a status change, rejecting invalid transitions with a 400 (NFR-10). Six unit tests in `backend/test/trip.test.js` cover valid and invalid transitions. Justified via Shvets (2021).
 
 ### 3.2 Implementation of OOP (~250–300 words)
 Demonstrate Classes, Objects, Inheritance, Encapsulation, Polymorphism with code examples and justification.
@@ -152,7 +155,57 @@ Mocha/Chai unit tests for all CRUD functions; terminal pass/fail screenshots (5.
 **Test case table (ID, Expected Output, Actual Output):**
 | Test Case ID | Function | Expected Output | Actual Output | Pass/Fail |
 |--------------|----------|-----------------|---------------|-----------|
-| *(populate)* | | | | |
+| TC-SIN-01 | `Database.getInstance()` | Same instance returned on every call | Same object reference returned | Pass |
+| TC-SIN-02 | `new Database()` after instance exists | Throws on direct construction | Error thrown | Pass |
+| TC-SIN-03 | `db.connect()` called twice | `mongoose.connect` called exactly once | One connection opened | Pass |
+| TC-SIN-04 | `db.connect()` after established | Returns same connection promise | Existing promise reused | Pass |
+| TC-BLD-01 | `TripQueryBuilder.build()` | Filter `{ userId }` and sort `{ createdAt: -1 }` | Correct filter and sort | Pass |
+| TC-BLD-02 | `TripUpdateBuilder.build()` | Only present fields applied; falsey values (0, '') preserved | Partial update applied correctly | Pass |
+| TC-FM-01 | `UserResponseFactory.create('auth')` | Response with `id`, `name`, `email`, `token`, `isAdmin` (boolean) | Correct auth shape returned | Pass |
+| TC-FM-02 | `UserResponseFactory.create('auth')` isAdmin cast | `isAdmin` is strict boolean regardless of source type | Boolean cast applied | Pass |
+| TC-FM-03 | `UserResponseFactory.create('admin')` | Response with `_id`, `name`, `email`, `isAdmin`; no `token` | Correct admin shape returned | Pass |
+| TC-FM-04 | `UserResponseFactory.create('admin')` isAdmin cast | `isAdmin` is strict boolean | Boolean cast applied | Pass |
+| TC-FM-05 | `UserResponseFactory.create('unknown')` | Throws for unrecognised type | Error thrown | Pass |
+| TC-COR-01 | `validate([rules])` - all rules pass | `next()` called once; no error response sent | next() called; no status/json | Pass |
+| TC-COR-02 | `validate([rules])` - rule fails | 400 returned; `next()` not called; chain stops | 400 JSON; chain stopped | Pass |
+| TC-COR-03 | `requireUserFields` | Returns null when all fields present; error string when any missing | Correct per-field validation | Pass |
+| TC-COR-04 | `requireValidStatus` | Returns null for `active`/`deactivated`; error string otherwise | Correct status validation | Pass |
+| TC-FAC-01 | `TripService.deleteTripWithActivities()` | `Activity.deleteMany` and `trip.deleteOne` both called | Both called | Pass |
+| TC-FAC-02 | `TripService.deleteTripWithActivities()` ordering | `Activity.deleteMany` called before `trip.deleteOne` | Correct deletion order | Pass |
+| TC-FAC-03 | `UserService.deleteUserWithCascade()` | Activities, trips, then user deleted in sequence | Correct cascade order | Pass |
+| TC-FAC-04 | `UserService.deleteUserWithCascade()` audit | `[AUDIT]` log written with user and admin identity | Audit log written | Pass |
+| TC-ADP-01 | `OpenMeteoWeatherAdapter.getForecast()` nominal | Normalised forecast DTO with geocoded destination and daily data | Correct DTO returned | Pass |
+| TC-ADP-02 | `getForecast()` destination parsing | Uses leading segment of "City, Country" for geocoding | Leading segment used | Pass |
+| TC-ADP-03 | `getForecast()` country disambiguation | Country segment used to select correct geocoding candidate | Correct candidate selected | Pass |
+| TC-ADP-04 | `getForecast()` no country given | Falls back to most populous geocoding candidate | Most populous selected | Pass |
+| TC-ADP-05 | `getForecast()` unmapped WMO code | Maps unknown codes to "Unknown"; preserves zero precipitation | Unknown mapped; 0 preserved | Pass |
+| TC-ADP-06 | `getForecast()` vendor omits daily data | Returns empty daily array | Empty array returned | Pass |
+| TC-ADP-07 | `getForecast()` blank destination | Throws without making network call | Error thrown pre-network | Pass |
+| TC-ADP-08 | `getForecast()` no location found | Throws when geocoding returns no match | Error thrown | Pass |
+| TC-ADP-09 | `getForecast()` dates outside forecast window | Returns empty forecast | Empty forecast returned | Pass |
+| TC-ADP-10 | `getForecast()` forecast request fails | Surfaces vendor error reason | Vendor error surfaced | Pass |
+| TC-ADP-11 | `getForecast()` vendor timeout | Aborts and reports timeout | Timeout error thrown | Pass |
+| TC-ADP-12 | `WeatherProvider` base class | Refuses direct use; error thrown on direct instantiation | Error thrown | Pass |
+| TC-ADP-13 | `GET /api/trips/:id/weather` owned trip | 200 with forecast DTO | 200 with forecast | Pass |
+| TC-ADP-14 | `GET /api/trips/:id/weather?q=place` | Uses `q` param as destination instead of trip destination | Override destination used | Pass |
+| TC-ADP-15 | `GET /api/trips/:id/weather` trip not found | 404; provider not called | 404 returned | Pass |
+| TC-ADP-16 | `GET /api/trips/:id/weather` another user's trip | 404 (no resource enumeration) | 404 returned | Pass |
+| TC-ADP-17 | `GET /api/trips/:id/weather` no auth | 401 | 401 returned | Pass |
+| TC-ADP-18 | `GET /api/trips/:id/weather` provider fails | 502 | 502 returned | Pass |
+| TC-DEC-01 | `withOwnership` - user owns trip | Attaches trip to `req.trip`; calls wrapped handler | req.trip set; handler called once | Pass |
+| TC-DEC-02 | `withOwnership` - trip not found | 404 `{ message: 'Trip not found' }`; handler not called | 404 returned; handler not called | Pass |
+| TC-DEC-03 | `withOwnership` - user does not own trip | 404 `{ message: 'Trip not found' }`; handler not called | 404 returned; handler not called | Pass |
+| TC-DEC-04 | `withOwnership` - activity route (`req.params.tripId`) | Resolves trip via `tripId` param; attaches to `req.trip`; calls handler | req.trip set; handler called once | Pass |
+| TC-CRUD-01 | `createTrip` valid body | 201 with created trip document | 201 returned | Pass |
+| TC-CRUD-02 | `getTrips` authenticated | 200 with user's trips ordered newest first | 200 ordered correctly | Pass |
+| TC-CRUD-03 | `getTripById` owned | 200 with matching trip | 200 returned | Pass |
+| TC-CRUD-04 | `getTripById` not owned | 404 (no resource enumeration) | 404 returned | Pass |
+| TC-CRUD-05 | `updateTrip` owned | 200 with updated trip | 200 returned | Pass |
+| TC-CRUD-06 | `updateTrip` partial body | Only supplied fields updated; omitted fields unchanged | Partial update applied | Pass |
+| TC-CRUD-07 | `deleteTrip` owned | 204 No Content; trip and activities removed | 204 returned | Pass |
+| TC-CRUD-08 | `deleteTrip` cascade ordering | Activities deleted before trip document | Correct cascade order | Pass |
+| TC-CRUD-09 | `addActivity` valid | 201 with activity document | 201 returned | Pass |
+| TC-CRUD-10 | `listActivitiesForTrip` | 200 with activities sorted by date then time | 200 sorted correctly | Pass |
 
 **Talking points:** *(populate, test strategy, coverage of create/update/delete/fetch)*
 
@@ -220,6 +273,8 @@ Shvets, A. (2021). *Chain of responsibility*. Refactoring.Guru. https://refactor
 Shvets, A. (2021). *Facade*. Refactoring.Guru. https://refactoring.guru/design-patterns/facade
 Shvets, A. (2021). *Factory method*. Refactoring.Guru. https://refactoring.guru/design-patterns/factory-method
 Shvets, A. (2021). *Singleton*. Refactoring.Guru. https://refactoring.guru/design-patterns/singleton
+Shvets, A. (2021). *State*. Refactoring.Guru. https://refactoring.guru/design-patterns/state
+Shvets, A. (2021). *State in Python*. Refactoring.Guru. https://refactoring.guru/design-patterns/state/python/example
 
 *(Note for final assembly: multiple same-author same-year Shvets entries need APA 2021a/2021b/... suffixes, assigned alphabetically by title, with in-text citations updated to match. Do once, at write-up, when the full set is known.)*
 
