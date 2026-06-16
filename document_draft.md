@@ -41,6 +41,10 @@ straight into the template on build day.
 ### 2.4 User characteristics (~50 words)
 *(draft here)*
 
+> **@jrmilburn** - the use case diagram belongs here. It shows the two actors (Traveller and Administrator) and their interactions with the system, which maps directly to user characteristics. Image is at `planning/diagrams/A2_system_diagram_use_case.png` - drop it in with a caption and a sentence introducing the actors when you draft this section.
+>
+> ![Figure 2: VacayPlan use case diagram](planning/diagrams/A2_system_diagram_use_case.png)
+
 ### 2.5 Constraints (~50 words)
 *(draft here)*
 
@@ -56,7 +60,7 @@ straight into the template on build day.
 ### 2.9 Complete system diagram (~20 words + figure)
 Figure 1 presents the complete VacayPlan system architecture. The React SPA communicates via HTTPS through an Nginx reverse proxy to the Express backend on AWS EC2, which connects to MongoDB Atlas and the Open-Meteo weather API via a CI/CD pipeline managed by GitHub Actions.
 
-*[Figure 1: VacayPlan complete system diagram]*
+![Figure 1: VacayPlan complete system diagram](planning/diagrams/A2_system_diagram_2.9.png)
 
 ### 2.10 Safety considerations (~100 words)
 VacayPlan's safety approach operates at three layers. At the network layer, Nginx terminates HTTPS before traffic reaches the Express backend; MongoDB Atlas uses TLS on all connections. At the application layer, every authenticated route passes through a three-link middleware chain - `protect` validates the JWT, `adminProtect` enforces role boundaries, and `validate` checks request shape before business logic executes. Trip and activity ownership is verified by `withOwnership` before handlers run, preventing cross-user data access. At the data layer, the Facade pattern ensures deletions cascade across related models, eliminating orphaned records. The weather adapter enforces an 8-second timeout against hung external requests.
