@@ -127,6 +127,11 @@ State is used as a behavioural pattern to enforce the trip lifecycle defined in 
 
 *(figure: kanban board 13 Jun - Blocked column in use with blocked-by comments, EPICs in flight - `planning/screenshots/2026-06-13-kanban-blocked-column.png`)*
 *(figure: PR #66 review thread - review flag, fix PR #69, approval cross-references - `planning/screenshots/2026-06-13-pr66-review-thread.png` + `-fix-ref.png`)*
+*(figure: current issues board showing open tasks with assignees - `planning/screenshots/2026-06-17-issues-board.png`)*
+*(figure: PR #71 multi-turn review thread - Joe requests review, Rodney flags conflict concern, Joe confirms resolution with team thumbs-up - `planning/screenshots/2026-06-17-pr71-discussion.png`)*
+*(figure: PR #74 merge conflict resolution - Rodney's comment documenting how the A2_Report_Notes.md conflict was resolved - `planning/screenshots/2026-06-17-pr74-conflict-resolution.png`)*
+*(figure: PR #81 team coordination - cross-team word count targets communicated via PR comment - `planning/screenshots/2026-06-17-pr81-team-comms.png`)*
+*(figure: contributor graph showing commit activity from all three team members - `planning/screenshots/2026-06-17-network-graph.png`)*
 
 ---
 
