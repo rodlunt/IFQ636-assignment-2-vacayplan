@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>Wireframe - Dashboard (Desktop)</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: sans-serif; background: #f5f5f5; color: #333; width: 1280px; }
+  .label { font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 0.05em; }
+  .box { background: #ddd; border-radius: 4px; display: flex; align-items: center; justify-content: center; }
+  .box-outline { background: #f0f0f0; border: 2px dashed #ccc; border-radius: 4px; display: flex; align-items: center; justify-content: center; }
+
+  /* Nav */
+  nav { background: #fff; border-bottom: 1px solid #ddd; height: 56px; padding: 0 32px; display: flex; align-items: center; justify-content: space-between; }
+  .nav-logo { width: 120px; height: 28px; background: #bbb; border-radius: 4px; }
+  .nav-links { display: flex; gap: 24px; }
+  .nav-link { width: 80px; height: 16px; background: #ddd; border-radius: 3px; }
+  .nav-avatar { width: 36px; height: 36px; background: #bbb; border-radius: 50%; }
+
+  /* Page */
+  .page { padding: 32px; max-width: 1200px; margin: 0 auto; }
+
+  /* Greeting */
+  .greeting { margin-bottom: 24px; }
+  .greeting-title { width: 280px; height: 28px; background: #ccc; border-radius: 4px; margin-bottom: 8px; }
+  .greeting-sub { width: 180px; height: 16px; background: #ddd; border-radius: 3px; }
+
+  /* Stats row */
+  .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
+  .stat-card { background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 20px; }
+  .stat-icon { width: 32px; height: 32px; background: #ddd; border-radius: 6px; margin-bottom: 12px; }
+  .stat-value { width: 48px; height: 28px; background: #bbb; border-radius: 4px; margin-bottom: 6px; }
+  .stat-label { width: 100px; height: 14px; background: #ddd; border-radius: 3px; margin-bottom: 4px; }
+  .stat-sub { width: 80px; height: 12px; background: #e8e8e8; border-radius: 3px; }
+
+  /* Upcoming card */
+  .upcoming { background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 20px; margin-bottom: 32px; }
+  .section-heading { width: 180px; height: 18px; background: #bbb; border-radius: 4px; margin-bottom: 16px; }
+  .upcoming-row { display: flex; gap: 12px; align-items: center; padding: 10px 0; border-bottom: 1px solid #eee; }
+  .upcoming-dest { width: 120px; height: 14px; background: #ccc; border-radius: 3px; }
+  .upcoming-date { width: 90px; height: 12px; background: #ddd; border-radius: 3px; }
+  .upcoming-badge { width: 60px; height: 20px; background: #ddd; border-radius: 12px; margin-left: auto; }
+
+  /* Trip cards */
+  .section-title-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .section-title { width: 80px; height: 20px; background: #bbb; border-radius: 4px; }
+  .add-btn { width: 100px; height: 32px; background: #aaa; border-radius: 6px; }
+  .trip-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .trip-card { background: #fff; border: 1px solid #ddd; border-radius: 10px; overflow: hidden; }
+  .trip-cover { height: 120px; background: #ccc; }
+  .trip-body { padding: 14px; }
+  .trip-name { width: 140px; height: 18px; background: #bbb; border-radius: 4px; margin-bottom: 8px; }
+  .trip-dates { width: 110px; height: 13px; background: #ddd; border-radius: 3px; margin-bottom: 6px; }
+  .trip-badge { width: 64px; height: 20px; background: #ddd; border-radius: 12px; margin-bottom: 10px; }
+  .trip-footer { display: flex; gap: 8px; }
+  .trip-meta { width: 60px; height: 12px; background: #e8e8e8; border-radius: 3px; }
+
+  /* Addition annotation */
+  .addition-wrap { position: relative; border: 2px solid #c0392b; border-radius: 6px; padding: 10px; margin-bottom: 16px; }
+  .addition-tag { position: absolute; top: -11px; left: 10px; background: #c0392b; color: #fff; font-size: 10px; font-weight: 700; letter-spacing: 0.06em; padding: 1px 7px; border-radius: 3px; text-transform: uppercase; }
+  .annotation-text { font-size: 11px; color: #c0392b; font-style: italic; margin-bottom: 8px; }
+
+  /* Watermark */
+  .wf-label { position: fixed; top: 8px; right: 12px; font-size: 10px; color: #bbb; text-transform: uppercase; letter-spacing: 0.1em; }
+</style>
+</head>
+<body>
+
+<div class="wf-label">Wireframe — Dashboard (Desktop 1280px)</div>
+
+<nav>
+  <div class="nav-logo"></div>
+  <div class="nav-links">
+    <div class="nav-link"></div>
+    <div class="nav-link"></div>
+    <div class="nav-link"></div>
+  </div>
+  <div style="display:flex;gap:12px;align-items:center;">
+    <div style="width:80px;height:16px;background:#ddd;border-radius:3px;"></div>
+    <div class="nav-avatar"></div>
+  </div>
+</nav>
+
+<div class="page">
+
+  <div class="greeting">
+    <div class="label" style="margin-bottom:6px;">Greeting</div>
+    <div class="greeting-title"></div>
+    <div class="greeting-sub"></div>
+  </div>
+
+  <div class="label" style="margin-bottom:8px;">Stats cards</div>
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-icon"></div>
+      <div class="stat-value"></div>
+      <div class="stat-label"></div>
+      <div class="stat-sub"></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon"></div>
+      <div class="stat-value"></div>
+      <div class="stat-label"></div>
+      <div class="stat-sub"></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon"></div>
+      <div class="stat-value"></div>
+      <div class="stat-label"></div>
+      <div class="stat-sub"></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon"></div>
+      <div class="stat-value"></div>
+      <div class="stat-label"></div>
+      <div class="stat-sub"></div>
+    </div>
+  </div>
+
+  <div class="label" style="margin-bottom:8px;">Upcoming departures</div>
+  <div class="upcoming" style="margin-bottom:32px;">
+    <div class="section-heading"></div>
+    <div class="upcoming-row">
+      <div class="upcoming-dest"></div>
+      <div class="upcoming-date"></div>
+      <div class="upcoming-badge"></div>
+    </div>
+    <div class="upcoming-row">
+      <div class="upcoming-dest" style="width:100px;"></div>
+      <div class="upcoming-date" style="width:80px;"></div>
+      <div class="upcoming-badge"></div>
+    </div>
+  </div>
+
+  <div class="section-title-row">
+    <div>
+      <div class="label" style="margin-bottom:4px;">Trip cards</div>
+      <div class="section-title"></div>
+    </div>
+    <div class="add-btn"></div>
+  </div>
+  <div class="addition-wrap" style="margin-bottom:12px;">
+    <div class="addition-tag">Addition</div>
+    <div class="annotation-text">Status badge on each card reflects trip lifecycle (State pattern: planning / active / completed)</div>
+  </div>
+  <div class="trip-grid">
+    <div class="trip-card">
+      <div class="trip-cover"></div>
+      <div class="trip-body">
+        <div class="trip-name"></div>
+        <div class="trip-dates"></div>
+        <div class="trip-badge"></div>
+        <div class="trip-footer">
+          <div class="trip-meta"></div>
+          <div class="trip-meta"></div>
+        </div>
+      </div>
+    </div>
+    <div class="trip-card">
+      <div class="trip-cover"></div>
+      <div class="trip-body">
+        <div class="trip-name"></div>
+        <div class="trip-dates"></div>
+        <div class="trip-badge"></div>
+        <div class="trip-footer">
+          <div class="trip-meta"></div>
+          <div class="trip-meta"></div>
+        </div>
+      </div>
+    </div>
+    <div class="trip-card">
+      <div class="trip-cover"></div>
+      <div class="trip-body">
+        <div class="trip-name"></div>
+        <div class="trip-dates"></div>
+        <div class="trip-badge"></div>
+        <div class="trip-footer">
+          <div class="trip-meta"></div>
+          <div class="trip-meta"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

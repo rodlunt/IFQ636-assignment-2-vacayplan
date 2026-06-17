@@ -51,7 +51,14 @@ straight into the template on build day.
 *(draft here)*
 
 ### 2.8 User interface mockups/wireframes (~20 words + figure)
-*(draft here — figure)*
+Low-fidelity wireframes show the three primary screens at desktop (1280px) and mobile (390px) breakpoints. Red annotations identify pattern-backed additions.
+
+![Figure 2a: Dashboard — desktop](planning/diagrams/wireframe-dashboard-desktop.png)
+![Figure 2b: Dashboard — mobile](planning/diagrams/wireframe-dashboard-mobile.png)
+![Figure 3a: Trip Detail — desktop](planning/diagrams/wireframe-trip-detail-desktop.png)
+![Figure 3b: Trip Detail — mobile](planning/diagrams/wireframe-trip-detail-mobile.png)
+![Figure 4a: Edit Trip — desktop](planning/diagrams/wireframe-edit-trip-desktop.png)
+![Figure 4b: Edit Trip — mobile](planning/diagrams/wireframe-edit-trip-mobile.png)
 
 ### 2.9 Complete system diagram (~20 words + figure)
 *(draft here — figure)*
