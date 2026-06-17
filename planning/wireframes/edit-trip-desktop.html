@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>Wireframe - Edit Trip (Desktop)</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: sans-serif; background: #f5f5f5; color: #333; width: 1280px; }
+  .label { font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 0.05em; }
+
+  nav { background: #fff; border-bottom: 1px solid #ddd; height: 56px; padding: 0 32px; display: flex; align-items: center; justify-content: space-between; }
+  .nav-logo { width: 120px; height: 28px; background: #bbb; border-radius: 4px; }
+  .nav-avatar { width: 36px; height: 36px; background: #bbb; border-radius: 50%; }
+
+  .page { padding: 28px 32px; max-width: 1200px; margin: 0 auto; }
+
+  .breadcrumb { display: flex; gap: 8px; align-items: center; margin-bottom: 20px; }
+  .bc-item { width: 80px; height: 14px; background: #ddd; border-radius: 3px; }
+  .bc-sep { width: 8px; height: 14px; background: #e8e8e8; border-radius: 2px; }
+
+  .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; }
+  .page-title { width: 140px; height: 32px; background: #bbb; border-radius: 4px; }
+  .last-saved { width: 160px; height: 14px; background: #ddd; border-radius: 3px; }
+
+  .grid { display: grid; grid-template-columns: 5fr 7fr; gap: 24px; align-items: start; }
+
+  /* Left col */
+  .cover-card { background: #ccc; border-radius: 12px; height: 220px; position: relative; margin-bottom: 16px; }
+  .cover-overlay { position: absolute; bottom: 0; left: 0; right: 0; padding: 16px; border-radius: 0 0 12px 12px; }
+  .cover-title { width: 160px; height: 22px; background: rgba(255,255,255,0.4); border-radius: 4px; margin-bottom: 6px; }
+  .cover-dates { width: 120px; height: 14px; background: rgba(255,255,255,0.35); border-radius: 3px; margin-bottom: 6px; }
+  .cover-badge { width: 70px; height: 22px; background: rgba(255,255,255,0.45); border-radius: 12px; }
+
+  .danger-card { background: #fff; border: 1px solid #f0c0c0; border-radius: 10px; padding: 16px; }
+  .danger-heading { width: 90px; height: 14px; background: #e0b0b0; border-radius: 3px; margin-bottom: 10px; }
+  .danger-text { width: 200px; height: 12px; background: #f0d0d0; border-radius: 3px; margin-bottom: 12px; }
+  .danger-btn { width: 100px; height: 32px; background: #e0b0b0; border-radius: 6px; }
+
+  /* Right col - form */
+  .form-card { background: #fff; border: 1px solid #ddd; border-radius: 10px; padding: 20px; }
+  .form-heading { width: 120px; height: 22px; background: #bbb; border-radius: 4px; margin-bottom: 6px; }
+  .form-subtext { width: 260px; height: 14px; background: #e0e0e0; border-radius: 3px; margin-bottom: 20px; }
+  .field-label { width: 80px; height: 12px; background: #ccc; border-radius: 3px; margin-bottom: 6px; }
+  .field-input { width: 100%; height: 38px; background: #f0f0f0; border: 1px solid #ddd; border-radius: 6px; margin-bottom: 16px; }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 4px; }
+  .field-row-inner { margin-bottom: 16px; }
+  .field-select { width: 100%; height: 38px; background: #f0f0f0; border: 1px solid #ddd; border-radius: 6px; margin-bottom: 16px; position: relative; }
+  .select-arrow { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); width: 12px; height: 12px; background: #bbb; border-radius: 2px; }
+  .field-textarea { width: 100%; height: 80px; background: #f0f0f0; border: 1px solid #ddd; border-radius: 6px; margin-bottom: 16px; }
+  .form-footer { display: flex; justify-content: space-between; align-items: center; padding-top: 16px; border-top: 1px solid #eee; }
+  .footer-hint { display: flex; gap: 6px; align-items: center; }
+  .hint-icon { width: 16px; height: 16px; background: #ddd; border-radius: 3px; }
+  .hint-text { width: 160px; height: 12px; background: #e0e0e0; border-radius: 3px; }
+  .btn-group { display: flex; gap: 10px; }
+  .btn-secondary { width: 80px; height: 36px; background: #ddd; border-radius: 6px; }
+  .btn-primary { width: 110px; height: 36px; background: #aaa; border-radius: 6px; }
+
+  /* Addition annotation */
+  .addition-wrap { position: relative; border: 2px solid #c0392b; border-radius: 6px; padding: 10px; margin-bottom: 16px; }
+  .addition-tag { position: absolute; top: -11px; left: 10px; background: #c0392b; color: #fff; font-size: 10px; font-weight: 700; letter-spacing: 0.06em; padding: 1px 7px; border-radius: 3px; text-transform: uppercase; }
+  .annotation-text { font-size: 11px; color: #c0392b; font-style: italic; margin-bottom: 8px; }
+
+  .wf-label { position: fixed; top: 8px; right: 12px; font-size: 10px; color: #bbb; text-transform: uppercase; letter-spacing: 0.1em; }
+</style>
+</head>
+<body>
+<div class="wf-label">Wireframe — Edit Trip (Desktop 1280px)</div>
+
+<nav>
+  <div class="nav-logo"></div>
+  <div style="display:flex;gap:12px;align-items:center;">
+    <div style="width:80px;height:16px;background:#ddd;border-radius:3px;"></div>
+    <div class="nav-avatar"></div>
+  </div>
+</nav>
+
+<div class="page">
+  <div class="breadcrumb">
+    <div class="bc-item"></div>
+    <div class="bc-sep"></div>
+    <div class="bc-item" style="width:60px;"></div>
+    <div class="bc-sep"></div>
+    <div class="bc-item" style="width:110px;"></div>
+  </div>
+
+  <div class="page-header">
+    <div class="page-title"></div>
+    <div class="last-saved"></div>
+  </div>
+
+  <div class="grid">
+    <div>
+      <div class="label" style="margin-bottom:6px;">Cover preview</div>
+      <div class="cover-card">
+        <div class="cover-overlay">
+          <div class="cover-title"></div>
+          <div class="cover-dates"></div>
+          <div class="cover-badge"></div>
+        </div>
+      </div>
+
+      <div class="label" style="margin-bottom:6px;">Danger zone</div>
+      <div class="danger-card">
+        <div class="danger-heading"></div>
+        <div class="danger-text"></div>
+        <div class="danger-btn"></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="label" style="margin-bottom:6px;">Edit form</div>
+      <div class="form-card">
+        <div class="form-heading"></div>
+        <div class="form-subtext"></div>
+
+        <div class="field-label"></div>
+        <div class="field-input"></div>
+
+        <div class="field-row">
+          <div class="field-row-inner">
+            <div class="field-label" style="width:64px;"></div>
+            <div class="field-input"></div>
+          </div>
+          <div class="field-row-inner">
+            <div class="field-label" style="width:56px;"></div>
+            <div class="field-input"></div>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field-row-inner">
+            <div class="field-label" style="width:72px;"></div>
+            <div class="field-input"></div>
+          </div>
+          <div class="field-row-inner">
+            <div class="addition-wrap">
+              <div class="addition-tag">Addition</div>
+              <div class="annotation-text">Status dropdown — planning / active / completed<br>Status now saved to backend (State pattern validates transition)</div>
+            </div>
+            <div class="field-label" style="width:44px;"></div>
+            <div class="field-select" style="position:relative;">
+              <div class="select-arrow"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="field-label" style="width:48px;"></div>
+        <div class="field-textarea"></div>
+
+        <div class="form-footer">
+          <div class="footer-hint">
+            <div class="hint-icon"></div>
+            <div class="hint-text"></div>
+          </div>
+          <div class="btn-group">
+            <div class="btn-secondary"></div>
+            <div class="btn-primary"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
