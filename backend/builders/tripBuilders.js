@@ -1,3 +1,8 @@
+// DESIGN PATTERN - BUILDER
+// Used to construct Trip update and query objects step-by-step through
+// a fluent interface. This centralises object construction logic and
+// promotes code reuse across controllers.
+
 const TRIP_UPDATE_FIELDS = [
     'title',
     'destination',
