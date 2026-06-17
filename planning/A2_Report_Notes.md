@@ -284,6 +284,12 @@ Critical insight into the development process, challenges, decisions, learning. 
 
 - 2026-06-04: A2 workspace created; A1 archived. *(append real moments as they happen)*
 - 2026-06-13 (Rodney): After Joe suggested the weather API as the Adapter anchor, it was clear there is real benefit in wider ideas being included in the application - one person can't think of everything. It is almost an obvious addition, and not something I had seen in a travel application before, yet such an obviously beneficial one.
+- 2026-06-13 (Lance): Restricting Admin from deleting Booking records felt like a constraint until the audit and regulatory logic made it obvious. Design rules that look like restrictions usually reflect real domain needs.
+- 2026-06-13 (Lance): Merge conflict #2 was genuinely useful. Rod's CoR entry had updated the implementation reference while my Facade branch still showed it as pending. Resolving it made both entries more accurate than either branch alone.
+- 2026-06-13 (Lance): Chose Ubuntu 24.04 over the module's specified 22.04 for Node 22 compatibility. A deliberate deviation worth documenting. Modules written against older tooling is a real consulting pattern.
+- 2026-06-13 (Lance): Rod's PEM key request revealed a misunderstanding about GitHub Actions runner registration. The token generates on his side, not mine. Debugging teammate assumptions is a real collaboration skill.
+- 2026-06-17 (Lance): Putting State validation inside TripUpdateBuilder was tempting but would have broken its single responsibility. A separate validation layer before the builder kept each component's job clean.
+- 2026-06-17 (Lance): The CI/CD pipeline stalling due to 594MB of accumulated runner update binaries was a production-realistic problem. Fixing it required distinguishing between the runner service, PM2, and the deployed app.
 - 2026-06-13 (Rodney): Post-merge review of PR #66 caught a frontend regression that both green test suites missed (detail raised as a comment on the PR). Lesson: backend unit tests prove handler behaviour, not API contract safety - the frontend tests mock the old response shape, so a contract change can pass everything and still break the app.
 
 ### References (APA 7th: append as sources are used)
