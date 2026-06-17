@@ -53,19 +53,27 @@ We chose to extend this base project as it was already structured in a way that 
 ## Section 2: SRS documentation (~600–800 words across 2.1–2.11)
 
 ### 2.1 Purpose
-*(populate)*
+
+VacayPlan lets independent travellers plan a trip in one place: record it, schedule activities within its dates, check the destination forecast, and review everything as a day-by-day itinerary. An administrator manages platform accounts.
 
 ### 2.2 Problem statement
-*(populate, compelling problem definition is an HD signal)*
 
-### 2.3 Scope
-*(populate, clear system boundaries; what's in and out)*
+Planning a multi-day trip ends up scattered across tools that were never built for it — notes apps, spreadsheets, booking emails, group chats, a weather site. None of them treat a trip as an object. Activities come loose of the days they belong to, the itinerary never exists as one view, and the forecast sits somewhere separate. Travellers hold the plan together in their heads. VacayPlan gives trip planning a single, trip-shaped home.
+
+### 2.3 Scope (~66 words)
+
+In scope: traveller authentication (register, log in, log out, update profile); full trip CRUD; activities scheduled within a trip's date range; the day-by-day itinerary view; a destination weather forecast; and an administrator panel for account management and trip visibility. 
+Out of scope: bookings, payments, and reservations; multi-user sharing or collaboration; native mobile apps; and email or push notifications. VacayPlan is a planning record, not a booking engine.
 
 ### 2.4 User characteristics
-*(populate, user types / personas)*
+
+VacayPlan has two actors (use case diagram, Figure 2). The Traveller is a non-technical end user planning personal holidays. They expect a fast, self-explanatory interface on desktop or mobile, and own only their own trips and activities. The Administrator is a trusted operator who manages user accounts and can view all trips for moderation.
+
+![Figure 2: VacayPlan use case diagram] (planning/diagrams/A2_system_use_case_diagram.png)
 
 ### 2.5 Constraints
-*(populate, technical, platform, team, time constraints)*
+
+The build extends the existing VacayPlan base, so the stack is fixed: Node.js/Express, MongoDB Atlas, and React, deployed to a single AWS EC2 instance via a GitHub Actions CI/CD pipeline. External services such as Open-Meteo (which requires no API key) must be free-tier. Academic requirements include at least seven backend design patterns, OOP principles, and unit and API testing. Three people, roughly four weeks. Open-Meteo provides a running weather forecast of up to 16 days into the future so trips beyond that will not have a forecast available.
 
 ### 2.6 Functional requirements
 *(populate, complete enumeration; reuse/extend the A1 VacayPlan R-catalogue)*
@@ -277,6 +285,7 @@ Append every GenAI use: tool, prompt category, task, project area, how verified.
 | 2026-06-13 | Claude Code | Data assembly | Test inventory table on #33 extended (per-file test counts, pending-branch rows) | Section 5 prep | Counts cross-checked against grep of each test file |
 | 2026-06-13 | Claude Code | Diagram generation | 2.9 system overview + use case diagram drafted in diagrams.net format, A1-derived naming | SRS 2.8/2.9 | Components checked against codebase and branches; layout reviewed and hand-adjusted by Rodney |
 | 2026-06-13 | Claude Code | Research summary | A2 task sheet and rubric reviewed to confirm SysML not required and figure obligations | Report planning | Read directly from the task sheet PDF and template |
+| 2026-06-18 | Claude Code | Drafting | Drafted SRS 2.1–2.5 (purpose, problem, scope, user characteristics, constraints) from project facts | SRS 2.1–2.5 | Claims checked against README, backend models/routes/controllers, and the use case diagram (Figure 2) |
 
 ### Reflection (running log: append verbatim, no embellishment)
 
