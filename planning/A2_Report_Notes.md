@@ -43,7 +43,10 @@ Members: Rodney, Lance, Joseph ("Joe", He/Him). Full names, contact details (pho
 
 What it needs: describe the chosen real-world application; what it does, who it serves, why this base was chosen for extension.
 
-**Talking points:** *(populate after base-project decision)*
+VacayPlan is a full-stack vacation-planning web application for travellers to organise multi-day trips. It is built on Node.js, Express and MongoDB for the backend, React and TailwindCSS for the frontend and CI/CD using github actions to an AWS EC2 instance. An authenticated user creates a trip with a destination and date range, schedules activities and reviews the resulting day-by-day itinerary. As an extension of the initial implemention, a user can also view the weather forecast at their destination for the dates of their trip. A seperate administrator role moderates the platform, moderating user accounts and viewing all trips. The application therefore serves two audiences: everyday travellers planning holidays and an admin user responsible for platform oversight.
+
+We chose to extend this base project as it was already structured in a way that made extension straightforward. Its clean seperation of trips, activities and user management lets each part of the system be reasoned about and modified in isolation. That structure gave each domain a natural home for new design patterns - such as Builder, Adapter and Decorator - allow us to strengthen the architecture and apply object-oriented principles without reworking the existing foundations.
+
 
 ---
 
