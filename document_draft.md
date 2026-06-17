@@ -41,6 +41,10 @@ straight into the template on build day.
 ### 2.4 User characteristics (~50 words)
 *(draft here)*
 
+> **@jrmilburn** - the use case diagram belongs here. It shows the two actors (Traveller and Administrator) and their interactions with the system, which maps directly to user characteristics. Image is at `planning/diagrams/A2_system_diagram_use_case.png` - drop it in with a caption and a sentence introducing the actors when you draft this section.
+>
+> ![Figure 2: VacayPlan use case diagram](planning/diagrams/A2_system_diagram_use_case.png)
+
 ### 2.5 Constraints (~50 words)
 *(draft here)*
 
@@ -51,16 +55,34 @@ straight into the template on build day.
 *(draft here)*
 
 ### 2.8 User interface mockups/wireframes (~20 words + figure)
-*(draft here — figure)*
+Low-fidelity wireframes for Dashboard, Trip Detail, and Edit Trip at desktop and mobile breakpoints. Red boxes mark pattern-backed additions.
+
+![Fig 2a](planning/diagrams/wireframe-dashboard-desktop.png)
+![Fig 2b](planning/diagrams/wireframe-dashboard-mobile.png)
+![Fig 3a](planning/diagrams/wireframe-trip-detail-desktop.png)
+![Fig 3b](planning/diagrams/wireframe-trip-detail-mobile.png)
+![Fig 4a](planning/diagrams/wireframe-edit-trip-desktop.png)
+![Fig 4b](planning/diagrams/wireframe-edit-trip-mobile.png)
 
 ### 2.9 Complete system diagram (~20 words + figure)
-*(draft here — figure)*
+Figure 1 presents the complete VacayPlan system architecture. The React SPA communicates via HTTPS through an Nginx reverse proxy to the Express backend on AWS EC2, which connects to MongoDB Atlas and the Open-Meteo weather API via a CI/CD pipeline managed by GitHub Actions.
+
+![Figure 1: VacayPlan complete system diagram](planning/diagrams/A2_system_diagram_2.9.png)
 
 ### 2.10 Safety considerations (~100 words)
-*(draft here)*
+VacayPlan's safety approach operates at three layers. At the network layer, Nginx terminates HTTPS before traffic reaches the Express backend; MongoDB Atlas uses TLS on all connections. At the application layer, every authenticated route passes through a three-link middleware chain - `protect` validates the JWT, `adminProtect` enforces role boundaries, and `validate` checks request shape before business logic executes. Trip and activity ownership is verified by `withOwnership` before handlers run, preventing cross-user data access. At the data layer, the Facade pattern ensures deletions cascade across related models, eliminating orphaned records. The weather adapter enforces an 8-second timeout against hung external requests.
 
 ### 2.11 Risk management (~60 words + table)
-*(draft here — table)*
+Risk management uses the STRIDE threat model. Each category maps to a VacayPlan-specific risk and the control in place, or a gap where none exists.
+
+| Threat                  | VacayPlan risk                                            | Mitigation                                                       | Status    |
+|:------------------------|:----------------------------------------------------------|:-----------------------------------------------------------------|:---------:|
+| Spoofing                | Forged identity or stolen JWT accesses protected routes   | bcrypt hashing; JWT 30-day expiry; `protect` on every request    | Mitigated |
+| Tampering               | User modifies another user's trip or activity             | `withOwnership` checks ownership before write handlers run       | Mitigated |
+| Repudiation             | User denies a trip or activity change                     | No audit log implemented                                         | Gap       |
+| Information disclosure  | Trip data exposed to wrong user; credentials leaked       | Ownership checks on all routes; TLS on Atlas; `.env` gitignored  | Mitigated |
+| Denial of service       | Unbounded requests exhaust server; weather API hangs      | 8-second timeout on weather adapter; no bulk endpoints           | Mitigated |
+| Elevation of privilege  | Regular user accesses admin-only routes                   | `adminProtect` checks `isAdmin`; admin routes mounted separately | Mitigated |
 
 ---
 
