@@ -229,12 +229,28 @@ All endpoints tested incl. error handling; exported collection committed to repo
 
 GitHub Actions build/test/deploy; runs on push; public URL + pm2 status.
 
-- 7.1 workflow YML: *(populate → tracker)*
-- 7.2 EC2 pm2 status: *(populate → tracker)*
-- 7.3 GitHub "Run Test" page: *(populate → tracker)*
-- 7.4 app first page, public IP highlighted: *(populate → tracker)*
+**Instance details:**
+- Name: `VacayPlan_IFQ636_A2`, Instance ID: `i-06076d755ec7b3cbf`
+- Public IP: `3.26.14.122`, type: t3.medium, Ubuntu 24.04 LTS
+- Stack: Node 22.22.3 (nvm), yarn, PM2, nginx 1.24.0
+- Repo cloned to `~/vacationplan_IFQ636/` (matches ci.yml rsync target paths)
+- PM2 processes: `vacayplan-backend` (port 5001), `vacayplan-frontend` (port 3000, SPA mode)
+- nginx reverse proxy: port 80 -> 3000 (frontend /), 5001 (backend /api)
+- PM2 startup configured via systemd (`pm2-ubuntu.service`) -- survives reboots
+- Self-hosted runner registered to team repo by Rod (admin-only token generation)
+- GitHub Actions secrets set: MONGO_URI, JWT_SECRET, PORT, PROD
 
-**Reusable from A1:** nginx + dual PM2 + self-hosted runner architecture (see archived `A1_Day3_SideTasks_Playbook.md` and the IFQ636 CI/CD memory). Adapt for the team repo.
+**Pipeline structure (ci.yml):**
+- Trigger: push to main
+- Single job: build + test + deploy on self-hosted runner
+- Steps: checkout -> Node 22 setup -> stop PM2 -> backend install + audit -> frontend install + build (REACT_APP_API_URL=http://3.26.14.122) -> frontend audit -> deploy frontend via rsync -> run backend tests -> deploy backend via rsync -> write .env from PROD secret -> install backend deps at deploy path -> sync nginx config -> restart PM2 -> seed users + trips
+- Deviations from unit template: secret echo step omitted (logs are public); yarn audit gates added (advisory, continue-on-error)
+
+**Evidence captures:**
+- 7.1 workflow YML: `planning/screenshots/2026-06-17-cicd-workflow-yml-ldmasina.png`
+- 7.2 EC2 pm2 status: `planning/screenshots/2026-06-17-pm2-status-vacayplan-a2-ldmasina.png`
+- 7.3 GitHub Run Test page: *(pending green CI/CD run)*
+- 7.4 app first page, public IP: `planning/screenshots/2026-06-17-vacayplan-a2-live-browser-ldmasina.png`
 
 **Talking points:** *(populate)*
 
