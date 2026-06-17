@@ -69,7 +69,7 @@ Out of scope: bookings, payments, and reservations; multi-user sharing or collab
 
 VacayPlan has two actors (use case diagram, Figure 2). The Traveller is a non-technical end user planning personal holidays. They expect a fast, self-explanatory interface on desktop or mobile, and own only their own trips and activities. The Administrator is a trusted operator who manages user accounts and can view all trips for moderation.
 
-![Figure 2: VacayPlan use case diagram] (planning/diagrams/A2_system_use_case_diagram.png)
+![Figure 2: VacayPlan use case diagram](planning/diagrams/A2_system_diagram_use_case.png)
 
 ### 2.5 Constraints
 
