@@ -43,11 +43,15 @@ const validate = (values) => {
   return '';
 };
 
+// status is included so the backend State pattern can validate the transition
+// (planning -> active -> completed). Without it the dropdown change is silently
+// dropped and the trip's status never updates.
 const buildPayload = (values) => ({
   destination: values.destination.trim(),
   startDate: values.startDate,
   endDate: values.endDate,
   budget: values.budget === '' ? null : Number(values.budget),
+  status: values.status,
   notes: values.notes.trim() || null,
 });
 
