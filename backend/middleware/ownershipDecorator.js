@@ -1,3 +1,11 @@
+// DESIGN PATTERN - DECORATOR - withOwnership wraps a route handler and adds
+// ownership verification without modifying the handler itself. The decorator
+// fetches the trip, checks the requesting user owns it, and attaches it as
+// req.trip before delegating to the wrapped handler - or terminates with 404
+// if the trip does not exist or belongs to another user. This eliminates the
+// ownership-check block that was duplicated across 8 handlers (3 in
+// tripController, 5 in activityController). Routes wire the decoration
+// explicitly: withOwnership(handler) in tripRoutes.js and activityRoutes.js.
 const Trip = require('../models/Trip');
 
 const withOwnership = (handler) => async (req, res) => {
