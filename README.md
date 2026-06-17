@@ -12,15 +12,15 @@ This repository is the **team build for IFQ636 Assignment 2**, extending the Vac
 
 ## Public URL
 
-**Live deploy (inherited base):** http://3.106.8.108/
+**Live deploy:** http://3.26.14.122/
 
-Deployed continuously from `main` on every push via GitHub Actions and PM2 behind Nginx (see report CI/CD section). *The team's own A2 deploy target is to be confirmed; update this once the A2 pipeline is live.*
+Deployed continuously from `main` on every push via GitHub Actions and PM2 behind Nginx (see report CI/CD section).
 
 ---
 
 ## Test credentials
 
-Two accounts are seeded into the production database on every CI/CD deploy. Sign in at http://3.106.8.108/login with either:
+Two accounts are seeded into the production database on every CI/CD deploy. Sign in at http://3.26.14.122/login with either:
 
 | Role | Email | Password |
 |---|---|---|
@@ -90,14 +90,11 @@ In production these are injected via the `PROD` GitHub Actions environment secre
 # Backend (Mocha + Chai + Sinon)
 cd backend && npm test
 
-# Frontend unit (React Testing Library)
-cd frontend && CI=true npm test
-
 # Frontend e2e (Playwright, against the live deploy by default)
 cd frontend && npm run e2e:live
 ```
 
-The Playwright pack runs four browser projects (chromium, firefox, mobile-chromium, tablet-chromium) and asserts auth, CRUD, admin, and responsive flows against http://3.106.8.108.
+The Playwright pack runs four browser projects (chromium, firefox, mobile-chromium, tablet-chromium) and asserts auth, CRUD, admin, and responsive flows against http://3.26.14.122.
 
 ---
 
@@ -128,4 +125,4 @@ deploy/       Nginx site config used by the deploy job
 - **Issues:** tracked in this repo; filter by person or assignment section using the saved VS Code queries in `.vscode/settings.json` (install the recommended GitHub Pull Requests and Issues extension)
 - **Planning docs:** [`planning/`](planning/) — delivery plan, checklist, live report notes, meeting log
 - **Working report draft:** [`document_draft.md`](document_draft.md)
-- **Figma file (A1 base, reuse for low-fidelity wireframes):** https://www.figma.com/design/XWuyTEpiatmky3N3OPOzNr/
+- **Wireframes:** [`planning/wireframes/`](planning/wireframes/) — HTML low-fidelity wireframes for Dashboard, Trip Detail, and Edit Trip (desktop + mobile)
