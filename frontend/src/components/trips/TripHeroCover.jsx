@@ -14,6 +14,12 @@ const STATUS_LABEL = {
   completed: 'Completed',
 };
 
+const STATUS_TONE = {
+  active: 'success',
+  planning: 'warning',
+  completed: 'neutral',
+};
+
 const formatDateRange = (start, end) => {
   if (!start || !end) return '';
   const opts = { month: 'short', day: 'numeric', year: 'numeric' };
@@ -23,6 +29,7 @@ const formatDateRange = (start, end) => {
 const TripHeroCover = ({ trip, onDelete }) => {
   const status = (trip.status || 'planning').toLowerCase();
   const statusLabel = STATUS_LABEL[status] || status;
+  const statusTone = STATUS_TONE[status] || 'neutral';
   const coverSrc = trip.coverPhoto || tripCoverImage(trip.destination);
 
   return (
@@ -39,7 +46,7 @@ const TripHeroCover = ({ trip, onDelete }) => {
       />
       <div className="relative flex flex-col justify-between p-5 md:p-8 h-full text-ink-inverse">
         <div className="flex justify-end">
-          <Badge tone="warning" variant="solid" className="shadow-sm">
+          <Badge tone={statusTone} variant="solid" className="shadow-sm">
             {statusLabel}
           </Badge>
         </div>
