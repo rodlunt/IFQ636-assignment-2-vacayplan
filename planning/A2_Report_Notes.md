@@ -18,7 +18,7 @@
 | Base A1 project chosen | **VacayPlan** (`rodlunt/vacationplan_IFQ636`), agreed 2026-06-06 | ✅ |
 | Shared GitHub repo URL | https://github.com/rodlunt/IFQ636-assignment-2-vacayplan (public) | ✅ |
 | Project board (kanban) | https://github.com/users/rodlunt/projects/12 | ✅ |
-| Public IP / live URL | *(populate after deploy)* | ⬜ |
+| Public IP / live URL | http://3.26.14.122/ | ✅ |
 | Postman collection link (GitHub) | *(populate after export)* | ⬜ |
 | Figma / wireframe link | *(populate)* | ⬜ |
 | Rodney's contribution scope | Patterns: Singleton (#52), Decorator (#56), Chain of Responsibility (#58); further roles (tests / CI-CD / SRS sections) pending split | 🟡 partial |
@@ -257,7 +257,7 @@ GitHub Actions build/test/deploy; runs on push; public URL + pm2 status.
 **Evidence captures:**
 - 7.1 workflow YML: `planning/screenshots/2026-06-17-cicd-workflow-yml-ldmasina.png`
 - 7.2 EC2 pm2 status: `planning/screenshots/2026-06-17-pm2-status-vacayplan-a2-ldmasina.png`
-- 7.3 GitHub Run Test page: *(pending green CI/CD run)*
+- 7.3 GitHub Run Test page: `planning/screenshots/2026-06-18-cicd-run-success-rodlunt.png` (run #41, Status: Success, 1m 36s, 2026-06-18)
 - 7.4 app first page, public IP: `planning/screenshots/2026-06-17-vacayplan-a2-live-browser-ldmasina.png`
 
 **Talking points:** *(populate)*
