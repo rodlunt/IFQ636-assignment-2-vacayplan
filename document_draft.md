@@ -145,7 +145,91 @@ State is used as a behavioural pattern to enforce the trip lifecycle defined in 
 ## API testing using Postman (~150-200 words)
 *All endpoints incl. error handling; exported collection committed.*
 
-*(draft here — plus 6.1 request/response screenshots and the 6.2 collection link)*
+*(draft here)*
+
+### 6.1 Request/response screenshots
+
+**Fig 6.1.1** — POST /api/auth/register — 201 Created
+![Fig 6.1.1](planning/screenshots/2026-06-18-postman-auth-register-201-rodlunt.png)
+
+**Fig 6.1.2** — POST /api/auth/register — 400 missing fields
+![Fig 6.1.2](planning/screenshots/2026-06-18-postman-auth-register-400-rodlunt.png)
+
+**Fig 6.1.3** — POST /api/auth/register — 409 duplicate email
+![Fig 6.1.3](planning/screenshots/2026-06-18-postman-auth-register-409-rodlunt.png)
+
+**Fig 6.1.4** — POST /api/auth/login — 200 happy path
+![Fig 6.1.4](planning/screenshots/2026-06-18-postman-auth-login-200-rodlunt.png)
+
+**Fig 6.1.5** — POST /api/auth/login — 401 wrong password
+![Fig 6.1.5](planning/screenshots/2026-06-18-postman-auth-login-wrong-password-401-rodlunt.png)
+
+**Fig 6.1.6** — POST /api/auth/login — 401 unknown user
+![Fig 6.1.6](planning/screenshots/2026-06-18-postman-auth-login-unknown-user-401-rodlunt.png)
+
+**Fig 6.1.7** — GET /api/auth/profile — 401 no JWT (CoR step 1: protect blocks)
+![Fig 6.1.7](planning/screenshots/2026-06-18-postman-auth-profile-no-jwt-401-rodlunt.png)
+
+**Fig 6.1.8** — GET /api/auth/profile — 200 happy path
+![Fig 6.1.8](planning/screenshots/2026-06-18-postman-auth-profile-200-rodlunt.png)
+
+**Fig 6.1.9** — PUT /api/auth/profile — 200 update
+![Fig 6.1.9](planning/screenshots/2026-06-18-postman-auth-profile-update-200-rodlunt.png)
+
+**Fig 6.1.10** — GET /api/admin/users — 401 no JWT (CoR step 1)
+![Fig 6.1.10](planning/screenshots/2026-06-18-postman-admin-no-jwt-401-rodlunt.png)
+
+**Fig 6.1.11** — GET /api/admin/users — 403 non-admin JWT (CoR step 2: adminProtect blocks)
+![Fig 6.1.11](planning/screenshots/2026-06-18-postman-admin-non-admin-403-rodlunt.png)
+
+**Fig 6.1.12** — POST /api/auth/login as admin — 200 (adminToken acquired)
+![Fig 6.1.12](planning/screenshots/2026-06-18-postman-admin-login-200-rodlunt.png)
+
+**Fig 6.1.13** — GET /api/admin/users — 200 all users
+![Fig 6.1.13](planning/screenshots/2026-06-18-postman-admin-list-users-200-rodlunt.png)
+
+**Fig 6.1.14** — GET /api/admin/users/:id — 200 single user
+![Fig 6.1.14](planning/screenshots/2026-06-18-postman-admin-get-user-200-rodlunt.png)
+
+**Fig 6.1.15** — POST /api/admin/users — 201 create user
+![Fig 6.1.15](planning/screenshots/2026-06-18-postman-admin-create-user-201-rodlunt.png)
+
+**Fig 6.1.16** — PATCH /api/admin/users/:id — 200 status deactivated
+![Fig 6.1.16](planning/screenshots/2026-06-18-postman-admin-update-status-200-rodlunt.png)
+
+**Fig 6.1.17** — GET /api/admin/trips — 200 all trips
+![Fig 6.1.17](planning/screenshots/2026-06-18-postman-admin-list-trips-200-rodlunt.png)
+
+**Fig 6.1.18** — DELETE /api/admin/users/:id — 204 no content
+![Fig 6.1.18](planning/screenshots/2026-06-18-postman-admin-delete-user-204-rodlunt.png)
+
+*(Figs 6.1.18-6.1.36 — Lance and Joe to fill in)*
+
+| Fig | Endpoint | Status needed | Screenshot |
+|-----|----------|---------------|------------|
+| 6.1.18 | POST /api/trips — create (Lance) | 201 | TODO |
+| 6.1.19 | GET /api/trips — list (Lance) | 200 | TODO |
+| 6.1.20 | GET /api/trips/:id (Lance) | 200 | TODO |
+| 6.1.21 | GET /api/trips/:id — wrong owner (Lance) | 404 | TODO |
+| 6.1.22 | PUT /api/trips/:id — update (Lance) | 200 | TODO |
+| 6.1.23 | PUT /api/trips/:id — planning→completed invalid (Lance) | 400 | TODO |
+| 6.1.24 | PUT /api/trips/:id — planning→active valid (Lance) | 200 | TODO |
+| 6.1.25 | PUT /api/trips/:id — active→planning invalid (Lance) | 400 | TODO |
+| 6.1.26 | PUT /api/trips/:id — active→completed valid (Lance) | 200 | TODO |
+| 6.1.27 | PUT /api/trips/:id — completed→planning invalid (Lance) | 400 | TODO |
+| 6.1.28 | DELETE /api/trips/:id — cascade Facade (Lance) | 204 | TODO |
+| 6.1.29 | POST /api/trips/:id/activities — create (Joe) | 201 | TODO |
+| 6.1.30 | GET /api/trips/:id/activities — list (Joe) | 200 | TODO |
+| 6.1.31 | PUT /api/trips/:id/activities/:actId — update (Joe) | 200 | TODO |
+| 6.1.32 | PATCH /api/trips/:id/activities/:actId/status — booked (Joe) | 200 | TODO |
+| 6.1.33 | PATCH /api/trips/:id/activities/:actId/status — invalid (Joe) | 400 | TODO |
+| 6.1.34 | GET /api/trips/:id/activities — wrong owner (Joe) | 404 | TODO |
+| 6.1.35 | DELETE /api/trips/:id/activities/:actId (Joe) | 204 | TODO |
+| 6.1.36 | GET /api/trips/:id/weather — happy path (Joe) | 200 | TODO |
+
+### 6.2 Exported collection
+
+*(GitHub link to committed collection JSON — populate after export)*
 
 ---
 
