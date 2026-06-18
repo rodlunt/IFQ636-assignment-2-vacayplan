@@ -257,7 +257,7 @@ GitHub Actions build/test/deploy; runs on push; public URL + pm2 status.
 **Evidence captures:**
 - 7.1 workflow YML: `planning/screenshots/2026-06-17-cicd-workflow-yml-ldmasina.png`
 - 7.2 EC2 pm2 status: `planning/screenshots/2026-06-17-pm2-status-vacayplan-a2-ldmasina.png`
-- 7.3 GitHub Run Test page: `planning/screenshots/2026-06-18-cicd-run-success-rodlunt.png` (run #41, Status: Success, 1m 36s, 2026-06-18)
+- 7.3 GitHub Run Test page: `planning/screenshots/2026-06-18-cicd-run-success-rodlunt.png` (run #41 summary, Status: Success, 1m 36s, 2026-06-18); `planning/screenshots/2026-06-18-cicd-run-job-steps-rodlunt.png` (job detail, all 22 steps green)
 - 7.4 app first page, public IP: `planning/screenshots/2026-06-17-vacayplan-a2-live-browser-ldmasina.png`
 
 **Talking points:** *(populate)*
