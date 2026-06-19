@@ -111,7 +111,13 @@ State is used as a behavioural pattern to enforce the trip lifecycle defined in 
 ### 3.2 Implementation of OOP (~250-300 words)
 *Classes, Objects, Inheritance, Encapsulation, Polymorphism with code examples and justification.*
 
-*(draft here)*
+**Classes and objects.** VacayPlan's backend is structured around ES6 classes throughout. `Database` in `backend/config/db.js` is a clear example: the class defines the connection blueprint, and `Database.getInstance()` returns the single object that holds the live Mongoose connection state. `TripService` and `UserService` in `backend/services/` follow the same shape - each is defined as a class and exported as a constructed object instance, bundling related operations (cascade deletion, ownership verification) around shared state rather than scattering them as loose functions.
+
+**Encapsulation.** `OpenMeteoWeatherAdapter` in `backend/adapters/weatherAdapter.js` exposes a single public method, `getForecast()`, and hides five internal methods behind the underscore convention: `_geocode()`, `_getJson()`, `_normaliseDaily()`, `_formatPlaceName()`, and `_pickBestMatch()`. The geocoding logic, HTTP request handling, and WMO-code translation are implementation details that callers never see. Controllers call `getForecast()` without knowing how the vendor response is structured - if Open-Meteo changed its format, only the adapter would need updating.
+
+**Inheritance.** Two class hierarchies appear in the backend. `OpenMeteoWeatherAdapter extends WeatherProvider` in `backend/adapters/weatherAdapter.js`: `WeatherProvider` defines the `getForecast()` interface (throwing if not overridden), and the subclass provides the Open-Meteo implementation. `PlanningState`, `ActiveState`, and `CompletedState` all extend `TripState` in `backend/state/tripState.js`, each overriding `canTransitionTo(newStatus)` with its own rules. Both hierarchies use the same approach: an abstract base class enforces a contract; concrete subclasses provide the implementation.
+
+**Polymorphism.** The State hierarchy demonstrates runtime polymorphism. `isValidTransition()` in `tripState.js` calls `state.canTransitionTo(newStatus)` without knowing the concrete class - when the trip is in `PlanningState`, the call returns true only for `'active'`; the same call on `CompletedState` always returns false. The method signature is identical across all three subclasses; the correct implementation is resolved at runtime based on the actual object.
 
 ---
 
