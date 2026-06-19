@@ -128,7 +128,7 @@ State is used as a behavioural pattern to enforce the trip lifecycle defined in 
 **Fig 4.2.1** — Kanban board (13 Jun) showing Blocked column in use with blocked-by comments and EPICs in flight
 ![Fig 4.2.1](planning/screenshots/2026-06-13-kanban-blocked-column.png)
 
-**Fig 4.2.2** — PR #66 review thread showing review flag raised by Lance, fix PR #69 created, and approval cross-references
+**Fig 4.2.2** — PR #66 review thread showing review flag raised, fix PR #69 created, and approval cross-references
 ![Fig 4.2.2](planning/screenshots/2026-06-13-pr66-review-thread.png)
 
 **Fig 4.2.3** — PR #66 fix reference confirming PR #69 closed the flagged issue and was approved
