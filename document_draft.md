@@ -157,7 +157,11 @@ All 142 tests pass with no failures or pending cases (Figs 5.1.1-5.1.2). The sui
 ## API testing using Postman (~150-200 words)
 *All endpoints incl. error handling; exported collection committed.*
 
-r *(draft here)*
+Using Postman, we tested all REST endpoints covering happy paths and error cases. The collection was created and shared in the repository so each team member could run their own tests independently. The endpoint groups Rodney covered were auth (`/api/auth/*`) and admin/CoR (`/api/admin/*`).
+
+The endpoints in admin demonstrate the Chain of Responsibility (CoR) in action, where `protect` verifies a JWT has been issued and is valid (Figs 6.1.10-6.1.11) and `adminProtect` checks for admin privileges (Fig 6.1.12). At that point, the request reaches the handler. Each figure shows one link in the chain rejecting requests at the correct point.
+
+The collection uses environment variables (`{{base_url}}`, `{{token}}`, `{{adminToken}}`) and test scripts that save tokens from login responses, so team members can import and run their own endpoints without manual setup.
 
 ### 6.1 Request/response screenshots
 
