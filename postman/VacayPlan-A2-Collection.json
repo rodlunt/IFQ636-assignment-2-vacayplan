@@ -216,7 +216,7 @@
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"REPLACE_WITH_ADMIN_EMAIL\",\n  \"password\": \"REPLACE_WITH_ADMIN_PASSWORD\"\n}",
+              "raw": "{\n  \"email\": \"admin@vacayplan.com\",\n  \"password\": \"AdminPass123!\"\n}",
               "options": { "raw": { "language": "json" } }
             },
             "url": {
