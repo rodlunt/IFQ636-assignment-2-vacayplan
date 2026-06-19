@@ -219,29 +219,29 @@ The collection uses environment variables (`{{base_url}}`, `{{token}}`, `{{admin
 **Fig 6.1.18** — DELETE /api/admin/users/:id — 204 no content
 ![Fig 6.1.18](planning/screenshots/2026-06-18-postman-admin-delete-user-204-rodlunt.png)
 
-*(Figs 6.1.18-6.1.36 — Lance and Joe to fill in)*
+*(Figs 6.1.19-6.1.37 — Lance and Joe to fill in)*
 
 | Fig | Endpoint | Status needed | Screenshot |
 |-----|----------|---------------|------------|
-| 6.1.18 | POST /api/trips — create (Lance) | 201 | TODO |
-| 6.1.19 | GET /api/trips — list (Lance) | 200 | TODO |
-| 6.1.20 | GET /api/trips/:id (Lance) | 200 | TODO |
-| 6.1.21 | GET /api/trips/:id — wrong owner (Lance) | 404 | TODO |
-| 6.1.22 | PUT /api/trips/:id — update (Lance) | 200 | TODO |
-| 6.1.23 | PUT /api/trips/:id — planning→completed invalid (Lance) | 400 | TODO |
-| 6.1.24 | PUT /api/trips/:id — planning→active valid (Lance) | 200 | TODO |
-| 6.1.25 | PUT /api/trips/:id — active→planning invalid (Lance) | 400 | TODO |
-| 6.1.26 | PUT /api/trips/:id — active→completed valid (Lance) | 200 | TODO |
-| 6.1.27 | PUT /api/trips/:id — completed→planning invalid (Lance) | 400 | TODO |
-| 6.1.28 | DELETE /api/trips/:id — cascade Facade (Lance) | 204 | TODO |
-| 6.1.29 | POST /api/trips/:id/activities — create (Joe) | 201 | TODO |
-| 6.1.30 | GET /api/trips/:id/activities — list (Joe) | 200 | TODO |
-| 6.1.31 | PUT /api/trips/:id/activities/:actId — update (Joe) | 200 | TODO |
-| 6.1.32 | PATCH /api/trips/:id/activities/:actId/status — booked (Joe) | 200 | TODO |
-| 6.1.33 | PATCH /api/trips/:id/activities/:actId/status — invalid (Joe) | 400 | TODO |
-| 6.1.34 | GET /api/trips/:id/activities — wrong owner (Joe) | 404 | TODO |
-| 6.1.35 | DELETE /api/trips/:id/activities/:actId (Joe) | 204 | TODO |
-| 6.1.36 | GET /api/trips/:id/weather — happy path (Joe) | 200 | TODO |
+| 6.1.19 | POST /api/trips — create (Lance) | 201 | TODO |
+| 6.1.20 | GET /api/trips — list (Lance) | 200 | TODO |
+| 6.1.21 | GET /api/trips/:id (Lance) | 200 | TODO |
+| 6.1.22 | GET /api/trips/:id — wrong owner (Lance) | 404 | TODO |
+| 6.1.23 | PUT /api/trips/:id — update (Lance) | 200 | TODO |
+| 6.1.24 | PUT /api/trips/:id — planning→completed invalid (Lance) | 400 | TODO |
+| 6.1.25 | PUT /api/trips/:id — planning→active valid (Lance) | 200 | TODO |
+| 6.1.26 | PUT /api/trips/:id — active→planning invalid (Lance) | 400 | TODO |
+| 6.1.27 | PUT /api/trips/:id — active→completed valid (Lance) | 200 | TODO |
+| 6.1.28 | PUT /api/trips/:id — completed→planning invalid (Lance) | 400 | TODO |
+| 6.1.29 | DELETE /api/trips/:id — cascade Facade (Lance) | 204 | TODO |
+| 6.1.30 | POST /api/trips/:id/activities — create (Joe) | 201 | TODO |
+| 6.1.31 | GET /api/trips/:id/activities — list (Joe) | 200 | TODO |
+| 6.1.32 | PUT /api/trips/:id/activities/:actId — update (Joe) | 200 | TODO |
+| 6.1.33 | PATCH /api/trips/:id/activities/:actId/status — booked (Joe) | 200 | TODO |
+| 6.1.34 | PATCH /api/trips/:id/activities/:actId/status — invalid (Joe) | 400 | TODO |
+| 6.1.35 | GET /api/trips/:id/activities — wrong owner (Joe) | 404 | TODO |
+| 6.1.36 | DELETE /api/trips/:id/activities/:actId (Joe) | 204 | TODO |
+| 6.1.37 | GET /api/trips/:id/weather — happy path (Joe) | 200 | TODO |
 
 ### 6.2 Exported collection
 
