@@ -138,14 +138,26 @@ State is used as a behavioural pattern to enforce the trip lifecycle defined in 
 ## Functional testing (only unit testing) (~200-250 words)
 *Mocha/Chai unit tests for all CRUD functions.*
 
-*(draft here — plus 5.1 terminal pass/fail screenshots and the test-case table)*
+### 5.1 Unit test results
+
+VacayPlan's backend is tested using Mocha as the test runner and Chai for assertions, with Sinon providing stubs for MongoDB and external HTTP calls. The suite is organised by controller and middleware, with each file grouping related test cases under descriptive `describe` blocks. Tests cover the full set of CRUD operations for trips, activities, users, and auth, as well as edge cases including missing fields, invalid status transitions, wrong-owner access attempts, and upstream weather provider failures.
+
+The Chain of Responsibility middleware (`protect`, `adminProtect`, `validate`) is tested in isolation to verify each link handles its responsibility correctly and passes control to the next link only when its own conditions are met. The State pattern transitions (`planning → active → completed`) are covered by six dedicated tests that assert both valid forward progressions and rejected backward or skip moves. The Adapter pattern (`OpenMeteoWeatherAdapter`) includes eleven tests covering geocoding, normalisation, timeout handling, and edge cases such as blank destinations and out-of-range dates.
+
+All 142 tests pass with no failures or pending cases (Figs 5.1.1-5.1.2). The suite runs in under one second, confirming no test introduces blocking I/O. Tests are executed in CI on every push via GitHub Actions, providing continuous regression coverage across the team's branches.
+
+**Fig 5.1.1** — Backend test suite output (top)
+![Fig 5.1.1](planning/screenshots/2026-06-19-backend-tests-top-rodlunt.png)
+
+**Fig 5.1.2** — Backend test suite output — 142 passing (bottom)
+![Fig 5.1.2](planning/screenshots/2026-06-19-backend-tests-bottom-rodlunt.png)
 
 ---
 
 ## API testing using Postman (~150-200 words)
 *All endpoints incl. error handling; exported collection committed.*
 
-*(draft here)*
+r *(draft here)*
 
 ### 6.1 Request/response screenshots
 
@@ -203,29 +215,29 @@ State is used as a behavioural pattern to enforce the trip lifecycle defined in 
 **Fig 6.1.18** — DELETE /api/admin/users/:id — 204 no content
 ![Fig 6.1.18](planning/screenshots/2026-06-18-postman-admin-delete-user-204-rodlunt.png)
 
-*(Figs 6.1.19-6.1.37 — Lance and Joe to fill in)*
+*(Figs 6.1.18-6.1.36 — Lance and Joe to fill in)*
 
 | Fig | Endpoint | Status needed | Screenshot |
 |-----|----------|---------------|------------|
-| 6.1.19 | POST /api/trips — create (Lance) | 201 | TODO |
-| 6.1.20 | GET /api/trips — list (Lance) | 200 | TODO |
-| 6.1.21 | GET /api/trips/:id (Lance) | 200 | TODO |
-| 6.1.22 | GET /api/trips/:id — wrong owner (Lance) | 404 | TODO |
-| 6.1.23 | PUT /api/trips/:id — update (Lance) | 200 | TODO |
-| 6.1.24 | PUT /api/trips/:id — planning→completed invalid (Lance) | 400 | TODO |
-| 6.1.25 | PUT /api/trips/:id — planning→active valid (Lance) | 200 | TODO |
-| 6.1.26 | PUT /api/trips/:id — active→planning invalid (Lance) | 400 | TODO |
-| 6.1.27 | PUT /api/trips/:id — active→completed valid (Lance) | 200 | TODO |
-| 6.1.28 | PUT /api/trips/:id — completed→planning invalid (Lance) | 400 | TODO |
-| 6.1.29 | DELETE /api/trips/:id — cascade Facade (Lance) | 204 | TODO |
-| 6.1.30 | POST /api/trips/:id/activities — create (Joe) | 201 | TODO |
-| 6.1.31 | GET /api/trips/:id/activities — list (Joe) | 200 | TODO |
-| 6.1.32 | PUT /api/trips/:id/activities/:actId — update (Joe) | 200 | TODO |
-| 6.1.33 | PATCH /api/trips/:id/activities/:actId/status — booked (Joe) | 200 | TODO |
-| 6.1.34 | PATCH /api/trips/:id/activities/:actId/status — invalid (Joe) | 400 | TODO |
-| 6.1.35 | GET /api/trips/:id/activities — wrong owner (Joe) | 404 | TODO |
-| 6.1.36 | DELETE /api/trips/:id/activities/:actId (Joe) | 204 | TODO |
-| 6.1.37 | GET /api/trips/:id/weather — happy path (Joe) | 200 | TODO |
+| 6.1.18 | POST /api/trips — create (Lance) | 201 | TODO |
+| 6.1.19 | GET /api/trips — list (Lance) | 200 | TODO |
+| 6.1.20 | GET /api/trips/:id (Lance) | 200 | TODO |
+| 6.1.21 | GET /api/trips/:id — wrong owner (Lance) | 404 | TODO |
+| 6.1.22 | PUT /api/trips/:id — update (Lance) | 200 | TODO |
+| 6.1.23 | PUT /api/trips/:id — planning→completed invalid (Lance) | 400 | TODO |
+| 6.1.24 | PUT /api/trips/:id — planning→active valid (Lance) | 200 | TODO |
+| 6.1.25 | PUT /api/trips/:id — active→planning invalid (Lance) | 400 | TODO |
+| 6.1.26 | PUT /api/trips/:id — active→completed valid (Lance) | 200 | TODO |
+| 6.1.27 | PUT /api/trips/:id — completed→planning invalid (Lance) | 400 | TODO |
+| 6.1.28 | DELETE /api/trips/:id — cascade Facade (Lance) | 204 | TODO |
+| 6.1.29 | POST /api/trips/:id/activities — create (Joe) | 201 | TODO |
+| 6.1.30 | GET /api/trips/:id/activities — list (Joe) | 200 | TODO |
+| 6.1.31 | PUT /api/trips/:id/activities/:actId — update (Joe) | 200 | TODO |
+| 6.1.32 | PATCH /api/trips/:id/activities/:actId/status — booked (Joe) | 200 | TODO |
+| 6.1.33 | PATCH /api/trips/:id/activities/:actId/status — invalid (Joe) | 400 | TODO |
+| 6.1.34 | GET /api/trips/:id/activities — wrong owner (Joe) | 404 | TODO |
+| 6.1.35 | DELETE /api/trips/:id/activities/:actId (Joe) | 204 | TODO |
+| 6.1.36 | GET /api/trips/:id/weather — happy path (Joe) | 200 | TODO |
 
 ### 6.2 Exported collection
 
