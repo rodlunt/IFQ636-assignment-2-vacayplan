@@ -580,6 +580,41 @@
     {
       "name": "Activities + Weather (Joe #91)",
       "description": "Activity CRUD and weather endpoint. Create a fresh trip first (re-run Create Trip from the Trips folder) to get a valid {{tripId}} in planning or active state before running these.",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "// Auto-create a trip if tripId is not set (e.g. after Trips folder deletes it)",
+              "if (!pm.environment.get('tripId')) {",
+              "    pm.sendRequest({",
+              "        url: pm.environment.get('base_url') + '/api/trips',",
+              "        method: 'POST',",
+              "        header: [",
+              "            { key: 'Content-Type', value: 'application/json' },",
+              "            { key: 'Authorization', value: 'Bearer ' + pm.environment.get('token') }",
+              "        ],",
+              "        body: {",
+              "            mode: 'raw',",
+              "            raw: JSON.stringify({",
+              "                name: 'Activities Test Trip',",
+              "                destination: 'Brisbane, Australia',",
+              "                startDate: '2027-01-01',",
+              "                endDate: '2027-01-07'",
+              "            })",
+              "        }",
+              "    }, function(err, res) {",
+              "        if (!err && res.code === 201) {",
+              "            pm.environment.set('tripId', res.json()._id);",
+              "            console.log('Pre-request: auto-created trip', res.json()._id);",
+              "        }",
+              "    });",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
       "item": [
         {
           "name": "Create Activity (201)",
