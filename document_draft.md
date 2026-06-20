@@ -143,13 +143,29 @@ State is used as a behavioural pattern to enforce the trip lifecycle defined in 
 
 *(draft here — plus figures: commit graph, PR list, merge-conflict resolution)*
 
-*(figure: kanban board 13 Jun - Blocked column in use with blocked-by comments, EPICs in flight - `planning/screenshots/2026-06-13-kanban-blocked-column.png`)*
-*(figure: PR #66 review thread - review flag, fix PR #69, approval cross-references - `planning/screenshots/2026-06-13-pr66-review-thread.png` + `-fix-ref.png`)*
-*(figure: current issues board showing open tasks with assignees - `planning/screenshots/2026-06-17-issues-board.png`)*
-*(figure: PR #71 multi-turn review thread - Joe requests review, Rodney flags conflict concern, Joe confirms resolution with team thumbs-up - `planning/screenshots/2026-06-17-pr71-discussion.png`)*
-*(figure: PR #74 merge conflict resolution - Rodney's comment documenting how the A2_Report_Notes.md conflict was resolved - `planning/screenshots/2026-06-17-pr74-conflict-resolution.png`)*
-*(figure: PR #81 team coordination - cross-team word count targets communicated via PR comment - `planning/screenshots/2026-06-17-pr81-team-comms.png`)*
-*(figure: contributor graph showing commit activity from all three team members - `planning/screenshots/2026-06-17-network-graph.png`)*
+**Fig 4.2.1** — Kanban board (13 Jun) showing Blocked column in use with blocked-by comments and EPICs in flight
+![Fig 4.2.1](planning/screenshots/2026-06-13-kanban-blocked-column.png)
+
+**Fig 4.2.2** — PR #66 review thread showing review flag raised, fix PR #69 created, and approval cross-references
+![Fig 4.2.2](planning/screenshots/2026-06-13-pr66-review-thread.png)
+
+**Fig 4.2.3** — PR #66 fix reference confirming PR #69 closed the flagged issue and was approved
+![Fig 4.2.3](planning/screenshots/2026-06-13-pr66-review-thread-fix-ref.png)
+
+**Fig 4.2.4** — Issues board showing open tasks with assignees across all three team members
+![Fig 4.2.4](planning/screenshots/2026-06-17-issues-board.png)
+
+**Fig 4.2.5** — PR #71 multi-turn review thread: Joe requests review, Rodney flags conflict concern, Joe confirms resolution
+![Fig 4.2.5](planning/screenshots/2026-06-17-pr71-discussion.png)
+
+**Fig 4.2.6** — PR #74 merge conflict resolution comment documenting how the A2_Report_Notes.md conflict was resolved
+![Fig 4.2.6](planning/screenshots/2026-06-17-pr74-conflict-resolution.png)
+
+**Fig 4.2.7** — PR #81 team coordination: cross-team word count targets communicated via PR comment
+![Fig 4.2.7](planning/screenshots/2026-06-17-pr81-team-comms.png)
+
+**Fig 4.2.8** — Contributor graph showing commit activity from all three team members
+![Fig 4.2.8](planning/screenshots/2026-06-17-network-graph.png)
 
 ---
 
