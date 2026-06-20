@@ -1,0 +1,14 @@
+{
+  "id": "vacayplan-a2-env",
+  "name": "VacayPlan A2 - Local",
+  "values": [
+    { "key": "base_url", "value": "http://localhost:5001", "enabled": true },
+    { "key": "token", "value": "", "enabled": true },
+    { "key": "adminToken", "value": "", "enabled": true },
+    { "key": "tripId", "value": "", "enabled": true },
+    { "key": "tripId2", "value": "", "enabled": true },
+    { "key": "activityId", "value": "", "enabled": true },
+    { "key": "userId", "value": "", "enabled": true }
+  ],
+  "_postman_variable_scope": "environment"
+}
