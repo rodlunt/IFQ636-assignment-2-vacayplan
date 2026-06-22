@@ -253,7 +253,46 @@ The collection uses environment variables (`{{base_url}}`, `{{token}}`, `{{admin
 **Fig 6.1.18** — DELETE /api/admin/users/:id — 204 no content
 ![Fig 6.1.18](planning/screenshots/2026-06-18-postman-admin-delete-user-204-rodlunt.png)
 
-*(Figs 6.1.19-6.1.37 — Lance and Joe to fill in)*
+**Fig 6.1.19** — POST /api/auth/login — 200 happy path (token acquired)
+![Fig 6.1.19](planning/screenshots/2026-06-20-postman-auth-login-200-ldmasina.png)
+
+**Fig 6.1.20** — POST /api/trips — 201 Created
+![Fig 6.1.20](planning/screenshots/2026-06-20-postman-trips-create-201-ldmasina.png)
+
+**Fig 6.1.21** — GET /api/trips — 200 all trips
+![Fig 6.1.21](planning/screenshots/2026-06-20-postman-trips-list-200-ldmasina.png)
+
+**Fig 6.1.22** — GET /api/trips/:id — 200 single trip
+![Fig 6.1.22](planning/screenshots/2026-06-20-postman-trips-get-by-id-200-ldmasina.png)
+
+**Fig 6.1.23** — GET /api/trips/:id — 404 wrong owner (resource guard)
+![Fig 6.1.23](planning/screenshots/2026-06-20-postman-trips-wrong-owner-404-ldmasina.png)
+
+**Fig 6.1.24** — PUT /api/trips/:id — 200 update happy path
+![Fig 6.1.24](planning/screenshots/2026-06-20-postman-trips-update-200-ldmasina.png)
+
+**Fig 6.1.25** — PUT /api/trips/:id — 400 State: planning -> completed INVALID skip
+![Fig 6.1.25](planning/screenshots/2026-06-20-postman-state-planning-completed-invalid-400-ldmasina.png)
+
+**Fig 6.1.26** — PUT /api/trips/:id — 200 State: planning -> active VALID
+![Fig 6.1.26](planning/screenshots/2026-06-20-postman-state-planning-active-valid-200-ldmasina.png)
+
+**Fig 6.1.27** — PUT /api/trips/:id — 400 State: active -> planning INVALID backward
+![Fig 6.1.27](planning/screenshots/2026-06-20-postman-state-active-planning-invalid-400-ldmasina.png)
+
+**Fig 6.1.28** — PUT /api/trips/:id — 200 State: active -> completed VALID
+![Fig 6.1.28](planning/screenshots/2026-06-20-postman-state-active-completed-valid-200-ldmasina.png)
+
+**Fig 6.1.29** — PUT /api/trips/:id — 400 State: completed -> planning INVALID backward
+![Fig 6.1.29](planning/screenshots/2026-06-20-postman-state-completed-planning-invalid-400-ldmasina.png)
+
+**Fig 6.1.30** — DELETE /api/trips/:id — 204 cascade via Facade
+![Fig 6.1.30](planning/screenshots/2026-06-20-postman-trips-delete-204-ldmasina.png)
+
+**Fig 6.1.31** — GET /api/trips — 401 no JWT
+![Fig 6.1.31](planning/screenshots/2026-06-20-postman-trips-no-jwt-401-ldmasina.png)
+
+*(Figs 6.1.32-6.1.37 — Joe to fill in)*
 
 | Fig | Endpoint | Status needed | Screenshot |
 |-----|----------|---------------|------------|
