@@ -597,10 +597,10 @@
               "        body: {",
               "            mode: 'raw',",
               "            raw: JSON.stringify({",
-              "                name: 'Activities Test Trip',",
+              "                title: 'Activities Test Trip',",
               "                destination: 'Brisbane, Australia',",
-              "                startDate: '2027-01-01',",
-              "                endDate: '2027-01-07'",
+              "                startDate: '2026-06-24',",
+              "                endDate: '2026-06-30'",
               "            })",
               "        }",
               "    }, function(err, res) {",
@@ -641,7 +641,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"date\": \"2026-09-05\",\n  \"time\": \"10:00\",\n  \"location\": \"Shibuya Crossing, Tokyo\",\n  \"description\": \"Morning visit to Shibuya\",\n  \"status\": \"wishlist\"\n}",
+              "raw": "{\n  \"date\": \"2026-06-25\",\n  \"time\": \"10:00\",\n  \"location\": \"South Bank Parklands, Brisbane\",\n  \"description\": \"Morning visit to South Bank\",\n  \"status\": \"wishlist\"\n}",
               "options": { "raw": { "language": "json" } }
             },
             "url": {
