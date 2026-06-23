@@ -653,6 +653,18 @@
         },
         {
           "name": "List Activities (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Body is an array', () => pm.expect(pm.response.json()).to.be.an('array'));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
@@ -665,6 +677,18 @@
         },
         {
           "name": "Update Activity (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Description updated', () => pm.expect(pm.response.json().description).to.eql('Updated description via Postman'));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "PUT",
             "header": [
@@ -685,6 +709,18 @@
         },
         {
           "name": "Update Activity Status - booked (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Status is booked', () => pm.expect(pm.response.json().status).to.eql('booked'));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "PATCH",
             "header": [
@@ -705,6 +741,17 @@
         },
         {
           "name": "Update Activity Status - invalid value (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 400', () => pm.response.to.have.status(400));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "PATCH",
             "header": [
@@ -725,19 +772,75 @@
         },
         {
           "name": "Wrong owner accessing activity (404)",
-          "description": "ownershipDecorator returns 404 when the trip does not belong to the requesting user.",
+          "description": "Proves the ownershipDecorator returns 404 when a trip belongs to ANOTHER user (not merely when it does not exist). The pre-request registers a second user, creates a trip they own, and stores it in {{tripId2}}; the request below then accesses that trip's activities with the first user's {{token}} and must be rejected with 404.",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "// Create a second user with their own trip so we can prove the Decorator",
+                  "// rejects a non-owner with 404. Only do this once per environment.",
+                  "if (!pm.environment.get('tripId2')) {",
+                  "    const email = 'other-owner-' + Date.now() + '@delete.me';",
+                  "    pm.sendRequest({",
+                  "        url: pm.environment.get('base_url') + '/api/auth/register',",
+                  "        method: 'POST',",
+                  "        header: { 'Content-Type': 'application/json' },",
+                  "        body: { mode: 'raw', raw: JSON.stringify({ name: 'Other Owner', email: email, password: 'Test1234!' }) }",
+                  "    }, function (err, res) {",
+                  "        if (!err && res.code === 201) {",
+                  "            const otherToken = res.json().token;",
+                  "            pm.sendRequest({",
+                  "                url: pm.environment.get('base_url') + '/api/trips',",
+                  "                method: 'POST',",
+                  "                header: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + otherToken },",
+                  "                body: { mode: 'raw', raw: JSON.stringify({ title: 'Other Owner Trip', destination: 'Sydney, Australia', startDate: '2026-06-24', endDate: '2026-06-30' }) }",
+                  "            }, function (e2, r2) {",
+                  "                if (!e2 && r2.code === 201) {",
+                  "                    pm.environment.set('tripId2', r2.json()._id);",
+                  "                    console.log('Pre-request: created other-owner trip', r2.json()._id);",
+                  "                }",
+                  "            });",
+                  "        }",
+                  "    });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 404 (non-owner rejected by Decorator)', () => pm.response.to.have.status(404));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
             "url": {
-              "raw": "{{base_url}}/api/trips/000000000000000000000001/activities",
+              "raw": "{{base_url}}/api/trips/{{tripId2}}/activities",
               "host": ["{{base_url}}"],
-              "path": ["api", "trips", "000000000000000000000001", "activities"]
+              "path": ["api", "trips", "{{tripId2}}", "activities"]
             }
           }
         },
         {
           "name": "Delete Activity - via Decorator (204)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 204', () => pm.response.to.have.status(204));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "DELETE",
             "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
@@ -750,7 +853,21 @@
         },
         {
           "name": "Get Trip Weather - happy path (200)",
-          "description": "Adapter pattern — Open-Meteo geocoding + forecast. Trip destination must have a recognisable place name.",
+          "description": "Adapter pattern — Open-Meteo geocoding + forecast. The trip's near-term Brisbane dates fall inside Open-Meteo's forecast window, so a daily forecast is returned.",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test('Resolved location returned', () => pm.expect(json.location).to.be.a('string'));",
+                  "pm.test('Daily forecast returned', () => pm.expect(json.daily).to.be.an('array').that.is.not.empty);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
@@ -758,6 +875,55 @@
               "raw": "{{base_url}}/api/trips/{{tripId}}/weather",
               "host": ["{{base_url}}"],
               "path": ["api", "trips", "{{tripId}}", "weather"]
+            }
+          }
+        },
+        {
+          "name": "Get Trip Weather - beyond forecast window (200 empty)",
+          "description": "Adapter pattern edge case. The pre-request creates a trip dated a year out (stored in {{tripIdFar}}); Open-Meteo has no forecast that far ahead, so the adapter returns an empty daily array (HTTP 200), or a 502 if the vendor rejects the date range outright. Either is the expected 'no forecast available' outcome.",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "// Create a far-future trip (beyond Open-Meteo's forecast window) once.",
+                  "if (!pm.environment.get('tripIdFar')) {",
+                  "    pm.sendRequest({",
+                  "        url: pm.environment.get('base_url') + '/api/trips',",
+                  "        method: 'POST',",
+                  "        header: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + pm.environment.get('token') },",
+                  "        body: { mode: 'raw', raw: JSON.stringify({ title: 'Beyond Window Trip', destination: 'Brisbane, Australia', startDate: '2027-06-24', endDate: '2027-06-30' }) }",
+                  "    }, function (err, res) {",
+                  "        if (!err && res.code === 201) {",
+                  "            pm.environment.set('tripIdFar', res.json()._id);",
+                  "            console.log('Pre-request: created beyond-window trip', res.json()._id);",
+                  "        }",
+                  "    });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200 (empty) or 502 (vendor rejects range)', () => pm.expect([200, 502]).to.include(pm.response.code));",
+                  "if (pm.response.code === 200) {",
+                  "    pm.test('No forecast for out-of-window dates', () => pm.expect(pm.response.json().daily).to.eql([]));",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{base_url}}/api/trips/{{tripIdFar}}/weather",
+              "host": ["{{base_url}}"],
+              "path": ["api", "trips", "{{tripIdFar}}", "weather"]
             }
           }
         }

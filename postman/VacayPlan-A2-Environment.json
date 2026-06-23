@@ -7,6 +7,7 @@
     { "key": "adminToken", "value": "", "enabled": true },
     { "key": "tripId", "value": "", "enabled": true },
     { "key": "tripId2", "value": "", "enabled": true },
+    { "key": "tripIdFar", "value": "", "enabled": true },
     { "key": "activityId", "value": "", "enabled": true },
     { "key": "userId", "value": "", "enabled": true }
   ],
