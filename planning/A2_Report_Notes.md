@@ -271,7 +271,14 @@ GitHub Actions build/test/deploy; runs on push; public URL + pm2 status.
 - 7.3 GitHub Run Test page: `planning/screenshots/2026-06-18-cicd-run-job-steps-rodlunt.png` (run #41, all 22 steps green, 2026-06-18)
 - 7.4 app first page, public IP: `planning/screenshots/2026-06-17-vacayplan-a2-live-browser-ldmasina.png`
 
-**Talking points:** *(populate)*
+**Talking points:**
+- Two-workflow architecture introduced via PR #106 (2026-06-24). `pr-checks.yml` runs on every PR targeting main on a GitHub-hosted ubuntu-latest runner -- no deployment, no secrets. `ci.yml` runs on push to main via self-hosted EC2 runner -- full build, test, deploy.
+- Split rationale: `ci.yml` stops PM2, rsyncs into the production serve path, rewrites .env and reseeds the database. Running it on PRs would deploy and reseed production on every PR review. `pr-checks.yml` restores PR-time test gating without touching production.
+- Credentials injected via GitHub Actions Secrets. Secret echo step deliberately omitted from both workflows -- workflow logs are publicly visible, echoing secrets would expose production credentials (Laster, 2023, Ch. 9).
+- EC2 instance is IaaS -- team manages OS, runtime, and application configuration above the cloud provider layer (IFQ636 Module 7.02, 2026).
+- PM2 systemd startup (`pm2-ubuntu.service`) ensures processes survive reboots without manual intervention.
+- nginx reverse proxy: port 80 routes to frontend (3000) and backend API (5001).
+- Deviations from unit template (3.11.1): secret echo step omitted; yarn audit gates added (advisory, continue-on-error); two workflows instead of one.
 
 ---
 
@@ -311,6 +318,9 @@ Critical insight into the development process, challenges, decisions, learning. 
 - 2026-06-17 (Lance): Putting State validation inside TripUpdateBuilder was tempting but would have broken its single responsibility. A separate validation layer before the builder kept each component's job clean.
 - 2026-06-17 (Lance): The CI/CD pipeline stalling due to 594MB of accumulated runner update binaries was a production-realistic problem. Fixing it required distinguishing between the runner service, PM2, and the deployed app.
 - 2026-06-13 (Rodney): Post-merge review of PR #66 caught a frontend regression that both green test suites missed (detail raised as a comment on the PR). Lesson: backend unit tests prove handler behaviour, not API contract safety - the frontend tests mock the old response shape, so a contract change can pass everything and still break the app.
+- 2026-06-20 (Lance): First time using Postman in a real project context. Rod's pre-built collection with environment variables and pre-request scripts made the trip and State pattern endpoint testing systematic rather than exploratory. The State pattern transitions were the most instructive to test -- seeing a 400 returned for planning -> completed made the enforcement concrete in a way the unit tests alone did not.
+- 2026-06-24 (Lance): PR #106 caught a missing PR-time test gate -- a broken TypeScript lock file could have merged without any test running. Rod's decision to split ci.yml into two workflows (pr-checks.yml for PRs, ci.yml for deploy) reflects a real CI/CD principle: the deploy pipeline cannot be the only test gate if it can only safely run post-merge.
+- 2026-06-24 (Lance): Drafting Section 7 required understanding which sources were strongest. Module pages were available but Laster (2023) as an essential reading gave a more academically defensible citation for the GitHub Actions architecture decisions. Choosing sources deliberately rather than citing whatever is nearest is a habit worth building.
 
 ### References (APA 7th: append as sources are used)
 
@@ -345,6 +355,7 @@ Shvets, A. (2021f). *State*. Refactoring.Guru.
 
 Shvets, A. (2021g). *State in Python*. Refactoring.Guru.
     https://refactoring.guru/design-patterns/state/python/example
+>>>>>>> origin/main
 
 *(Note for final assembly: multiple same-author same-year Shvets entries need APA 2021a/2021b/... suffixes, assigned alphabetically by title, with in-text citations updated to match. Do once, at write-up, when the full set is known.)*
 
