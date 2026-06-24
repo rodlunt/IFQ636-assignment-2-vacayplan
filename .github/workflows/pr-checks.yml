@@ -1,0 +1,66 @@
+name: PR Checks
+
+# Continuous-integration gate for pull requests. Runs the backend test suite
+# and a frontend production build on every pull request targeting main, on a
+# GitHub-hosted ubuntu-latest runner. This workflow does NO deployment.
+#
+# Why this workflow exists, separate from ci.yml:
+#   The CI/CD Pipeline (ci.yml) builds, tests AND deploys in a single job on the
+#   self-hosted EC2 runner. Because it stops PM2, rsyncs into the served path,
+#   rewrites the production .env and reseeds the database, it can only safely run
+#   on push to main. Adding a pull_request trigger there would deploy and reseed
+#   production on every PR. This workflow restores PR-time test gating without
+#   touching production - the same gate the original base CI (ci.yml.disabled)
+#   provided before the deploy pipeline replaced it.
+#
+# This is the CI half of the CI/CD split:
+#   - PR Checks (this file): validate every PR on a throwaway runner.
+#   - CI/CD Pipeline (ci.yml): deploy main to EC2 after merge.
+#
+# No secrets are required. The backend suite uses sinon stubs and a JWT_SECRET
+# fallback (backend/test/hooks.js), so it needs no MongoDB Atlas connection; the
+# frontend step is a build only.
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  validate:
+    name: Backend tests and frontend build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Set up Node.js 22
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+
+      - name: Install backend dependencies
+        working-directory: ./backend
+        run: npm ci
+
+      - name: Run backend tests
+        working-directory: ./backend
+        run: npm test
+
+      # The frontend is yarn-managed (yarn.lock is the maintained lockfile and
+      # ci.yml deploys with yarn). package-lock.json is stale, so `npm ci`
+      # fails its strict sync check (e.g. typescript pinned outside the
+      # react-scripts range). Use yarn here to match the deploy.
+      - name: Install frontend dependencies
+        working-directory: ./frontend
+        run: yarn install
+
+      - name: Build frontend
+        working-directory: ./frontend
+        env:
+          # Build-time only; the PR check never serves this bundle, so the URL
+          # is a placeholder. The real value is injected by ci.yml on deploy.
+          REACT_APP_API_URL: http://localhost
+        run: yarn run build

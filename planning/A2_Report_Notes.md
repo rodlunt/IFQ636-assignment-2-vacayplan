@@ -76,10 +76,21 @@ VacayPlan has two actors (use case diagram, Figure 2). The Traveller is a non-te
 The build extends the existing VacayPlan base, so the stack is fixed: Node.js/Express, MongoDB Atlas, and React, deployed to a single AWS EC2 instance via a GitHub Actions CI/CD pipeline. External services such as Open-Meteo (which requires no API key) must be free-tier. Academic requirements include at least seven backend design patterns, OOP principles, and unit and API testing. Three people, roughly four weeks. Open-Meteo provides a running weather forecast of up to 16 days into the future so trips beyond that will not have a forecast available.
 
 ### 2.6 Functional requirements
-*(populate, complete enumeration; reuse/extend the A1 VacayPlan R-catalogue)*
+23 functional requirements across four domains. Author: Lance Masina. Source: `planning/SRS_2.6_2.7_Requirements.md` (merged PR #75, revised 2026-06-13 per Rod's PR #65 feedback).
+- Authentication (FR-01 to FR-04): register, login/JWT, protected routes, logout
+- Trip management (FR-05 to FR-11): full CRUD, status lifecycle (FR-09/FR-10 State pattern anchor), cascade delete (FR-11 Facade anchor)
+- Activity management (FR-12 to FR-15): add, date-range constraint, view by day, update/delete
+- Administration (FR-16 to FR-23): user management, deactivate/reactivate, delete with cascade (FR-19 Facade anchor), consistent response shape (FR-22 Factory Method anchor), request validation (FR-23 CoR anchor)
+- Follows IEEE Std 830-1998 "shall" statement convention throughout
 
 ### 2.7 Non-functional requirements (NFRs)
-*(populate, performance, security, usability; A1 had N001–N005 for VacationPlan)*
+14 NFRs across six quality dimensions. Author: Lance Masina. Source: `planning/SRS_2.6_2.7_Requirements.md` (merged PR #75).
+- Performance (NFR-01/02): API responses within 500ms; dashboard renders within 2 seconds
+- Reliability (NFR-03/04): 99% uptime via PM2; CI/CD auto-redeploy on push to main
+- Security (NFR-05 to NFR-08, NFR-13): bcrypt passwords, JWT expiry, admin middleware, no secrets in version control, single DB connection (Singleton anchor)
+- Usability (NFR-09/10): responsive UI; meaningful error messages without exposing internals (State pattern 400 response anchor)
+- Scalability (NFR-11/12): stateless API design; MongoDB schema-free growth
+- Availability (NFR-14): core features available when external services (weather API) are unavailable
 
 ### 2.8 User interface mockups/wireframes (Low Fidelity Design)
 *(populate, LF wireframes; reuse the A1 VacayPlan Figma LF screens. Screenshot → 2.8 tracker)*
@@ -127,7 +138,7 @@ Lance's 3rd pattern confirmed as State (email 2026-06-09, reiterated at 13 Jun c
 - Singleton (creational): commit `ccd56e0`. `Database` class in `backend/config/db.js` turns the shared Mongoose connection from an accidental property (one call site) into a designed guarantee: `getInstance()` is the sole access point, the constructor throws on a second instantiation, and `connect()` stores the first connection promise and reuses it on every later call. `connectDB()` keeps its signature so `server.js` is unchanged - and `server.js` already guards startup behind `require.main`, so production has exactly one call site (latent invariant made explicit). Four unit tests in `backend/test/dbSingleton.test.js` prove instance identity, the construction guard, and the single-connection guarantee. Justified via Shvets (2021).
 - Chain of Responsibility (behavioural): commit `c42bf6d`. `validate(rules)` in `backend/middleware/validateMiddleware.js` completes the admin pipeline: `protect` -> `adminProtect` -> `validate` -> handler. Each link follows the same contract - terminate with the appropriate error code or call `next()`. Validation previously sat duplicated inside controllers, enmeshed with business logic; the new link externalises it into the chain. Wired per route in `adminRoutes.js`; four unit tests verify the validate link in isolation; existing admin route tests pass unchanged through the new link. Justified via Shvets (2021).
 - Decorator (structural): commit `e64ca7d`. `withOwnership(handler)` in `backend/middleware/ownershipDecorator.js` eliminates the trip-ownership check duplicated across 8 handlers (3 in tripController, 5 in activityController). The decorator fetches the trip, verifies `trip.userId === req.user._id`, attaches it as `req.trip`, then delegates to the wrapped handler - or terminates with 404. Routes wire it explicitly: `withOwnership(getTripById)` in `tripRoutes.js`, `withOwnership(addActivity)` etc. in `activityRoutes.js`. Controllers simplified to use `req.trip` rather than fetching the trip themselves. Four unit tests in `backend/test/ownershipDecorator.test.js` cover the happy path, 404 not-found, 404 not-owned, and tripId param alias. Justified via Shvets (2021).
-- State (behavioural): commit `23a0d48`. `PlanningState`, `ActiveState`, and `CompletedState` in `backend/state/tripState.js` encapsulate which trip lifecycle transitions are valid (FR-10: planning -> active -> completed, completed is terminal). `tripController.updateTrip` checks this before applying a status change, rejecting invalid transitions with a 400 (NFR-10). Six unit tests in `backend/test/trip.test.js` cover valid and invalid transitions. Justified via Shvets (2021).
+- State (behavioural): commit `23a0d48`. `PlanningState`, `ActiveState`, and `CompletedState` in `backend/state/tripState.js` encapsulate which trip lifecycle transitions are valid (FR-10: planning -> active -> completed, completed is terminal). `tripController.updateTrip` checks this before applying a status change, rejecting invalid transitions with a 400 (NFR-10). Nine unit tests across `backend/test/trip.test.js` and `backend/test/tripState.test.js` cover valid and invalid transitions, the base class guard, and unknown status handling. Justified via Shvets (2021).
 
 ### 3.2 Implementation of OOP (~250–300 words)
 Demonstrate Classes, Objects, Inheritance, Encapsulation, Polymorphism with code examples and justification.
@@ -313,16 +324,38 @@ Critical insight into the development process, challenges, decisions, learning. 
 
 ### References (APA 7th: append as sources are used)
 
-GitHub Inc. (2026). *Secure use reference*. GitHub Docs. https://docs.github.com/en/actions/reference/security/secure-use
-IFQ636 Software Lifecycle Management, QUT. (2026). *1.14 DevOps and CI/CD pipelines*. Module 1. https://canvas.qutonline.edu.au/courses/2238/pages/1-dot-14-devops-and-ci-slash-cd-pipelines
-IFQ636 Software Lifecycle Management, QUT. (2026). *7.2 Cloud infrastructure foundations*. Module 7. https://canvas.qutonline.edu.au/courses/2238/pages/7-dot-2-cloud-infrastructure-foundations
+GitHub Inc. (2026). *Secure use reference*. GitHub Docs.
+    https://docs.github.com/en/actions/reference/security/secure-use
+
+IFQ636 Software Lifecycle Management, QUT. (2026). *1.14 DevOps and CI/CD pipelines*. Module 1.
+    https://canvas.qutonline.edu.au/courses/2238/pages/1-dot-14-devops-and-ci-slash-cd-pipelines
+
+IFQ636 Software Lifecycle Management, QUT. (2026). *7.2 Cloud infrastructure foundations*. Module 7.
+    https://canvas.qutonline.edu.au/courses/2238/pages/7-dot-2-cloud-infrastructure-foundations
+
+Institute of Electrical and Electronics Engineers. (1998). *IEEE recommended practice for software requirements specifications* (IEEE Std 830-1998).
+    https://doi.org/10.1109/IEEESTD.1998.88286
+
 Laster, B. (2023). *Learning GitHub actions: automation and integration of CI/CD with GitHub* (1st ed.). O'Reilly Media.
-Shvets, A. (2021). *Chain of responsibility*. Refactoring.Guru. https://refactoring.guru/design-patterns/chain-of-responsibility
-Shvets, A. (2021). *Facade*. Refactoring.Guru. https://refactoring.guru/design-patterns/facade
-Shvets, A. (2021). *Factory method*. Refactoring.Guru. https://refactoring.guru/design-patterns/factory-method
-Shvets, A. (2021). *Singleton*. Refactoring.Guru. https://refactoring.guru/design-patterns/singleton
-Shvets, A. (2021). *State*. Refactoring.Guru. https://refactoring.guru/design-patterns/state
-Shvets, A. (2021). *State in Python*. Refactoring.Guru. https://refactoring.guru/design-patterns/state/python/example
+
+Shvets, A. (2021a). *Chain of responsibility*. Refactoring.Guru.
+    https://refactoring.guru/design-patterns/chain-of-responsibility
+
+Shvets, A. (2021c). *Facade*. Refactoring.Guru.
+    https://refactoring.guru/design-patterns/facade
+
+Shvets, A. (2021d). *Factory method*. Refactoring.Guru.
+    https://refactoring.guru/design-patterns/factory-method
+
+Shvets, A. (2021e). *Singleton*. Refactoring.Guru.
+    https://refactoring.guru/design-patterns/singleton
+
+Shvets, A. (2021f). *State*. Refactoring.Guru.
+    https://refactoring.guru/design-patterns/state
+
+Shvets, A. (2021g). *State in Python*. Refactoring.Guru.
+    https://refactoring.guru/design-patterns/state/python/example
+>>>>>>> origin/main
 
 *(Note for final assembly: multiple same-author same-year Shvets entries need APA 2021a/2021b/... suffixes, assigned alphabetically by title, with in-text citations updated to match. Do once, at write-up, when the full set is known.)*
 
