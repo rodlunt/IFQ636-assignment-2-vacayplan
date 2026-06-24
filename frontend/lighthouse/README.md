@@ -19,29 +19,36 @@ the seeded `marker` and `admin` accounts from the e2e suite):
 | Trip detail | `/trips/:id` | marker (throwaway trip created + deleted via API) |
 | Admin users | `/admin/users` | admin |
 
-## Prerequisites
+## One-time setup
 
-Unlike the unit tests (which run on mocks), Lighthouse needs the **real app
-running locally**:
-
-1. Backend running with a working `backend/.env` (MongoDB Atlas connection).
-2. Frontend running (`npm start`, default `http://localhost:3000`).
-3. Seeded users present (`marker@vacayplan.com`, `admin@vacayplan.com`). Run the
-   backend seed scripts if needed (`npm run seed` in `backend/`).
-
-## Run it
-
-From `frontend/`:
+Lighthouse needs the headless-shell browser, which the standard browser
+install may not have pulled:
 
 ```bash
-npm run test:lighthouse
+cd frontend
+npx playwright install chromium chromium-headless-shell
 ```
 
-Audit a different target (e.g. the live deploy) with:
+## Run it (against a same-origin full stack)
+
+**Important:** the trip-detail audit makes same-origin `/api` calls, so it only
+works against an origin that serves **both** the app and the API on the same
+host - i.e. the deployed app behind nginx, the same setup the `e2e:live` script
+targets. A split local frontend (`:3000`) + backend (`:5001`) has no `/api`
+proxy, so the trip-detail audit fails there.
+
+Point it at the live deploy (or any same-origin full stack):
 
 ```bash
-LH_BASE_URL=http://<host> npm run test:lighthouse
+cd frontend
+LH_BASE_URL=http://<live-host> npm run test:lighthouse
 ```
+
+Verified working against the live EC2 deploy with all four audits passing.
+Example scores: Performance 93, Accessibility 97, Best Practices 78, SEO 100.
+
+The seeded `marker@vacayplan.com` and `admin@vacayplan.com` accounts must exist
+on whatever backend that origin uses.
 
 ## Output
 

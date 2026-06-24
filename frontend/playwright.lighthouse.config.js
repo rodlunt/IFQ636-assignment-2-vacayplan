@@ -20,6 +20,9 @@ module.exports = defineConfig({
     fullyParallel: false,
     workers: 1,
     retries: 0,
+    // Lighthouse audits plus login can exceed Playwright's 30s default on
+    // slower machines or pages, so give each test generous headroom.
+    timeout: 120000,
     reporter: 'list',
     use: {
         baseURL: BASE_URL,
