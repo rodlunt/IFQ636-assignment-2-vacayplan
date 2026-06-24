@@ -76,3 +76,6 @@ planning/A2_GenAI_Log.md
 # Local-only working drafts (agendas, scratch notes). Kept out of commits;
 # shared by other means (email / WhatsApp), not via the repo.
 planning/local/
+
+# Lighthouse audit reports (local, beyond-rubric)
+frontend/lighthouse-report/
