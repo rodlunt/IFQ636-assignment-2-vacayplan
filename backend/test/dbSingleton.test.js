@@ -1,6 +1,7 @@
 const { expect } = require('chai');
 const sinon = require('sinon');
 const mongoose = require('mongoose');
+const connectDB = require('../config/db');
 const { Database } = require('../config/db');
 
 describe('Database singleton (config/db.js)', () => {
@@ -47,6 +48,35 @@ describe('Database singleton (config/db.js)', () => {
       await db.connect();
       await db.connect();
       expect(connectStub.calledOnce).to.equal(true);
+    });
+  });
+
+  describe('connectDB wrapper', () => {
+    let logStub;
+    let errStub;
+    let exitStub;
+
+    beforeEach(() => {
+      logStub = sinon.stub(console, 'log');
+      errStub = sinon.stub(console, 'error');
+      exitStub = sinon.stub(process, 'exit');
+    });
+
+    it('connects via the singleton and logs success', async () => {
+      await connectDB();
+      expect(connectStub.calledOnce).to.equal(true);
+      expect(logStub.calledWithMatch('MongoDB connected successfully')).to.equal(true);
+      expect(exitStub.called).to.equal(false);
+    });
+
+    it('logs the error and exits the process when the connection fails', async () => {
+      connectStub.restore();
+      sinon.stub(mongoose, 'connect').rejects(new Error('no db'));
+
+      await connectDB();
+
+      expect(errStub.calledWithMatch('MongoDB connection error:')).to.equal(true);
+      expect(exitStub.calledWith(1)).to.equal(true);
     });
   });
 });
