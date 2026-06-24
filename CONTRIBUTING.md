@@ -85,5 +85,12 @@ a remote-less clone makes them return nothing.
 
 See [`README.md`](README.md) for full setup. Quick version: `npm run install-all`
 at the root, copy `backend/.env.example` to `backend/.env` and set `MONGO_URI`,
-then `npm start`. The project uses **npm** throughout — do not switch package
-managers.
+then `npm start`.
+
+**Package managers: root and backend use npm; the frontend uses yarn.** The
+root install script and the backend are npm. The **frontend is yarn-managed** -
+`frontend/yarn.lock` is the live lockfile and the deploy (`ci.yml`) builds the
+frontend with `yarn install` + `yarn run build`. Do **not** run `npm install`
+or `npm ci` in `frontend/`: it fails against the stray, drifted
+`frontend/package-lock.json` and rewrites `yarn.lock`. Use `yarn` there. Do not
+introduce pnpm.
