@@ -137,7 +137,7 @@ Lance's 3rd pattern confirmed as State (email 2026-06-09, reiterated at 13 Jun c
 - Facade (structural): commit `30fe755`. `TripService` in `backend/services/tripService.js` encapsulates trip cascade delete (activities then trip) behind `deleteTripWithActivities(trip)`. `UserService` in `backend/services/userService.js` encapsulates user cascade delete (activities, trips, user, plus audit log) behind `deleteUserWithCascade(user, adminUser)`. Both `tripController.deleteTrip` and `adminController.deleteUser` now delegate to one service method instead of coordinating multiple models inline. Anchored to FR-11 (trip cascade) and FR-19 (user cascade). Justified via Shvets (2021).
 - Singleton (creational): commit `ccd56e0`. `Database` class in `backend/config/db.js` turns the shared Mongoose connection from an accidental property (one call site) into a designed guarantee: `getInstance()` is the sole access point, the constructor throws on a second instantiation, and `connect()` stores the first connection promise and reuses it on every later call. `connectDB()` keeps its signature so `server.js` is unchanged - and `server.js` already guards startup behind `require.main`, so production has exactly one call site (latent invariant made explicit). Four unit tests in `backend/test/dbSingleton.test.js` prove instance identity, the construction guard, and the single-connection guarantee. Justified via Shvets (2021).
 - Chain of Responsibility (behavioural): commit `c42bf6d`. `validate(rules)` in `backend/middleware/validateMiddleware.js` completes the admin pipeline: `protect` -> `adminProtect` -> `validate` -> handler. Each link follows the same contract - terminate with the appropriate error code or call `next()`. Validation previously sat duplicated inside controllers, enmeshed with business logic; the new link externalises it into the chain. Wired per route in `adminRoutes.js`; four unit tests verify the validate link in isolation; existing admin route tests pass unchanged through the new link. Justified via Shvets (2021).
-- Decorator (structural): commit `e64ca7d`. `withOwnership(handler)` in `backend/middleware/ownershipDecorator.js` eliminates the trip-ownership check duplicated across 8 handlers (3 in tripController, 5 in activityController). The decorator fetches the trip, verifies `trip.userId === req.user._id`, attaches it as `req.trip`, then delegates to the wrapped handler - or terminates with 404. Routes wire it explicitly: `withOwnership(getTripById)` in `tripRoutes.js`, `withOwnership(addActivity)` etc. in `activityRoutes.js`. Controllers simplified to use `req.trip` rather than fetching the trip themselves. Four unit tests in `backend/test/ownershipDecorator.test.js` cover the happy path, 404 not-found, 404 not-owned, and tripId param alias. Justified via Shvets (2021).
+- Decorator (structural): commit `e64ca7d`. `withOwnership(handler)` in `backend/middleware/ownershipDecorator.js` eliminates the trip-ownership check duplicated across 8 handlers (3 in tripController, 5 in activityController). The decorator fetches the trip, verifies `trip.userId === req.user._id`, attaches it as `req.trip`, then delegates to the wrapped handler - or terminates with 404. Routes wire it explicitly: `withOwnership(getTripById)` in `tripRoutes.js`, `withOwnership(addActivity)` etc. in `activityRoutes.js`. Controllers simplified to use `req.trip` rather than fetching the trip themselves. Four unit tests in `backend/test/ownershipDecorator.test.js` cover the happy path, 404 not-found, 404 not-owned, and tripId param alias. Justified via Shvets (2021b).
 - State (behavioural): commit `23a0d48`. `PlanningState`, `ActiveState`, and `CompletedState` in `backend/state/tripState.js` encapsulate which trip lifecycle transitions are valid (FR-10: planning -> active -> completed, completed is terminal). `tripController.updateTrip` checks this before applying a status change, rejecting invalid transitions with a 400 (NFR-10). Nine unit tests across `backend/test/trip.test.js` and `backend/test/tripState.test.js` cover valid and invalid transitions, the base class guard, and unknown status handling. Justified via Shvets (2021).
 
 ### 3.2 Implementation of OOP (~250–300 words)
@@ -341,20 +341,17 @@ Laster, B. (2023). *Learning GitHub actions: automation and integration of CI/CD
 Shvets, A. (2021a). *Chain of responsibility*. Refactoring.Guru.
     https://refactoring.guru/design-patterns/chain-of-responsibility
 
-Shvets, A. (2021c). *Facade*. Refactoring.Guru.
-    https://refactoring.guru/design-patterns/facade
 
-Shvets, A. (2021d). *Factory method*. Refactoring.Guru.
+Shvets, A. (2021b). *Decorator*. Refactoring.Guru.
+    https://refactoring.guru/design-patterns/decorator
+
+Shvets, A. (2021c). *Factory method*. Refactoring.Guru.
     https://refactoring.guru/design-patterns/factory-method
 
-Shvets, A. (2021e). *Singleton*. Refactoring.Guru.
-    https://refactoring.guru/design-patterns/singleton
 
-Shvets, A. (2021f). *State*. Refactoring.Guru.
+Shvets, A. (2021d). *State*. Refactoring.Guru.
     https://refactoring.guru/design-patterns/state
 
-Shvets, A. (2021g). *State in Python*. Refactoring.Guru.
-    https://refactoring.guru/design-patterns/state/python/example
 >>>>>>> origin/main
 
 *(Note for final assembly: multiple same-author same-year Shvets entries need APA 2021a/2021b/... suffixes, assigned alphabetically by title, with in-text citations updated to match. Do once, at write-up, when the full set is known.)*
