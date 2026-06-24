@@ -76,10 +76,21 @@ VacayPlan has two actors (use case diagram, Figure 2). The Traveller is a non-te
 The build extends the existing VacayPlan base, so the stack is fixed: Node.js/Express, MongoDB Atlas, and React, deployed to a single AWS EC2 instance via a GitHub Actions CI/CD pipeline. External services such as Open-Meteo (which requires no API key) must be free-tier. Academic requirements include at least seven backend design patterns, OOP principles, and unit and API testing. Three people, roughly four weeks. Open-Meteo provides a running weather forecast of up to 16 days into the future so trips beyond that will not have a forecast available.
 
 ### 2.6 Functional requirements
-*(populate, complete enumeration; reuse/extend the A1 VacayPlan R-catalogue)*
+23 functional requirements across four domains. Author: Lance Masina. Source: `planning/SRS_2.6_2.7_Requirements.md` (merged PR #75, revised 2026-06-13 per Rod's PR #65 feedback).
+- Authentication (FR-01 to FR-04): register, login/JWT, protected routes, logout
+- Trip management (FR-05 to FR-11): full CRUD, status lifecycle (FR-09/FR-10 State pattern anchor), cascade delete (FR-11 Facade anchor)
+- Activity management (FR-12 to FR-15): add, date-range constraint, view by day, update/delete
+- Administration (FR-16 to FR-23): user management, deactivate/reactivate, delete with cascade (FR-19 Facade anchor), consistent response shape (FR-22 Factory Method anchor), request validation (FR-23 CoR anchor)
+- Follows IEEE Std 830-1998 "shall" statement convention throughout
 
 ### 2.7 Non-functional requirements (NFRs)
-*(populate, performance, security, usability; A1 had N001–N005 for VacationPlan)*
+14 NFRs across six quality dimensions. Author: Lance Masina. Source: `planning/SRS_2.6_2.7_Requirements.md` (merged PR #75).
+- Performance (NFR-01/02): API responses within 500ms; dashboard renders within 2 seconds
+- Reliability (NFR-03/04): 99% uptime via PM2; CI/CD auto-redeploy on push to main
+- Security (NFR-05 to NFR-08, NFR-13): bcrypt passwords, JWT expiry, admin middleware, no secrets in version control, single DB connection (Singleton anchor)
+- Usability (NFR-09/10): responsive UI; meaningful error messages without exposing internals (State pattern 400 response anchor)
+- Scalability (NFR-11/12): stateless API design; MongoDB schema-free growth
+- Availability (NFR-14): core features available when external services (weather API) are unavailable
 
 ### 2.8 User interface mockups/wireframes (Low Fidelity Design)
 *(populate, LF wireframes; reuse the A1 VacayPlan Figma LF screens. Screenshot → 2.8 tracker)*
