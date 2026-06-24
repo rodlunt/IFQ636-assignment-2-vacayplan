@@ -48,7 +48,7 @@ VacayPlan has two actors (use case diagram, Figure 2). The Traveller is a non-te
 The build extends the existing VacayPlan base, so the stack is fixed: Node.js/Express, MongoDB Atlas, and React, deployed to a single AWS EC2 instance via a GitHub Actions CI/CD pipeline. External services such as Open-Meteo (which requires no API key) must be free-tier. Academic requirements include at least seven backend design patterns, OOP principles, and unit and API testing. Three people, roughly four weeks. Open-Meteo provides a running weather forecast of up to 16 days into the future, so trips beyond that will not have a forecast available.
 
 ### 2.6 Functional requirements (~30 words + table)
-The following functional requirements define the behaviour VacayPlan shall exhibit. Requirements are grouped by functional domain and identified by unique identifiers for traceability. Two user roles govern access: a regular user (traveller) and an administrator.
+The following functional and non-functional requirements use "shall" statements per IEEE Std 830-1998 (Institute of Electrical and Electronics Engineers, 1998), grouped by domain across two user roles: traveller and administrator.
 
 **Authentication**
 
@@ -182,7 +182,7 @@ Adapter is used as a structural pattern to wrap the Open-Meteo weather service. 
 
 Builder is used as a creational pattern for trip query and update assembly. `TripQueryBuilder` constructs the authenticated user's trip-list filter with newest-first sort; `TripUpdateBuilder` builds partial updates from request data without overwriting omitted fields. Both keep controllers focused on HTTP coordination rather than object construction rules. Implementation: `backend/builders/tripBuilders.js`, used by `tripController.js` in `getTrips` and `updateTrip` (commit `6965ef3`).
 
-Factory Method is used as a creational pattern to centralise user response construction. Previously, `authController.js` and `adminController.js` each built response objects inline, producing inconsistent field names (`id` vs `_id`) across five handlers. `UserResponseFactory.create()` returns a guaranteed object shape, removing that inconsistency and decoupling creators from the objects they produce (Shvets, 2021d). Implementation: `backend/factories/userResponseFactory.js` (commit `e0b85f0`).
+Factory Method is used as a creational pattern to centralise user response construction. Previously, `authController.js` and `adminController.js` each built response objects inline, producing inconsistent field names (`id` vs `_id`) across five handlers. `UserResponseFactory.create()` returns a guaranteed object shape, removing that inconsistency and decoupling creators from the objects they produce (Shvets, 2021c). Implementation: `backend/factories/userResponseFactory.js` (commit `e0b85f0`).
 
 Facade is used as a structural pattern to hide multi-model cascade complexity behind a simplified service interface. Previously, `tripController.deleteTrip` and `adminController.deleteUser` each coordinated Trip, Activity, and User models inline, coupling HTTP flow logic to data management. `TripService.deleteTripWithActivities()` and `UserService.deleteUserWithCascade()` encapsulate those cascades behind single calls, leaving each controller responsible only for request handling. Implementation: `backend/services/` (commit `30fe755`).
 
@@ -192,7 +192,7 @@ Chain of Responsibility is used as a behavioural pattern to sequence authenticat
 
 Decorator is used as a structural pattern to eliminate the ownership-check duplicated across eight trip and activity handlers. Each previously fetched the trip, returned 404 if absent, and re-verified ownership inline. `withOwnership(handler)` in `backend/middleware/ownershipDecorator.js` encapsulates those three steps and delegates to the original handler only when the guard passes - the wrapper adds behaviour without modifying the wrapped function (Shvets, 2021b). Implementation: `tripRoutes.js` and `activityRoutes.js` (commit `e64ca7d`).
 
-State is used as a behavioural pattern to enforce the trip lifecycle defined in FR-10 (planning -> active -> completed, completed terminal). `PlanningState`, `ActiveState`, and `CompletedState` each implement `canTransitionTo(newStatus)`, encapsulating state-specific behaviour rather than scattering it as if/else chains in the controller (Shvets, 2021f). `tripController.updateTrip` rejects invalid transitions with a 400 response (NFR-10). Implementation: `backend/state/tripState.js` (commit `23a0d48`), nine unit tests across `backend/test/trip.test.js` (six API-level transition tests) and `backend/test/tripState.test.js` (three unit-level tests covering the base class guard, unknown status handling, and the full lifecycle matrix).
+State is used as a behavioural pattern to enforce the trip lifecycle defined in FR-10 (planning -> active -> completed, completed terminal). `PlanningState`, `ActiveState`, and `CompletedState` each implement `canTransitionTo(newStatus)`, encapsulating state-specific behaviour rather than scattering it as if/else chains in the controller (Shvets, 2021d). `tripController.updateTrip` rejects invalid transitions with a 400 response (NFR-10). Implementation: `backend/state/tripState.js` (commit `23a0d48`), nine unit tests across `backend/test/trip.test.js` (six API-level transition tests) and `backend/test/tripState.test.js` (three unit-level tests covering the base class guard, unknown status handling, and the full lifecycle matrix).
 
 ### 3.2 Implementation of OOP (~250-300 words)
 *Classes, Objects, Inheritance, Encapsulation, Polymorphism with code examples and justification.*
@@ -413,7 +413,7 @@ The collection uses environment variables (`{{base_url}}`, `{{token}}`, `{{admin
 
 VacayPlan uses two GitHub Actions workflows with distinct responsibilities. `pr-checks.yml` runs on every pull request targeting main, executing the backend test suite and a frontend production build on a GitHub-hosted runner with no deployment or secret access, restoring PR-time test gating that the original single-workflow architecture lacked (Laster, 2023, Ch. 2).
 
-`ci.yml` implements continuous deployment via a self-hosted runner on an AWS EC2 t3.medium instance running Ubuntu 24.04 LTS at public IP 3.26.14.122: every merge to main triggers an automated build, test, and deploy sequence without a manual approval gate (IFQ636 Module 1.14, 2026). The workflow covers Node 22 setup, dependency installation, React production build, Mocha and Chai test execution, rsync deployment, nginx synchronisation, and PM2 restart. Credentials are injected via GitHub Actions Secrets rather than hardcoded in the workflow file, consistent with security hardening practices that prohibit echoing secret values to public logs (Laster, 2023, Ch. 9; GitHub Inc., 2026b). The instance is provisioned as Infrastructure as a Service, with the team managing all configuration above the cloud provider layer (IFQ636 Module 7.02, 2026). PM2 uses systemd startup to survive reboots, and nginx proxies port 80 to the frontend on port 3000 and the backend API on port 5001.
+`ci.yml` implements continuous deployment via a self-hosted runner on an AWS EC2 t3.medium instance running Ubuntu 24.04 LTS at public IP 3.26.14.122: every merge to main triggers an automated build, test, and deploy sequence without a manual approval gate (IFQ636 Module 1.14, 2026). The workflow covers Node 22 setup, dependency installation, React production build, Mocha and Chai test execution, rsync deployment, nginx synchronisation, and PM2 restart. Credentials are injected via GitHub Actions Secrets rather than hardcoded in the workflow file, consistent with security hardening practices that prohibit echoing secret values to public logs (Laster, 2023, Ch. 9; GitHub Inc., 2026). The instance is provisioned as Infrastructure as a Service, with the team managing all configuration above the cloud provider layer (IFQ636 Module 7.2, 2026). PM2 uses systemd startup to survive reboots, and nginx proxies port 80 to the frontend on port 3000 and the backend API on port 5001.
 
 **Fig 7.1** — CI/CD workflow YML
 ![Fig 7.1](planning/screenshots/2026-06-17-cicd-workflow-yml-ldmasina.png)
@@ -456,6 +456,9 @@ VacayPlan uses two GitHub Actions workflows with distinct responsibilities. `pr-
 GitHub Inc. (2026). *Secure use reference*. GitHub Docs.
     https://docs.github.com/en/actions/reference/security/secure-use
 
+Institute of Electrical and Electronics Engineers. (1998). *IEEE recommended practice for software requirements specifications* (IEEE Std 830-1998).
+    https://doi.org/10.1109/IEEESTD.1998.88286
+
 IFQ636 Software Lifecycle Management, QUT. (2026). *1.14 DevOps and CI/CD pipelines*. Module 1.
     https://canvas.qutonline.edu.au/courses/2238/pages/1-dot-14-devops-and-ci-slash-cd-pipelines
 
@@ -464,23 +467,15 @@ IFQ636 Software Lifecycle Management, QUT. (2026). *7.2 Cloud infrastructure fou
 
 Laster, B. (2023). *Learning GitHub actions: automation and integration of CI/CD with GitHub* (1st ed.). O'Reilly Media.
 
-Shvets, A. (2021c). *Facade*. Refactoring.Guru.
-    https://refactoring.guru/design-patterns/facade
-
-Shvets, A. (2021d). *Factory method*. Refactoring.Guru.
-    https://refactoring.guru/design-patterns/factory-method
-
 Shvets, A. (2021a). *Chain of responsibility*. Refactoring.Guru.
     https://refactoring.guru/design-patterns/chain-of-responsibility
 
 Shvets, A. (2021b). *Decorator*. Refactoring.Guru.
     https://refactoring.guru/design-patterns/decorator
 
-Shvets, A. (2021e). *Singleton*. Refactoring.Guru.
-    https://refactoring.guru/design-patterns/singleton
+Shvets, A. (2021c). *Factory method*. Refactoring.Guru.
+    https://refactoring.guru/design-patterns/factory-method
 
-Shvets, A. (2021f). *State*. Refactoring.Guru.
+Shvets, A. (2021d). *State*. Refactoring.Guru.
     https://refactoring.guru/design-patterns/state
 
-Shvets, A. (2021g). *State in Python*. Refactoring.Guru.
-    https://refactoring.guru/design-patterns/state/python/example
