@@ -9,7 +9,8 @@
     "dev": "nodemon server.js",
     "prod": "node server.js",
     "seed": "node scripts/seedUsers.js",
-    "seed:trips": "node scripts/seedTrips.js"
+    "seed:trips": "node scripts/seedTrips.js",
+    "coverage": "c8 --reporter=text --reporter=text-summary --reporter=html mocha --require test/hooks.js --exit --timeout 10000"
   },
   "dependencies": {
     "bcrypt": "^5.0.1",
@@ -23,6 +24,7 @@
     "request": "^2.88.2"
   },
   "devDependencies": {
+    "c8": "^11.0.0",
     "esm": "^3.2.25",
     "mocha": "^11.0.1",
     "nodemon": "^2.0.15",
