@@ -314,12 +314,37 @@ Critical insight into the development process, challenges, decisions, learning. 
 
 ### References (APA 7th: append as sources are used)
 
-Shvets, A. (2021). *Chain of responsibility*. Refactoring.Guru. https://refactoring.guru/design-patterns/chain-of-responsibility
-Shvets, A. (2021). *Facade*. Refactoring.Guru. https://refactoring.guru/design-patterns/facade
-Shvets, A. (2021). *Factory method*. Refactoring.Guru. https://refactoring.guru/design-patterns/factory-method
-Shvets, A. (2021). *Singleton*. Refactoring.Guru. https://refactoring.guru/design-patterns/singleton
-Shvets, A. (2021). *State*. Refactoring.Guru. https://refactoring.guru/design-patterns/state
-Shvets, A. (2021). *State in Python*. Refactoring.Guru. https://refactoring.guru/design-patterns/state/python/example
+GitHub Inc. (2026). *Secure use reference*. GitHub Docs.
+    https://docs.github.com/en/actions/reference/security/secure-use
+
+IFQ636 Software Lifecycle Management, QUT. (2026). *1.14 DevOps and CI/CD pipelines*. Module 1.
+    https://canvas.qutonline.edu.au/courses/2238/pages/1-dot-14-devops-and-ci-slash-cd-pipelines
+
+IFQ636 Software Lifecycle Management, QUT. (2026). *7.2 Cloud infrastructure foundations*. Module 7.
+    https://canvas.qutonline.edu.au/courses/2238/pages/7-dot-2-cloud-infrastructure-foundations
+
+Institute of Electrical and Electronics Engineers. (1998). *IEEE recommended practice for software requirements specifications* (IEEE Std 830-1998).
+    https://doi.org/10.1109/IEEESTD.1998.88286
+
+Laster, B. (2023). *Learning GitHub actions: automation and integration of CI/CD with GitHub* (1st ed.). O'Reilly Media.
+
+Shvets, A. (2021a). *Chain of responsibility*. Refactoring.Guru.
+    https://refactoring.guru/design-patterns/chain-of-responsibility
+
+Shvets, A. (2021c). *Facade*. Refactoring.Guru.
+    https://refactoring.guru/design-patterns/facade
+
+Shvets, A. (2021d). *Factory method*. Refactoring.Guru.
+    https://refactoring.guru/design-patterns/factory-method
+
+Shvets, A. (2021e). *Singleton*. Refactoring.Guru.
+    https://refactoring.guru/design-patterns/singleton
+
+Shvets, A. (2021f). *State*. Refactoring.Guru.
+    https://refactoring.guru/design-patterns/state
+
+Shvets, A. (2021g). *State in Python*. Refactoring.Guru.
+    https://refactoring.guru/design-patterns/state/python/example
 
 *(Note for final assembly: multiple same-author same-year Shvets entries need APA 2021a/2021b/... suffixes, assigned alphabetically by title, with in-text citations updated to match. Do once, at write-up, when the full set is known.)*
 
