@@ -2,6 +2,7 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 const sinon = require('sinon');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 
 const User = require('../models/User');
@@ -158,6 +159,178 @@ describe('Auth Controller (/api/auth)', () => {
 
             expect(res).to.have.status(403);
             expect(res.body).to.have.property('message', 'Account is deactivated');
+        });
+    });
+
+    describe('GET /api/auth/profile', () => {
+        let userId;
+        let token;
+
+        beforeEach(() => {
+            userId = new mongoose.Types.ObjectId();
+            token = jwt.sign({ id: userId.toString() }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        });
+
+        // protect (Chain of Responsibility) calls User.findById(id).select('-password');
+        // getProfile then calls User.findById(req.user.id) directly. The first call
+        // feeds the middleware, the second feeds the handler.
+        const stubAuthThen = (handlerResult) => {
+            const findById = sinon.stub(User, 'findById');
+            findById.onFirstCall().returns({
+                select: sinon.stub().resolves({ id: userId.toString() }),
+            });
+            if (handlerResult instanceof Error) {
+                findById.onSecondCall().rejects(handlerResult);
+            } else {
+                findById.onSecondCall().resolves(handlerResult);
+            }
+            return findById;
+        };
+
+        it('returns 200 with the profile fields for an authenticated user', async () => {
+            stubAuthThen({
+                name: 'Profile User',
+                email: 'profile@test.com',
+                university: 'QUT',
+                address: '2 George St',
+            });
+
+            const res = await chai.request(app)
+                .get('/api/auth/profile')
+                .set('Authorization', `Bearer ${token}`);
+
+            expect(res).to.have.status(200);
+            expect(res.body).to.deep.equal({
+                name: 'Profile User',
+                email: 'profile@test.com',
+                university: 'QUT',
+                address: '2 George St',
+            });
+        });
+
+        it('returns 404 when the user no longer exists', async () => {
+            stubAuthThen(null);
+
+            const res = await chai.request(app)
+                .get('/api/auth/profile')
+                .set('Authorization', `Bearer ${token}`);
+
+            expect(res).to.have.status(404);
+            expect(res.body).to.have.property('message', 'User not found');
+        });
+
+        it('returns 401 when no token is provided', async () => {
+            const res = await chai.request(app).get('/api/auth/profile');
+            expect(res).to.have.status(401);
+        });
+
+        it('returns 500 when the profile lookup throws', async () => {
+            stubAuthThen(new Error('db down'));
+
+            const res = await chai.request(app)
+                .get('/api/auth/profile')
+                .set('Authorization', `Bearer ${token}`);
+
+            expect(res).to.have.status(500);
+            expect(res.body).to.have.property('message', 'Server error');
+        });
+    });
+
+    describe('PUT /api/auth/profile', () => {
+        let userId;
+        let token;
+
+        beforeEach(() => {
+            userId = new mongoose.Types.ObjectId();
+            token = jwt.sign({ id: userId.toString() }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        });
+
+        const stubAuthThen = (handlerResult) => {
+            const findById = sinon.stub(User, 'findById');
+            findById.onFirstCall().returns({
+                select: sinon.stub().resolves({ id: userId.toString() }),
+            });
+            findById.onSecondCall().resolves(handlerResult);
+            return findById;
+        };
+
+        it('updates the provided fields and returns 200 with a token', async () => {
+            const userDoc = {
+                id: userId.toString(),
+                name: 'Old Name',
+                email: 'old@test.com',
+                university: 'UQ',
+                address: 'Old Address',
+                save: sinon.stub().resolvesThis(),
+            };
+            stubAuthThen(userDoc);
+
+            const res = await chai.request(app)
+                .put('/api/auth/profile')
+                .set('Authorization', `Bearer ${token}`)
+                .send({ name: 'New Name', email: 'new@test.com', address: 'New Address' });
+
+            expect(res).to.have.status(200);
+            expect(res.body).to.have.property('name', 'New Name');
+            expect(res.body).to.have.property('email', 'new@test.com');
+            expect(res.body).to.have.property('token').that.is.a('string');
+            expect(userDoc.save.calledOnce).to.be.true;
+            expect(userDoc.university).to.equal('UQ'); // omitted field retained
+        });
+
+        it('keeps existing values for fields that are not provided', async () => {
+            const userDoc = {
+                id: userId.toString(),
+                name: 'Keep Name',
+                email: 'keep@test.com',
+                university: 'QUT',
+                address: 'Keep Address',
+                save: sinon.stub().resolvesThis(),
+            };
+            stubAuthThen(userDoc);
+
+            const res = await chai.request(app)
+                .put('/api/auth/profile')
+                .set('Authorization', `Bearer ${token}`)
+                .send({ university: 'New University' });
+
+            expect(res).to.have.status(200);
+            expect(userDoc.university).to.equal('New University');
+            expect(userDoc.name).to.equal('Keep Name');
+            expect(userDoc.email).to.equal('keep@test.com');
+            expect(userDoc.address).to.equal('Keep Address');
+        });
+
+        it('returns 404 when the user no longer exists', async () => {
+            stubAuthThen(null);
+
+            const res = await chai.request(app)
+                .put('/api/auth/profile')
+                .set('Authorization', `Bearer ${token}`)
+                .send({ name: 'X' });
+
+            expect(res).to.have.status(404);
+            expect(res.body).to.have.property('message', 'User not found');
+        });
+
+        it('returns 500 when save throws', async () => {
+            const userDoc = {
+                id: userId.toString(),
+                name: 'N',
+                email: 'e@test.com',
+                university: 'U',
+                address: 'A',
+                save: sinon.stub().rejects(new Error('save failed')),
+            };
+            stubAuthThen(userDoc);
+
+            const res = await chai.request(app)
+                .put('/api/auth/profile')
+                .set('Authorization', `Bearer ${token}`)
+                .send({ name: 'X' });
+
+            expect(res).to.have.status(500);
+            expect(res.body).to.have.property('message', 'save failed');
         });
     });
 });
