@@ -13,10 +13,11 @@ Team: Rodney (`rodlunt`), Lance (`LDMasina`), Joseph (`jrmilburn`).
    `srs/...`, `pattern/...`, `oop/...`, `unit-test/...`, `api-test/...`,
    `ci-cd/...`, `report/...`, `docs/...`, `fix/...` (a short description after
    the slash, e.g. `pattern/strategy-itinerary-sort`).
-2. **One open pull request at a time, across the whole team.** We review and
-   merge serially so the commit graph stays clean and legible to the marker.
-   Do not open a second PR while one is still open. If you are blocked waiting,
-   review the open PR so it can merge.
+2. **Multiple pull requests may be open at once.** Open a PR as soon as the
+   work is ready rather than holding it back, and aim to review and merge open
+   PRs quickly so the queue stays short. Keep each PR small and scoped to one
+   task so the commit graph stays clean and legible to the marker. If you are
+   blocked waiting on your own work, review an open PR so it can merge.
 3. **Never squash-merge. Never rebase-flatten shared history.** Use ordinary
    merge commits. Squashing collapses a branch into a single commit, which
    erases who-did-what and destroys the merge-conflict evidence the rubric
