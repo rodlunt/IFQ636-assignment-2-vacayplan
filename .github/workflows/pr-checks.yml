@@ -49,9 +49,13 @@ jobs:
         working-directory: ./backend
         run: npm test
 
+      # The frontend is yarn-managed (yarn.lock is the maintained lockfile and
+      # ci.yml deploys with yarn). package-lock.json is stale, so `npm ci`
+      # fails its strict sync check (e.g. typescript pinned outside the
+      # react-scripts range). Use yarn here to match the deploy.
       - name: Install frontend dependencies
         working-directory: ./frontend
-        run: npm ci
+        run: yarn install
 
       - name: Build frontend
         working-directory: ./frontend
@@ -59,4 +63,4 @@ jobs:
           # Build-time only; the PR check never serves this bundle, so the URL
           # is a placeholder. The real value is injected by ci.yml on deploy.
           REACT_APP_API_URL: http://localhost
-        run: npm run build
+        run: yarn run build
