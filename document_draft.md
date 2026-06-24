@@ -65,7 +65,7 @@ Low-fidelity wireframes for Dashboard, Trip Detail, and Edit Trip at desktop and
 ![Fig 4b](planning/diagrams/wireframe-edit-trip-mobile.png)
 
 ### 2.9 Complete system diagram (~20 words + figure)
-Figure 1 presents the complete VacayPlan system architecture. The React SPA communicates via HTTPS through an Nginx reverse proxy to the Express backend on AWS EC2, which connects to MongoDB Atlas and the Open-Meteo weather API via a CI/CD pipeline managed by GitHub Actions.
+Figure 1 presents the complete VacayPlan system architecture. The React SPA communicates over HTTP through an Nginx reverse proxy to the Express backend on AWS EC2, which connects to MongoDB Atlas and the Open-Meteo weather API via a CI/CD pipeline managed by GitHub Actions.
 
 ![Figure 1: VacayPlan complete system diagram](planning/diagrams/A2_system_diagram_2.9.png)
 
