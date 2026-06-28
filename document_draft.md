@@ -298,32 +298,13 @@ The collection uses environment variables (`{{base_url}}`, `{{token}}`, `{{admin
 
 ### 6.1 Request/response screenshots
 
+Representative results are shown below, one per response type and pattern. The full set of 40 request/response captures across all endpoints (happy paths and error handling) is in Appendix B.
+
 **Fig 6.1.1** - POST /api/auth/register - 201
 ![Fig 6.1.1](planning/screenshots/2026-06-18-postman-auth-register-201-rodlunt.png)
 
 **Fig 6.1.2** - POST /api/auth/register - 400 missing fields
 ![Fig 6.1.2](planning/screenshots/2026-06-18-postman-auth-register-400-rodlunt.png)
-
-**Fig 6.1.3** - POST /api/auth/register - 409 duplicate email
-![Fig 6.1.3](planning/screenshots/2026-06-18-postman-auth-register-409-rodlunt.png)
-
-**Fig 6.1.4** - POST /api/auth/login - 200
-![Fig 6.1.4](planning/screenshots/2026-06-18-postman-auth-login-200-rodlunt.png)
-
-**Fig 6.1.5** - POST /api/auth/login - 401 wrong password
-![Fig 6.1.5](planning/screenshots/2026-06-18-postman-auth-login-wrong-password-401-rodlunt.png)
-
-**Fig 6.1.6** - POST /api/auth/login - 401 unknown user
-![Fig 6.1.6](planning/screenshots/2026-06-18-postman-auth-login-unknown-user-401-rodlunt.png)
-
-**Fig 6.1.7** - GET /api/auth/profile - 401 no JWT (CoR protect)
-![Fig 6.1.7](planning/screenshots/2026-06-18-postman-auth-profile-no-jwt-401-rodlunt.png)
-
-**Fig 6.1.8** - GET /api/auth/profile - 200
-![Fig 6.1.8](planning/screenshots/2026-06-18-postman-auth-profile-200-rodlunt.png)
-
-**Fig 6.1.9** - PUT /api/auth/profile - 200 update
-![Fig 6.1.9](planning/screenshots/2026-06-18-postman-auth-profile-update-200-rodlunt.png)
 
 **Fig 6.1.10** - GET /api/admin/users - 401 no JWT (CoR step 1)
 ![Fig 6.1.10](planning/screenshots/2026-06-18-postman-admin-no-jwt-401-rodlunt.png)
@@ -334,41 +315,8 @@ The collection uses environment variables (`{{base_url}}`, `{{token}}`, `{{admin
 **Fig 6.1.12** - POST /api/auth/login as admin - 200
 ![Fig 6.1.12](planning/screenshots/2026-06-18-postman-admin-login-200-rodlunt.png)
 
-**Fig 6.1.13** - GET /api/admin/users - 200 all users
-![Fig 6.1.13](planning/screenshots/2026-06-18-postman-admin-list-users-200-rodlunt.png)
-
-**Fig 6.1.14** - GET /api/admin/users/:id - 200
-![Fig 6.1.14](planning/screenshots/2026-06-18-postman-admin-get-user-200-rodlunt.png)
-
-**Fig 6.1.15** - POST /api/admin/users - 201 create
-![Fig 6.1.15](planning/screenshots/2026-06-18-postman-admin-create-user-201-rodlunt.png)
-
-**Fig 6.1.16** - PATCH /api/admin/users/:id - 200 deactivated
-![Fig 6.1.16](planning/screenshots/2026-06-18-postman-admin-update-status-200-rodlunt.png)
-
-**Fig 6.1.17** - GET /api/admin/trips - 200 all trips
-![Fig 6.1.17](planning/screenshots/2026-06-18-postman-admin-list-trips-200-rodlunt.png)
-
-**Fig 6.1.18** - DELETE /api/admin/users/:id - 204
-![Fig 6.1.18](planning/screenshots/2026-06-18-postman-admin-delete-user-204-rodlunt.png)
-
-**Fig 6.1.19** - POST /api/auth/login - 200 (token acquired)
-![Fig 6.1.19](planning/screenshots/2026-06-20-postman-auth-login-200-ldmasina.png)
-
-**Fig 6.1.20** - POST /api/trips - 201
-![Fig 6.1.20](planning/screenshots/2026-06-20-postman-trips-create-201-ldmasina.png)
-
-**Fig 6.1.21** - GET /api/trips - 200 all trips
-![Fig 6.1.21](planning/screenshots/2026-06-20-postman-trips-list-200-ldmasina.png)
-
-**Fig 6.1.22** - GET /api/trips/:id - 200
-![Fig 6.1.22](planning/screenshots/2026-06-20-postman-trips-get-by-id-200-ldmasina.png)
-
 **Fig 6.1.23** - GET /api/trips/:id - 404 wrong owner
 ![Fig 6.1.23](planning/screenshots/2026-06-20-postman-trips-wrong-owner-404-ldmasina.png)
-
-**Fig 6.1.24** - PUT /api/trips/:id - 200 update
-![Fig 6.1.24](planning/screenshots/2026-06-20-postman-trips-update-200-ldmasina.png)
 
 **Fig 6.1.25** - PUT /api/trips/:id - 400 State planning->completed invalid
 ![Fig 6.1.25](planning/screenshots/2026-06-20-postman-state-planning-completed-invalid-400-ldmasina.png)
@@ -376,47 +324,8 @@ The collection uses environment variables (`{{base_url}}`, `{{token}}`, `{{admin
 **Fig 6.1.26** - PUT /api/trips/:id - 200 State planning->active
 ![Fig 6.1.26](planning/screenshots/2026-06-20-postman-state-planning-active-valid-200-ldmasina.png)
 
-**Fig 6.1.27** - PUT /api/trips/:id - 400 State active->planning invalid
-![Fig 6.1.27](planning/screenshots/2026-06-20-postman-state-active-planning-invalid-400-ldmasina.png)
-
-**Fig 6.1.28** - PUT /api/trips/:id - 200 State active->completed
-![Fig 6.1.28](planning/screenshots/2026-06-20-postman-state-active-completed-valid-200-ldmasina.png)
-
-**Fig 6.1.29** - PUT /api/trips/:id - 400 State completed->planning invalid
-![Fig 6.1.29](planning/screenshots/2026-06-20-postman-state-completed-planning-invalid-400-ldmasina.png)
-
-**Fig 6.1.30** - DELETE /api/trips/:id - 204 cascade (Facade)
-![Fig 6.1.30](planning/screenshots/2026-06-20-postman-trips-delete-204-ldmasina.png)
-
-**Fig 6.1.31** - GET /api/trips - 401 no JWT
-![Fig 6.1.31](planning/screenshots/2026-06-20-postman-trips-no-jwt-401-ldmasina.png)
-
-**Fig 6.1.32** - POST /api/trips/:id/activities - create - 201
-![Fig 6.1.32](planning/screenshots/2026-06-23-postman-activities-create-201-jrmilburn.png)
-
-**Fig 6.1.33** - GET /api/trips/:id/activities - list - 200
-![Fig 6.1.33](planning/screenshots/2026-06-23-postman-activities-list-200-jrmilburn.png)
-
-**Fig 6.1.34** - PUT /api/trips/:id/activities/:actId - update - 200
-![Fig 6.1.34](planning/screenshots/2026-06-23-postman-activities-update-200-jrmilburn.png)
-
-**Fig 6.1.35** - PATCH /api/trips/:id/activities/:actId/status - booked - 200
-![Fig 6.1.35](planning/screenshots/2026-06-23-postman-activities-status-booked-200-jrmilburn.png)
-
-**Fig 6.1.36** - PATCH /api/trips/:id/activities/:actId/status - invalid - 400
-![Fig 6.1.36](planning/screenshots/2026-06-23-postman-activities-status-invalid-400-jrmilburn.png)
-
-**Fig 6.1.37** - GET /api/trips/:id/activities - wrong owner - 404
-![Fig 6.1.37](planning/screenshots/2026-06-23-postman-activities-wrong-owner-404-jrmilburn.png)
-
-**Fig 6.1.38** - DELETE /api/trips/:id/activities/:actId - 204
-![Fig 6.1.38](planning/screenshots/2026-06-23-postman-activities-delete-204-jrmilburn.png)
-
 **Fig 6.1.39** - GET /api/trips/:id/weather - happy path - 200
 ![Fig 6.1.39](planning/screenshots/2026-06-23-postman-weather-happy-path-200-jrmilburn.png)
-
-**Fig 6.1.40** - GET /api/trips/:id/weather - beyond forecast window - 200
-![Fig 6.1.40](planning/screenshots/2026-06-23-postman-weather-beyond-window-200-jrmilburn.png)
 
 ### 6.2 Exported collection
 
@@ -641,3 +550,101 @@ Genuine conflicts arising from parallel work, resolved on record (commit + messa
 | `caf4d93` | resolve conflict with main - keep fuller meeting-2 notes |
 | `4e2d810` | resolve conflicts with main - keep CoR and Facade checklist rows, add Facade and CoR references |
 | `394d5e5` | resolve conflicts with main - keep Builder and Factory Method entries in all three files |
+
+
+## Appendix B: API test evidence (Postman)
+
+Complete Postman request/response evidence for every endpoint (happy paths and error cases). Representative examples appear in section 6.1.
+
+**Fig 6.1.3** - POST /api/auth/register - 409 duplicate email
+![Fig 6.1.3](planning/screenshots/2026-06-18-postman-auth-register-409-rodlunt.png)
+
+**Fig 6.1.4** - POST /api/auth/login - 200
+![Fig 6.1.4](planning/screenshots/2026-06-18-postman-auth-login-200-rodlunt.png)
+
+**Fig 6.1.5** - POST /api/auth/login - 401 wrong password
+![Fig 6.1.5](planning/screenshots/2026-06-18-postman-auth-login-wrong-password-401-rodlunt.png)
+
+**Fig 6.1.6** - POST /api/auth/login - 401 unknown user
+![Fig 6.1.6](planning/screenshots/2026-06-18-postman-auth-login-unknown-user-401-rodlunt.png)
+
+**Fig 6.1.7** - GET /api/auth/profile - 401 no JWT (CoR protect)
+![Fig 6.1.7](planning/screenshots/2026-06-18-postman-auth-profile-no-jwt-401-rodlunt.png)
+
+**Fig 6.1.8** - GET /api/auth/profile - 200
+![Fig 6.1.8](planning/screenshots/2026-06-18-postman-auth-profile-200-rodlunt.png)
+
+**Fig 6.1.9** - PUT /api/auth/profile - 200 update
+![Fig 6.1.9](planning/screenshots/2026-06-18-postman-auth-profile-update-200-rodlunt.png)
+
+**Fig 6.1.13** - GET /api/admin/users - 200 all users
+![Fig 6.1.13](planning/screenshots/2026-06-18-postman-admin-list-users-200-rodlunt.png)
+
+**Fig 6.1.14** - GET /api/admin/users/:id - 200
+![Fig 6.1.14](planning/screenshots/2026-06-18-postman-admin-get-user-200-rodlunt.png)
+
+**Fig 6.1.15** - POST /api/admin/users - 201 create
+![Fig 6.1.15](planning/screenshots/2026-06-18-postman-admin-create-user-201-rodlunt.png)
+
+**Fig 6.1.16** - PATCH /api/admin/users/:id - 200 deactivated
+![Fig 6.1.16](planning/screenshots/2026-06-18-postman-admin-update-status-200-rodlunt.png)
+
+**Fig 6.1.17** - GET /api/admin/trips - 200 all trips
+![Fig 6.1.17](planning/screenshots/2026-06-18-postman-admin-list-trips-200-rodlunt.png)
+
+**Fig 6.1.18** - DELETE /api/admin/users/:id - 204
+![Fig 6.1.18](planning/screenshots/2026-06-18-postman-admin-delete-user-204-rodlunt.png)
+
+**Fig 6.1.19** - POST /api/auth/login - 200 (token acquired)
+![Fig 6.1.19](planning/screenshots/2026-06-20-postman-auth-login-200-ldmasina.png)
+
+**Fig 6.1.20** - POST /api/trips - 201
+![Fig 6.1.20](planning/screenshots/2026-06-20-postman-trips-create-201-ldmasina.png)
+
+**Fig 6.1.21** - GET /api/trips - 200 all trips
+![Fig 6.1.21](planning/screenshots/2026-06-20-postman-trips-list-200-ldmasina.png)
+
+**Fig 6.1.22** - GET /api/trips/:id - 200
+![Fig 6.1.22](planning/screenshots/2026-06-20-postman-trips-get-by-id-200-ldmasina.png)
+
+**Fig 6.1.24** - PUT /api/trips/:id - 200 update
+![Fig 6.1.24](planning/screenshots/2026-06-20-postman-trips-update-200-ldmasina.png)
+
+**Fig 6.1.27** - PUT /api/trips/:id - 400 State active->planning invalid
+![Fig 6.1.27](planning/screenshots/2026-06-20-postman-state-active-planning-invalid-400-ldmasina.png)
+
+**Fig 6.1.28** - PUT /api/trips/:id - 200 State active->completed
+![Fig 6.1.28](planning/screenshots/2026-06-20-postman-state-active-completed-valid-200-ldmasina.png)
+
+**Fig 6.1.29** - PUT /api/trips/:id - 400 State completed->planning invalid
+![Fig 6.1.29](planning/screenshots/2026-06-20-postman-state-completed-planning-invalid-400-ldmasina.png)
+
+**Fig 6.1.30** - DELETE /api/trips/:id - 204 cascade (Facade)
+![Fig 6.1.30](planning/screenshots/2026-06-20-postman-trips-delete-204-ldmasina.png)
+
+**Fig 6.1.31** - GET /api/trips - 401 no JWT
+![Fig 6.1.31](planning/screenshots/2026-06-20-postman-trips-no-jwt-401-ldmasina.png)
+
+**Fig 6.1.32** - POST /api/trips/:id/activities - create - 201
+![Fig 6.1.32](planning/screenshots/2026-06-23-postman-activities-create-201-jrmilburn.png)
+
+**Fig 6.1.33** - GET /api/trips/:id/activities - list - 200
+![Fig 6.1.33](planning/screenshots/2026-06-23-postman-activities-list-200-jrmilburn.png)
+
+**Fig 6.1.34** - PUT /api/trips/:id/activities/:actId - update - 200
+![Fig 6.1.34](planning/screenshots/2026-06-23-postman-activities-update-200-jrmilburn.png)
+
+**Fig 6.1.35** - PATCH /api/trips/:id/activities/:actId/status - booked - 200
+![Fig 6.1.35](planning/screenshots/2026-06-23-postman-activities-status-booked-200-jrmilburn.png)
+
+**Fig 6.1.36** - PATCH /api/trips/:id/activities/:actId/status - invalid - 400
+![Fig 6.1.36](planning/screenshots/2026-06-23-postman-activities-status-invalid-400-jrmilburn.png)
+
+**Fig 6.1.37** - GET /api/trips/:id/activities - wrong owner - 404
+![Fig 6.1.37](planning/screenshots/2026-06-23-postman-activities-wrong-owner-404-jrmilburn.png)
+
+**Fig 6.1.38** - DELETE /api/trips/:id/activities/:actId - 204
+![Fig 6.1.38](planning/screenshots/2026-06-23-postman-activities-delete-204-jrmilburn.png)
+
+**Fig 6.1.40** - GET /api/trips/:id/weather - beyond forecast window - 200
+![Fig 6.1.40](planning/screenshots/2026-06-23-postman-weather-beyond-window-200-jrmilburn.png)
