@@ -275,7 +275,7 @@ GitHub Actions build/test/deploy; runs on push; public URL + pm2 status.
 - Two-workflow architecture introduced via PR #106 (2026-06-24). `pr-checks.yml` runs on every PR targeting main on a GitHub-hosted ubuntu-latest runner -- no deployment, no secrets. `ci.yml` runs on push to main via self-hosted EC2 runner -- full build, test, deploy.
 - Split rationale: `ci.yml` stops PM2, rsyncs into the production serve path, rewrites .env and reseeds the database. Running it on PRs would deploy and reseed production on every PR review. `pr-checks.yml` restores PR-time test gating without touching production.
 - Credentials injected via GitHub Actions Secrets. Secret echo step deliberately omitted from both workflows -- workflow logs are publicly visible, echoing secrets would expose production credentials (Laster, 2023, Ch. 9).
-- EC2 instance is IaaS -- team manages OS, runtime, and application configuration above the cloud provider layer (IFQ636 Module 7.02, 2026).
+- EC2 instance is IaaS -- team manages OS, runtime, and application configuration above the cloud provider layer (Queensland University of Technology, 2026b).
 - PM2 systemd startup (`pm2-ubuntu.service`) ensures processes survive reboots without manual intervention.
 - nginx reverse proxy: port 80 routes to frontend (3000) and backend API (5001).
 - Deviations from unit template (3.11.1): secret echo step omitted; yarn audit gates added (advisory, continue-on-error); two workflows instead of one.
@@ -327,16 +327,16 @@ Critical insight into the development process, challenges, decisions, learning. 
 GitHub Inc. (2026). *Secure use reference*. GitHub Docs.
     https://docs.github.com/en/actions/reference/security/secure-use
 
-IFQ636 Software Lifecycle Management, QUT. (2026). *1.14 DevOps and CI/CD pipelines*. Module 1.
-    https://canvas.qutonline.edu.au/courses/2238/pages/1-dot-14-devops-and-ci-slash-cd-pipelines
-
-IFQ636 Software Lifecycle Management, QUT. (2026). *7.2 Cloud infrastructure foundations*. Module 7.
-    https://canvas.qutonline.edu.au/courses/2238/pages/7-dot-2-cloud-infrastructure-foundations
-
 Institute of Electrical and Electronics Engineers. (1998). *IEEE recommended practice for software requirements specifications* (IEEE Std 830-1998).
     https://doi.org/10.1109/IEEESTD.1998.88286
 
 Laster, B. (2023). *Learning GitHub actions: automation and integration of CI/CD with GitHub* (1st ed.). O'Reilly Media.
+
+Queensland University of Technology. (2026a). *IFQ636 Software Lifecycle Management: 1.14 DevOps and CI/CD pipelines* [Module notes]. Canvas.
+    https://canvas.qutonline.edu.au/
+
+Queensland University of Technology. (2026b). *IFQ636 Software Lifecycle Management: 7.2 Cloud infrastructure foundations* [Module notes]. Canvas.
+    https://canvas.qutonline.edu.au/
 
 Shvets, A. (2021a). *Chain of responsibility*. Refactoring.Guru.
     https://refactoring.guru/design-patterns/chain-of-responsibility
@@ -352,9 +352,7 @@ Shvets, A. (2021c). *Factory method*. Refactoring.Guru.
 Shvets, A. (2021d). *State*. Refactoring.Guru.
     https://refactoring.guru/design-patterns/state
 
->>>>>>> origin/main
-
-*(Note for final assembly: multiple same-author same-year Shvets entries need APA 2021a/2021b/... suffixes, assigned alphabetically by title, with in-text citations updated to match. Do once, at write-up, when the full set is known.)*
+*(QUT module pages cited per QUT cite|write APA 7th LMS format: group author Queensland University of Technology, unit code + name folded into the italicised title, [Module notes] descriptor, Canvas + login URL. Same-author same-year suffixes applied: Shvets 2021a-d and Queensland University of Technology 2026a/2026b, by title order, with in-text citations updated to match. This bank mirrors document_draft.md References, the single canonical list per issue #36.)*
 
 ---
 

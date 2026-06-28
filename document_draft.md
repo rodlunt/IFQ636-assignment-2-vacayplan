@@ -418,7 +418,7 @@ The collection uses environment variables (`{{base_url}}`, `{{token}}`, `{{admin
 
 VacayPlan uses two GitHub Actions workflows with distinct responsibilities. `pr-checks.yml` runs on every pull request targeting main, executing the backend test suite and a frontend production build on a GitHub-hosted runner with no deployment or secret access, restoring PR-time test gating that the original single-workflow architecture lacked (Laster, 2023, Ch. 2).
 
-`ci.yml` implements continuous deployment via a self-hosted runner on an AWS EC2 t3.medium instance running Ubuntu 24.04 LTS at public IP 3.26.14.122: every merge to main triggers an automated build, test, and deploy sequence without a manual approval gate (IFQ636 Module 1.14, 2026). The workflow covers Node 22 setup, dependency installation, React production build, Mocha and Chai test execution, rsync deployment, nginx synchronisation, and PM2 restart. Credentials are injected via GitHub Actions Secrets rather than hardcoded in the workflow file, consistent with security hardening practices that prohibit echoing secret values to public logs (Laster, 2023, Ch. 9; GitHub Inc., 2026). The instance is provisioned as Infrastructure as a Service, with the team managing all configuration above the cloud provider layer (IFQ636 Module 7.2, 2026). PM2 uses systemd startup to survive reboots, and nginx proxies port 80 to the frontend on port 3000 and the backend API on port 5001.
+`ci.yml` implements continuous deployment via a self-hosted runner on an AWS EC2 t3.medium instance running Ubuntu 24.04 LTS at public IP 3.26.14.122: every merge to main triggers an automated build, test, and deploy sequence without a manual approval gate (Queensland University of Technology, 2026a). The workflow covers Node 22 setup, dependency installation, React production build, Mocha and Chai test execution, rsync deployment, nginx synchronisation, and PM2 restart. Credentials are injected via GitHub Actions Secrets rather than hardcoded in the workflow file, consistent with security hardening practices that prohibit echoing secret values to public logs (Laster, 2023, Ch. 9; GitHub Inc., 2026). The instance is provisioned as Infrastructure as a Service, with the team managing all configuration above the cloud provider layer (Queensland University of Technology, 2026b). PM2 uses systemd startup to survive reboots, and nginx proxies port 80 to the frontend on port 3000 and the backend API on port 5001.
 
 **Fig 7.1** - CI/CD workflow YML
 ![Fig 7.1](planning/screenshots/2026-06-17-cicd-workflow-yml-ldmasina.png)
@@ -489,13 +489,13 @@ GitHub Inc. (2026). *Secure use reference*. GitHub Docs.
 Institute of Electrical and Electronics Engineers. (1998). *IEEE recommended practice for software requirements specifications* (IEEE Std 830-1998).
     https://doi.org/10.1109/IEEESTD.1998.88286
 
-IFQ636 Software Lifecycle Management, QUT. (2026). *1.14 DevOps and CI/CD pipelines*. Module 1.
-    https://canvas.qutonline.edu.au/courses/2238/pages/1-dot-14-devops-and-ci-slash-cd-pipelines
-
-IFQ636 Software Lifecycle Management, QUT. (2026). *7.2 Cloud infrastructure foundations*. Module 7.
-    https://canvas.qutonline.edu.au/courses/2238/pages/7-dot-2-cloud-infrastructure-foundations
-
 Laster, B. (2023). *Learning GitHub actions: automation and integration of CI/CD with GitHub* (1st ed.). O'Reilly Media.
+
+Queensland University of Technology. (2026a). *IFQ636 Software Lifecycle Management: 1.14 DevOps and CI/CD pipelines* [Module notes]. Canvas.
+    https://canvas.qutonline.edu.au/
+
+Queensland University of Technology. (2026b). *IFQ636 Software Lifecycle Management: 7.2 Cloud infrastructure foundations* [Module notes]. Canvas.
+    https://canvas.qutonline.edu.au/
 
 Shvets, A. (2021a). *Chain of responsibility*. Refactoring.Guru.
     https://refactoring.guru/design-patterns/chain-of-responsibility
