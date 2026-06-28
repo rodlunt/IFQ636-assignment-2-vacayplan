@@ -37,7 +37,7 @@ camera. One member uploads the final cut to Canvas Studio.
 ### 2. Rodney - 8:30
 
 - **CI/CD pipeline + deploy (Step 7):** walk `.github/workflows/ci.yml`, show a green Actions run, `pm2 status` on the EC2 box, and the live URL serving the latest build. Mention the separate PR Checks workflow that gates pull requests.
-- **Unit testing (Step 5):** run the mocha suite (142 passing), then `npm run coverage` to show the c8 table (~92% statements). Screenshot both for the report.
+- **Unit testing (Step 5):** run the mocha suite (180 passing), then `npm run coverage` to show the c8 table (99.54% statements, 99.26% branches, 100% functions). Screenshot both for the report.
 - **Postman - auth + admin folder (Step 6):** run the Auth and Admin requests, including the failure cases (401/403).
 - **Patterns owned:** Singleton (`config/db.js`), Facade (`services/`), Chain of Responsibility (the `protect` -> `adminProtect` -> `validate` middleware chain).
 

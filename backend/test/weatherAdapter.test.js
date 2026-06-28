@@ -241,6 +241,58 @@ describe('OpenMeteoWeatherAdapter (Adapter pattern)', () => {
         expect(error.message).to.match(/timed out/i);
     });
 
+    it('treats a null destination the same as a blank one and skips the network', async () => {
+        const fetchFn = makeFetch([]);
+        const adapter = new OpenMeteoWeatherAdapter({ fetchFn });
+
+        let error;
+        try {
+            await adapter.getForecast({ location: null });
+        } catch (err) {
+            error = err;
+        }
+
+        expect(error).to.be.an('error');
+        expect(error.message).to.match(/destination is required/i);
+        expect(fetchFn.calls).to.have.lengthOf(0);
+    });
+
+    it('falls back to the first candidate when a region is given but no candidate matches it', async () => {
+        const geocode = {
+            results: [
+                { name: 'Springfield', country: 'United States', country_code: 'US', admin1: 'Illinois', latitude: 39.8, longitude: -89.6 },
+                { name: 'Springfield', country: 'United States', country_code: 'US', admin1: 'Missouri', latitude: 37.2, longitude: -93.3 },
+            ],
+        };
+        const fetchFn = makeFetch([jsonResponse(geocode), jsonResponse(FORECAST_BODY)]);
+        const adapter = new OpenMeteoWeatherAdapter({ fetchFn });
+
+        const forecast = await adapter.getForecast({ location: 'Springfield, Atlantis' });
+
+        // 'Atlantis' matches no candidate field, so the adapter keeps the first result.
+        expect(forecast.location).to.equal('Springfield, Illinois, United States');
+    });
+
+    it('normalises a day to null for a metric the vendor omits or leaves empty', async () => {
+        const partialForecast = {
+            daily: {
+                time: ['2026-07-01'],
+                weathercode: [0],
+                temperature_2m_max: [30.0],
+                // temperature_2m_min omitted entirely, so pick() sees a non-array
+                precipitation_sum: [null], // present, but the element itself is null
+            },
+        };
+        const fetchFn = makeFetch([jsonResponse(GEOCODE_BODY), jsonResponse(partialForecast)]);
+        const adapter = new OpenMeteoWeatherAdapter({ fetchFn });
+
+        const forecast = await adapter.getForecast({ location: 'Kyoto' });
+
+        expect(forecast.daily[0].tempMinC).to.equal(null);
+        expect(forecast.daily[0].precipitationMm).to.equal(null);
+        expect(forecast.daily[0].tempMaxC).to.equal(30.0);
+    });
+
     it('the WeatherProvider target interface refuses to be used directly', async () => {
         let error;
         try {
