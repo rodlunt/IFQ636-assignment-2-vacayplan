@@ -387,6 +387,20 @@
           "name": "Create Trip (201)",
           "event": [
             {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "// Dates within Open-Meteo's forecast window so the weather happy-path",
+                  "// returns a real forecast. Computed at run time so they never go stale.",
+                  "const iso = (offset) => { const d = new Date(); d.setDate(d.getDate() + offset); return d.toISOString().slice(0, 10); };",
+                  "pm.environment.set('tripStart', iso(2));",
+                  "pm.environment.set('tripEnd', iso(9));",
+                  "pm.environment.set('activityDate', iso(3));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
               "listen": "test",
               "script": {
                 "exec": [
@@ -409,7 +423,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"title\": \"Postman Test Trip\",\n  \"destination\": \"Tokyo, Japan\",\n  \"startDate\": \"2026-09-01\",\n  \"endDate\": \"2026-09-14\",\n  \"budget\": 5000,\n  \"notes\": \"Test trip for Postman collection\",\n  \"status\": \"planning\"\n}",
+              "raw": "{\n  \"title\": \"Postman Test Trip\",\n  \"destination\": \"Tokyo, Japan\",\n  \"startDate\": \"{{tripStart}}\",\n  \"endDate\": \"{{tripEnd}}\",\n  \"budget\": 5000,\n  \"notes\": \"Test trip for Postman collection\",\n  \"status\": \"planning\"\n}",
               "options": { "raw": { "language": "json" } }
             },
             "url": {
@@ -645,7 +659,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"date\": \"2026-09-02\",\n  \"time\": \"10:00\",\n  \"location\": \"South Bank Parklands, Brisbane\",\n  \"description\": \"Morning visit to South Bank\",\n  \"status\": \"wishlist\"\n}",
+              "raw": "{\n  \"date\": \"{{activityDate}}\",\n  \"time\": \"10:00\",\n  \"location\": \"South Bank Parklands, Brisbane\",\n  \"description\": \"Morning visit to South Bank\",\n  \"status\": \"wishlist\"\n}",
               "options": { "raw": { "language": "json" } }
             },
             "url": {
