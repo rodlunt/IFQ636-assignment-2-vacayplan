@@ -429,10 +429,14 @@ VacayPlan uses two GitHub Actions workflows with distinct responsibilities. `pr-
 
 ---
 
-## Discussion and conclusion (~200-250 words)
+## Discussion and conclusion (218 words)
 *Team discussion of the development process; conclusion.*
 
-*(draft here)*
+We organised development around short-lived feature branches and pull requests, which let the three of us work in parallel while keeping the main branch deployable. The benefit of this approach was that each merge into main was seen by at least 2 of the 3 members, significantly reducing the chance of issues. A post-merge review of PR #66 caught a frontend regression that both test suites had missed, which showed us that backend unit tests do not necessarily guarantee API contract safety. Resolving merge conflicts turned out to be productive in a similar way. When working through conflict #2, between Rodney's Chain of Responsibility entry and Lance's Facade branch, the reconciliation forced the implementation references up to date. The resulting documentation was more accurate than either branch in isolation.
+
+Collaboration widened the design as well. The weather adapter gave us a sensible place to apply the Adapter pattern, as the existing design had no obvious fit for it. Finally, the pipeline was split into pr-checks.yml and ci.yml once it was clear a deploy-time gate could not be the only test gate.
+
+Overall, VacayPlan is a working full-stack trip-planning application. It has been built on documented design patterns and OOP principles. Testing involved unit tests and Postman API checks, and every push was deployed through an automated CI/CD pipeline. 
 
 ---
 
