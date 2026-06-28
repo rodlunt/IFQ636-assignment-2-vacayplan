@@ -50,10 +50,10 @@ VacayPlan has two actors (use case diagram, Figure 2). The Traveller is a non-te
 The build extends the existing VacayPlan base, so the stack is fixed: Node.js/Express, MongoDB Atlas, and React, deployed to a single AWS EC2 instance via a GitHub Actions CI/CD pipeline. External services such as Open-Meteo (which requires no API key) must be free-tier. Academic requirements include at least seven backend design patterns, OOP principles, and unit and API testing. Three people, roughly four weeks. Open-Meteo provides a running weather forecast of up to 16 days into the future, so trips beyond that will not have a forecast available.
 
 ### 2.6 Functional requirements (~30 words + table)
-VacayPlan defines 23 functional requirements across four domains, written as "shall" statements per IEEE Std 830-1998 (Institute of Electrical and Electronics Engineers, 1998). Authentication (FR-01-FR-04) covers registration, JWT login, protected-route access, and logout. Trip management (FR-05-FR-11) provides full CRUD plus the planning-active-completed status lifecycle (FR-09/FR-10) and cascade deletion of activities (FR-11). Activity management (FR-12-FR-15) adds date-constrained activities organised by day. Administration (FR-16-FR-23) covers account management, cross-account trip visibility, deactivation enforcement, a consistent JSON response shape, and request validation. The complete requirement table is in Appendix C.
+VacayPlan defines 23 functional requirements across four domains, written as "shall" statements per IEEE Std 830-1998 (Institute of Electrical and Electronics Engineers, 1998). Authentication (FR-01-FR-04) covers registration, JSON Web Token (JWT) login (Jones et al., 2015), protected-route access, and logout. Trip management (FR-05-FR-11) provides full CRUD plus the planning-active-completed status lifecycle (FR-09/FR-10) and cascade deletion of activities (FR-11). Activity management (FR-12-FR-15) adds date-constrained activities organised by day. Administration (FR-16-FR-23) covers account management, cross-account trip visibility, deactivation enforcement, a consistent JSON response shape, and request validation. The complete requirement table is in Appendix C.
 
 ### 2.7 Non-functional requirements (~30 words + table)
-Fourteen non-functional requirements define VacayPlan's quality attributes. Performance (NFR-01/02): sub-500ms CRUD responses and a two-second dashboard render. Reliability (NFR-03/04): 99% uptime via PM2 and automatic CI/CD redeploy on every push. Security (NFR-05-NFR-08, NFR-13): bcrypt password hashing, JWT expiry, admin-only middleware, no secrets in version control, and a single shared database connection. Usability (NFR-09/10): a responsive UI and safe error messaging. Scalability (NFR-11/12): stateless horizontal scaling and schema-free collection growth. Availability (NFR-14): core planning remains usable when external services fail. The complete requirement table is in Appendix C.
+Fourteen non-functional requirements define VacayPlan's quality attributes (Sommerville, 2016). Performance (NFR-01/02): sub-500ms CRUD responses and a two-second dashboard render. Reliability (NFR-03/04): 99% uptime via PM2 and automatic CI/CD redeploy on every push. Security (NFR-05-NFR-08, NFR-13): bcrypt password hashing (Provos & Mazières, 1999), JWT expiry, admin-only middleware, no secrets in version control, and a single shared database connection. Usability (NFR-09/10): a responsive UI and safe error messaging. Scalability (NFR-11/12): stateless horizontal scaling and schema-free collection growth. Availability (NFR-14): core planning remains usable when external services fail. The complete requirement table is in Appendix C.
 
 ### 2.8 User interface mockups/wireframes (~20 words + figure)
 Low-fidelity wireframes for Dashboard, Trip Detail, and Edit Trip at desktop and mobile breakpoints. Red boxes mark pattern-backed additions.
@@ -71,10 +71,10 @@ Figure 1 presents the complete VacayPlan system architecture. The React SPA comm
 ![Figure 1: VacayPlan complete system diagram](planning/diagrams/A2_system_diagram_2.9.png)
 
 ### 2.10 Safety considerations (~100 words)
-VacayPlan's safety approach operates at three layers. At the network layer, Nginx serves the app and reverse-proxies API calls to the Express backend on the EC2 public IP; the backend reaches MongoDB Atlas over TLS. The public endpoint is served over HTTP, in line with the unit's bare-IP deployment model; client-facing TLS is noted as a future hardening step. At the application layer, every authenticated route passes through a three-link middleware chain - `protect` validates the JWT, `adminProtect` enforces role boundaries, and `validate` checks request shape before business logic executes. Trip and activity ownership is verified by `withOwnership` before handlers run, preventing cross-user data access. At the data layer, the Facade pattern ensures deletions cascade across related models, eliminating orphaned records. The weather adapter enforces an 8-second timeout against hung external requests.
+VacayPlan's safety approach operates at three layers. At the network layer, Nginx serves the app and reverse-proxies API calls to the Express backend, which reaches MongoDB Atlas over TLS; the public endpoint is HTTP, in line with the unit's bare-IP model, with client-facing TLS a future hardening step. At the application layer, every authenticated route passes through the middleware chain (`protect`, `adminProtect`, `validate`) before business logic runs, and `withOwnership` verifies trip and activity ownership to prevent cross-user access. At the data layer, the Facade cascades deletions across related models to eliminate orphaned records, and the weather adapter enforces an 8-second timeout against hung external requests.
 
 ### 2.11 Risk management (~60 words + table)
-Risk management uses the STRIDE threat model. Each category maps to a VacayPlan-specific risk and the control in place, or a gap where none exists.
+Risk management uses the STRIDE threat model (Shostack, 2014). Each category maps to a VacayPlan-specific risk and the control in place, or a gap where none exists.
 
 | Threat                  | VacayPlan risk                                            | Mitigation                                                       | Status    |
 |:------------------------|:----------------------------------------------------------|:-----------------------------------------------------------------|:---------:|
@@ -93,7 +93,7 @@ Risk management uses the STRIDE threat model. Each category maps to a VacayPlan-
 ### 3.1 Design pattern (~400-500 words)
 *Minimum 7 patterns, each justified and demonstrated in backend code. Pattern-count ladder: 7=HD, 6=D, 5=C, 4=P. Live committed list lives in `planning/A2_Checklist.md` pattern tracker.*
 
-Adapter is used as a structural pattern to wrap the Open-Meteo weather service. `WeatherProvider` defines the forecast interface the application depends on, and `OpenMeteoWeatherAdapter` translates the vendor's coordinate-based, WMO-coded responses into a normalised forecast object. Changing providers means adding a new `WeatherProvider` subclass without touching controllers, routes, or the frontend. Implementation: `backend/adapters/weatherAdapter.js`, serving `GET /api/trips/:id/weather` (commit `37b337c`).
+Adapter is used as a structural pattern (Gamma et al., 1994) to wrap the Open-Meteo weather service. `WeatherProvider` defines the forecast interface the application depends on, and `OpenMeteoWeatherAdapter` translates the vendor's coordinate-based, WMO-coded responses into a normalised forecast object. Changing providers means adding a new `WeatherProvider` subclass without touching controllers, routes, or the frontend. Implementation: `backend/adapters/weatherAdapter.js`, serving `GET /api/trips/:id/weather` (commit `37b337c`).
 
 Builder is used as a creational pattern for trip query and update assembly. `TripQueryBuilder` constructs the authenticated user's trip-list filter with newest-first sort; `TripUpdateBuilder` builds partial updates from request data without overwriting omitted fields. Both keep controllers focused on HTTP coordination rather than object construction rules. Implementation: `backend/builders/tripBuilders.js`, used by `tripController.js` in `getTrips` and `updateTrip` (commit `6965ef3`).
 
@@ -112,7 +112,7 @@ State is used as a behavioural pattern to enforce the trip lifecycle defined in 
 ### 3.2 Implementation of OOP (~250-300 words)
 *Classes, Objects, Inheritance, Encapsulation, Polymorphism with code examples and justification.*
 
-**Classes and objects.** VacayPlan's backend is structured around ES6 classes throughout. `Database` in `backend/config/db.js` is a clear example: the class defines the connection blueprint, and `Database.getInstance()` returns the single object that holds the live Mongoose connection state. `TripService` and `UserService` in `backend/services/` follow the same shape - each is defined as a class and exported as a constructed object instance, bundling related operations (cascade deletion, ownership verification) around shared state rather than scattering them as loose functions (Fig 3.2.1).
+**Classes and objects.** VacayPlan's backend is structured around ES6 classes throughout. `Database` in `backend/config/db.js` is a clear example: the class defines the connection blueprint, and `Database.getInstance()` returns the single object that holds the live Mongoose connection state. `TripService` and `UserService` in `backend/services/` follow the same shape - each is defined as a class and exported as a constructed object instance, bundling related operations (cascade deletion, ownership verification) around shared state rather than scattering them as loose functions (Martin, 2017; Fig 3.2.1).
 
 **Fig 3.2.1** - `Database` class with `getInstance()` (db.js)
 ![Fig 3.2.1](planning/screenshots/2026-06-19-oop-classes-db-rodlunt.png)
@@ -122,7 +122,7 @@ State is used as a behavioural pattern to enforce the trip lifecycle defined in 
 **Fig 3.2.2** - `getForecast()` delegating to private helpers (weatherAdapter.js)
 ![Fig 3.2.2](planning/screenshots/2026-06-19-oop-encapsulation-weather-rodlunt.png)
 
-**Inheritance.** Two class hierarchies appear in the backend. `OpenMeteoWeatherAdapter extends WeatherProvider` in `backend/adapters/weatherAdapter.js`: `WeatherProvider` defines the `getForecast()` interface (throwing if not overridden), and the subclass provides the Open-Meteo implementation. `PlanningState`, `ActiveState`, and `CompletedState` all extend `TripState` in `backend/state/tripState.js`, each overriding `canTransitionTo(newStatus)` with its own rules. Both hierarchies use the same approach: an abstract base class enforces a contract; concrete subclasses provide the implementation (Fig 3.2.3).
+**Inheritance.** Two class hierarchies appear in the backend. `OpenMeteoWeatherAdapter extends WeatherProvider` in `backend/adapters/weatherAdapter.js`: `WeatherProvider` defines the `getForecast()` interface (throwing if not overridden), and the subclass provides the Open-Meteo implementation. `PlanningState`, `ActiveState`, and `CompletedState` all extend `TripState` in `backend/state/tripState.js`, each overriding `canTransitionTo(newStatus)` with its own rules. Both hierarchies use the same approach: an abstract base class enforces a contract; concrete subclasses provide the implementation, programming to an interface rather than to a concrete class (Gamma et al., 1994; Fig 3.2.3).
 
 **Fig 3.2.3** - `TripState` base class and subclasses (tripState.js)
 ![Fig 3.2.3](planning/screenshots/2026-06-19-oop-inheritance-tripstate-rodlunt.png)
@@ -137,12 +137,12 @@ State is used as a behavioural pattern to enforce the trip lifecycle defined in 
 ## Team collaboration via GitHub (~200-250 words)
 
 ### 4.1 Team collaboration statement
-We organised every piece of work as a GitHub issue, labelled by report section and assigned to a single owner, then tracked it on a shared Project board through Todo, In progress, In review and Done. Each task was developed on its own short-lived feature branch taken from main, with several pull requests open at once so the queue stayed short and each change stayed small and reviewable. Every pull request was reviewed and approved by at least one other member before it merged, and we used ordinary merge commits rather than squashing or rebasing so that per-author history and our resolved merge conflicts remained on record. All three of us committed under our own identity. We coordinated through a Tuesday email check-in, a standing Saturday call, and a WhatsApp group for day-to-day questions and blockers.
+We organised every piece of work as a GitHub issue, labelled by report section and assigned to a single owner, then tracked it on a shared Project board through Todo, In progress, In review and Done. Each task was developed on its own short-lived feature branch taken from main (Chacon & Straub, 2014), with several pull requests open at once so the queue stayed short and each change stayed small and reviewable. Every pull request was reviewed and approved by at least one other member before it merged, and we used ordinary merge commits rather than squashing or rebasing so that per-author history and our resolved merge conflicts remained on record. All three of us committed under our own identity. We coordinated through a Tuesday email check-in, a standing Saturday call, and a WhatsApp group for day-to-day questions and blockers.
 
 ### 4.2 Team collaboration evidence
 *Feature branches; PRs; minimum 2 resolved merge conflicts; commit history graph; meeting times/dates. Meeting log + merge-conflict log are kept in `planning/A2_Report_Notes.md` §4.2.*
 
-The team worked one feature branch per task, merged through reviewed pull requests with ordinary merge commits (never squash) so per-decision history is preserved. The commit graph below shows feature branches merging into `main` with authorship across all three members; Appendix A lists every pull request with its branch, author, and reviewer, and the resolved merge conflicts.
+The commit graph below shows feature branches merging into `main` with authorship across all three members; Appendix A lists every pull request with its branch, author, and reviewer, and the resolved merge conflicts.
 
 **Fig 4.2.0** - Commit graph (VS Code Git Graph): feature branches merged into `main` via pull request, with per-commit authorship across the team
 ![Fig 4.2.0](planning/screenshots/2026-06-28-git-graph-vscode-rodlunt.png)
@@ -167,7 +167,7 @@ The backend is tested with Mocha, Chai, and Sinon (stubbing MongoDB and external
 
 The Chain of Responsibility middleware (`protect`, `adminProtect`, `validate`) is tested in isolation, each link passing control only when its conditions are met. Six tests cover the State pattern transitions (`planning → active → completed`), asserting valid progressions and rejected backward or skip moves. Fifteen tests cover the Adapter (`OpenMeteoWeatherAdapter`): geocoding, normalisation, timeout handling, and edge cases (blank destinations, unmatched regions, omitted metrics, out-of-range dates).
 
-All 180 tests pass with no failures or pending cases (Figs 5.1.1-5.1.2), running in under a second and executed in CI on every push for continuous regression coverage.
+All 180 tests pass with no failures or pending cases (Figs 5.1.1-5.1.2), running in under a second and executed in CI on every push for continuous regression coverage (Sommerville, 2016).
 
 c8 coverage is 99.54% of statements, 99.26% of branches, and 100% of functions (Fig 5.1.3); the only gaps are the `server.js` bootstrap guard and one unreachable branch in the weather adapter.
 
@@ -185,11 +185,11 @@ c8 coverage is 99.54% of statements, 99.26% of branches, and 100% of functions (
 ## API testing using Postman (~150-200 words)
 *All endpoints incl. error handling; exported collection committed.*
 
-Using Postman, we tested all REST endpoints covering happy paths and error cases. The collection was created and shared in the repository so each team member could run their own tests independently. The endpoint groups Rodney covered were auth (`/api/auth/*`) and admin/CoR (`/api/admin/*`).
+Using Postman, we tested all REST endpoints (Fielding, 2000) across happy paths and error cases. The collection was shared in the repository so each member could run the tests independently; Rodney covered auth (`/api/auth/*`) and admin/CoR (`/api/admin/*`).
 
-The endpoints in admin demonstrate the Chain of Responsibility (CoR) in action, where `protect` verifies a JWT has been issued and is valid (Figs 6.1.10-6.1.11) and `adminProtect` checks for admin privileges (Fig 6.1.12). At that point, the request reaches the handler. Each figure shows one link in the chain rejecting requests at the correct point.
+The admin endpoints demonstrate the Chain of Responsibility: `protect` validates the JWT (Figs 6.1.10-6.1.11) and `adminProtect` checks admin privileges (Fig 6.1.12) before the request reaches the handler, each figure showing one link rejecting requests at the correct point.
 
-The collection uses environment variables (`{{base_url}}`, `{{token}}`, `{{adminToken}}`) and test scripts that save tokens from login responses, so team members can import and run their own endpoints without manual setup. A full run against the live deployment passes end to end - 41 requests and every assertion green, including the live weather forecast (Fig 6.1.0).
+The collection uses environment variables (`{{base_url}}`, `{{token}}`, `{{adminToken}}`) and scripts that save tokens from login responses, so members can import and run it without manual setup. A full run against the live deployment passes end to end: 41 requests, every assertion green, including the live weather forecast (Fig 6.1.0).
 
 **Fig 6.1.0** - Full collection run against the live deployment (`http://3.26.14.122`), all assertions passing
 ![Fig 6.1.0](planning/screenshots/2026-06-28-postman-newman-green-live-rodlunt.png)
@@ -234,9 +234,9 @@ Representative results are shown below, one per response type and pattern. The f
 ## CI/CD pipeline setup (~150-200 words)
 *GitHub Actions build/test/deploy on push; public URL; pm2 status.*
 
-VacayPlan uses two GitHub Actions workflows with distinct responsibilities. `pr-checks.yml` runs on every pull request targeting main, executing the backend test suite and a frontend production build on a GitHub-hosted runner with no deployment or secret access, restoring PR-time test gating that the original single-workflow architecture lacked (Laster, 2023, Ch. 2).
+VacayPlan uses two GitHub Actions workflows. `pr-checks.yml` runs on every pull request to main, executing the backend test suite and a frontend production build on a GitHub-hosted runner with no deployment or secret access, restoring the PR-time test gating the original single-workflow setup lacked (Laster, 2023, Ch. 2).
 
-`ci.yml` implements continuous deployment via a self-hosted runner on an AWS EC2 t3.medium instance running Ubuntu 24.04 LTS at public IP 3.26.14.122: every merge to main triggers an automated build, test, and deploy sequence without a manual approval gate (Queensland University of Technology, 2026a). The workflow covers Node 22 setup, dependency installation, React production build, Mocha and Chai test execution, rsync deployment, nginx synchronisation, and PM2 restart. Credentials are injected via GitHub Actions Secrets rather than hardcoded in the workflow file, consistent with security hardening practices that prohibit echoing secret values to public logs (Laster, 2023, Ch. 9; GitHub Inc., 2026). The instance is provisioned as Infrastructure as a Service, with the team managing all configuration above the cloud provider layer (Queensland University of Technology, 2026b). PM2 uses systemd startup to survive reboots, and nginx proxies port 80 to the frontend on port 3000 and the backend API on port 5001.
+`ci.yml` implements continuous deployment via a self-hosted runner on an AWS EC2 t3.medium instance (Ubuntu 24.04 LTS, public IP 3.26.14.122): every merge to main triggers an automated build, test, and deploy without a manual approval gate (Queensland University of Technology, 2026a). It covers Node 22 setup, dependency installation, React build, Mocha/Chai tests, rsync deployment, nginx sync, and PM2 restart, forming a deployment pipeline (Humble & Farley, 2010). Credentials come from GitHub Actions Secrets rather than the workflow file, and are never echoed to the public logs (Laster, 2023, Ch. 9; GitHub Inc., 2026). The instance runs as Infrastructure as a Service, the team managing all configuration above the provider layer (Queensland University of Technology, 2026b). PM2 uses systemd startup to survive reboots, and nginx proxies port 80 to the frontend (3000) and backend API (5001).
 
 **Fig 7.1** - CI/CD workflow YML
 ![Fig 7.1](planning/screenshots/2026-06-17-cicd-workflow-yml-ldmasina.png)
@@ -302,19 +302,38 @@ Lance - I thought the trip status-transition checks belonged inside the TripUpda
 ## References
 *APA 7th. Alphabetical, hanging indent. No invented references.*
 
+Chacon, S., & Straub, B. (2014). *Pro Git* (2nd ed.). Apress.
+
+Fielding, R. T. (2000). *Architectural styles and the design of network-based software architectures* [Doctoral dissertation, University of California, Irvine].
+    https://ics.uci.edu/~fielding/pubs/dissertation/fielding_dissertation.pdf
+
+Gamma, E., Helm, R., Johnson, R., & Vlissides, J. (1994). *Design patterns: Elements of reusable object-oriented software*. Addison-Wesley.
+
 GitHub Inc. (2026). *Secure use reference*. GitHub Docs.
     https://docs.github.com/en/actions/reference/security/secure-use
+
+Humble, J., & Farley, D. (2010). *Continuous delivery: Reliable software releases through build, test, and deployment automation*. Addison-Wesley.
 
 Institute of Electrical and Electronics Engineers. (1998). *IEEE recommended practice for software requirements specifications* (IEEE Std 830-1998).
     https://doi.org/10.1109/IEEESTD.1998.88286
 
+Jones, M., Bradley, J., & Sakimura, N. (2015). *JSON Web Token (JWT)* (Request for Comments No. 7519). Internet Engineering Task Force.
+    https://doi.org/10.17487/RFC7519
+
 Laster, B. (2023). *Learning GitHub actions: automation and integration of CI/CD with GitHub* (1st ed.). O'Reilly Media.
+
+Martin, R. C. (2017). *Clean architecture: A craftsman's guide to software structure and design*. Prentice Hall.
+
+Provos, N., & Mazières, D. (1999, June 6-11). *A future-adaptable password scheme* [Paper presentation]. 1999 USENIX Annual Technical Conference, Monterey, CA, United States.
+    https://www.usenix.org/legacy/event/usenix99/provos/provos.pdf
 
 Queensland University of Technology. (2026a). *IFQ636 Software Lifecycle Management: 1.14 DevOps and CI/CD pipelines* [Module notes]. Canvas.
     https://canvas.qutonline.edu.au/
 
 Queensland University of Technology. (2026b). *IFQ636 Software Lifecycle Management: 7.2 Cloud infrastructure foundations* [Module notes]. Canvas.
     https://canvas.qutonline.edu.au/
+
+Shostack, A. (2014). *Threat modeling: Designing for security*. Wiley.
 
 Shvets, A. (2021a). *Chain of responsibility*. Refactoring.Guru.
     https://refactoring.guru/design-patterns/chain-of-responsibility
@@ -327,6 +346,8 @@ Shvets, A. (2021c). *Factory method*. Refactoring.Guru.
 
 Shvets, A. (2021d). *State*. Refactoring.Guru.
     https://refactoring.guru/design-patterns/state
+
+Sommerville, I. (2016). *Software engineering* (10th ed.). Pearson.
 
 
 ---
