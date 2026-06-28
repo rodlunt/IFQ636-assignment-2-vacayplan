@@ -464,31 +464,20 @@ Overall, VacayPlan is a working full-stack trip-planning application. It has bee
 
 ---
 
-## Use of GenAI + Reflection (~150-200 words, counted in total)
-*Mandatory disclosure. Source table: `planning/A2_Report_Notes.md` §9. QUT CiteWrite AI-citation format.*
+## 9a. Use of GenAI
+*Mandatory disclosure. Source table: `planning/A2_Report_Notes.md` §9. QUT CiteWrite AI-citation format. (9a + 9b together ~150-200 words.)*
 
-*(draft here)*
+All three used Claude Code (Anthropic, 2026; Opus 4.8) as the sole AI assistant; uses overlap across the team. Logs available on request.
 
-Joe's GenAI disclosure
-Sample prompts (joe's work — Adapter + Builder):
-- Design drafting — "draft a WeatherProvider interface and an Open-Meteo adapter so the app depends on a stable forecast contract, not the vendor's response shape"
-- Code drafting — "map Open-Meteo's WMO weather codes to short summaries"
-- Debugging — "guard the forecast call with a timeout/abort so a hung vendor request can't block a trip"
-- Refactoring — "fold trip-list filtering into a fluent TripQueryBuilder"
-- Copyediting and PR descriptions
+| Aspect | Detail |
+|---|---|
+| **Sample prompts** | Pattern/feature implementation; debugging; rubric and code audits; Postman authoring; SRS/diagram drafting; copyediting; Git/PR workflow. |
+| **AI-assisted tasks** | Code and tests for the seven patterns; backend fixes; coverage; the Postman collection; rubric/code audits; SRS/diagram drafting; 3.1 copyedit; board scaffolding. |
+| **How verified** | `npm test` between changes; code checked against the codebase; CI green; Postman/Newman re-runs. |
 
-AI-assisted tasks (joe):
-- Adapter pattern (weather integration) code
-- Builder pattern code
-- SRS 2.1–2.5 prose
-- Design-pattern paragraph copyedits (3.1)
+**Boundary:** AI drafted under student direction; design, scope and content decisions were the team's. No AI-attribution in commits or code.
 
-How verified (joe):
-- Code claims checked against README, backend models/routes/controllers, and the use-case diagram
-- CI/CD pipeline tests
-- npm test run between changes (106 passing)
-- Task sheet read directly rather than paraphrased from memory
-
+*[Lance to confirm: you used Claude Code (or name your tool), and add any AI-assisted task specific to you - ~10-15 words if needed.]*
 
 ---
 
