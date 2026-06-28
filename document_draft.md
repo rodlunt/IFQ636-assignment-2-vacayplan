@@ -473,10 +473,14 @@ How verified (joe):
 
 ---
 
-## Reflection
-*Critical insight into the development process, challenges, decisions, learning. Source: the running reflection log in `planning/A2_Report_Notes.md` §9.*
+## 9b. Reflection
+*Conversational, one genuine insight each, ~40 words per member. (9a + 9b together ~150-200 words.)*
 
-*(draft here)*
+Rodney - I assumed two green test suites meant the API was safe. PR #66 proved otherwise: a frontend regression slipped straight through, because unit tests show a handler behaves, not that the contract still holds. I now check contract changes across the stack, not with unit tests alone.
+
+Lance - I thought the trip status-transition checks belonged inside the TripUpdateBuilder. Building them there would have broken its single responsibility, so I moved them to a separate validation layer in front of the builder. Keeping each component to one job is how I work now.
+
+*Joseph - add yours here (~25-40 words; aim ~25 to keep 9a+9b within the 200 budget), conversational like the two above: what you expected going in, what actually happened, and how it changes the way you work.*
 
 ---
 
