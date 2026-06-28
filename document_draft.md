@@ -227,7 +227,10 @@ State is used as a behavioural pattern to enforce the trip lifecycle defined in 
 ### 4.2 Team collaboration evidence
 *Feature branches; PRs; minimum 2 resolved merge conflicts; commit history graph; meeting times/dates. Meeting log + merge-conflict log are kept in `planning/A2_Report_Notes.md` §4.2.*
 
-*(draft here - plus figures: commit graph, PR list, merge-conflict resolution)*
+The team worked one feature branch per task, merged through reviewed pull requests with ordinary merge commits (never squash) so per-decision history is preserved. The commit graph below shows feature branches merging into `main` with authorship across all three members; Appendix A lists every pull request with its branch, author, and reviewer, and the resolved merge conflicts.
+
+**Fig 4.2.0** - Commit graph (VS Code Git Graph): feature branches merged into `main` via pull request, with per-commit authorship across the team
+![Fig 4.2.0](planning/screenshots/2026-06-28-git-graph-vscode-rodlunt.png)
 
 **Fig 4.2.1** - Kanban board (13 Jun) with Blocked column in use
 ![Fig 4.2.1](planning/screenshots/2026-06-13-kanban-blocked-column.png)
@@ -509,3 +512,123 @@ Shvets, A. (2021c). *Factory method*. Refactoring.Guru.
 Shvets, A. (2021d). *State*. Refactoring.Guru.
     https://refactoring.guru/design-patterns/state
 
+
+---
+
+## Appendix A: Branch and pull-request evidence
+
+Every code change was developed on a dedicated feature branch (one branch per task) and merged into `main` through a reviewed pull request. Ordinary merge commits were used (never squash), so per-decision history is preserved on `main`; merged branches were then deleted, so the live branch list shows only `main`. The branch and merge topology is shown visually in the commit graph (Figure 4.2.0); the pull-request history below is the authoritative textual record.
+
+### Headline numbers
+
+| Metric | Value |
+|---|---|
+| Pull requests opened | 65 |
+| Pull requests merged | 62 |
+| Distinct feature branches | 63 |
+| Genuine merge conflicts resolved on record | 7 |
+
+**Commits and pull requests per member**
+
+| Member | Commits | Pull requests |
+|---|---|---|
+| rodlunt (Rodney Lunt) | ~126 | 48 |
+| LDMasina (Lance Masina) | ~54 | 9 |
+| jrmilburn (Joseph Milburn) | ~33 | 8 |
+
+**Branch prefixes**
+
+| Prefix | Count |
+|---|---|
+| `docs/` | 34 |
+| `fix/` | 10 |
+| `pattern/` | 5 |
+| `test/` | 5 |
+| `chore/` | 4 |
+| `feature/` | 3 |
+| `hotfix/` | 2 |
+| `feat/` | 2 |
+
+### Pull request to branch evidence
+
+| PR | Source branch | Author | Reviewed by | Merged | Title |
+|---|---|---|---|---|---|
+| #62 | `docs/vscode-issue-filters` | rodlunt | LDMasina | 2026-06-09 | Document VS Code issue filter setup |
+| #63 | `chore/ignore-local-drafts` | rodlunt | - | 2026-06-10 | Ignore planning/local/ for local-only drafts |
+| #64 | `pattern/builder-trip-query-update` | jrmilburn | rodlunt | 2026-06-11 | feat: Implement trip builder pattern |
+| #65 | `docs/srs-requirements-2.6-2.7` | LDMasina | rodlunt | 2026-06-11 | docs: SRS sections 2.6 and 2.7 functional and non-functional requirements |
+| #66 | `feature/factory-method-user-response` | LDMasina | rodlunt | 2026-06-12 | feat: Factory Method pattern - centralise user response construction |
+| #68 | `docs/documentation-updates` | rodlunt | LDMasina | 2026-06-12 | docs: sync planning docs with locked pattern ownership |
+| #69 | `fix/factory-admin-id-field` | LDMasina | rodlunt | 2026-06-12 | fix: restore '_id' field in admin response shape to match frontend contract |
+| #70 | `pattern/singleton-db-connection` | rodlunt | jrmilburn | 2026-06-13 | feat: implement Singleton pattern for the database connection |
+| #71 | `pattern/adapter` | jrmilburn | LDMasina, rodlunt | 2026-06-15 | feat: Add Open-Meteo weather forecast (Adapter pattern) |
+| #72 | `docs/report-draft-updates` | rodlunt | jrmilburn | 2026-06-13 | docs: update figure placeholder, log GenAI entries, add screenshots and diagram |
+| #73 | `pattern/chain-of-responsibility-middleware` | rodlunt | jrmilburn | 2026-06-13 | feat: implement Chain of Responsibility in the admin middleware pipeline |
+| #74 | `docs/meeting-2-outcomes` | rodlunt | LDMasina | 2026-06-16 | docs: post meeting 2 updates - pattern ownership, role split, meeting log |
+| #75 | `docs/srs-requirements-revision` | LDMasina | rodlunt | 2026-06-14 | docs: revise SRS 2.6-2.7 per Rod PR #65 feedback |
+| #76 | `feature/facade-service-layer` | LDMasina | rodlunt | 2026-06-13 | feat: Facade pattern - service layer for cascade delete operations |
+| #77 | `chore/update-cicd-ip-a2` | LDMasina | - | 2026-06-15 | chore: update CI/CD deploy target IP to A2 EC2 instance |
+| #78 | `feature/state-trip-lifecycle` | LDMasina | rodlunt | 2026-06-15 | feat: implement State pattern for trip lifecycle (FR-10) |
+| #79 | `pattern/chain-of-responsibility-middleware` | rodlunt | - | 2026-06-16 | feat: implement Decorator pattern - withOwnership handler wrapper |
+| #80 | `docs/test-case-grid` | rodlunt | LDMasina | 2026-06-16 | docs: backfill unit test case grid (TC-SIN to TC-CRUD) |
+| #81 | `docs/add-word-count-targets` | rodlunt | - | 2026-06-16 | docs: add per-section word count targets to document_draft headings |
+| #82 | `docs/srs-2-10-2-11-draft` | rodlunt | jrmilburn | 2026-06-17 | docs: draft SRS 2.9-2.11 + diagram exports |
+| #83 | `fix/trip-builder-comments` | jrmilburn | rodlunt | 2026-06-17 | Add comments to tripBuilder file |
+| #84 | `docs/project-overview` | jrmilburn | rodlunt | 2026-06-17 | docs: Project overview |
+| #85 | `fix/decorator-comment` | rodlunt | LDMasina | 2026-06-17 | docs: add Decorator pattern header comment to ownershipDecorator.js |
+| #86 | `fix/edit-trip-status-save` | rodlunt | - | 2026-06-17 | fix: include status in EditTrip save payload |
+| #87 | `docs/collaboration-evidence` | rodlunt | LDMasina | 2026-06-17 | docs: collaboration evidence screenshots and 4.2 placeholders |
+| #88 | `fix/trip-hero-status-tone` | rodlunt | LDMasina | 2026-06-17 | fix: match Trip Detail status badge tone to trip state |
+| #92 | `docs/readme-update` | rodlunt | LDMasina | 2026-06-17 | docs: update README - correct live URL and tidy stale references |
+| #93 | `hotfix/mocha-exit-hang` | rodlunt | - | 2026-06-17 | fix: mocha --exit --timeout to unblock CI runner |
+| #94 | `hotfix/jwt-secret-test-fallback` | rodlunt | - | 2026-06-17 | fix: mocha root hook JWT_SECRET fallback for local test runs |
+| #95 | `docs/srs-narrative` | jrmilburn | rodlunt | 2026-06-18 | SRS narrative 2.1–2.5 (purpose, problem, scope, users, constraints) |
+| #96 | `docs/cicd-evidence-7-3` | rodlunt | LDMasina | 2026-06-19 | docs: CI/CD evidence 7.3 + public IP |
+| #97 | `feat/postman-auth-admin-endpoints` | rodlunt | - | 2026-06-18 | fix: return guards in protect middleware prevent double-response crash |
+| #98 | `feat/postman-auth-admin-endpoints` | rodlunt | LDMasina | 2026-06-20 | docs: Postman collection + auth/admin screenshots for Section 6 |
+| #99 | `fix/postman-collection-review` | rodlunt | LDMasina | 2026-06-20 | fix: Postman collection review fixes (fig numbering, admin creds, activities pre-request) |
+| #100 | `docs/section-3-1-trim` | rodlunt | LDMasina | 2026-06-24 | docs: trim Section 3.1 design patterns to word target |
+| #101 | `docs/section-3-2-oop` | rodlunt | LDMasina | 2026-06-20 | docs: Section 3.2 OOP write-up with inline code screenshots |
+| #102 | `docs/section-4-2-collab-figures` | rodlunt | LDMasina | 2026-06-20 | docs: embed Section 4.2 collaboration figures |
+| #103 | `chore/meeting-admin-20jun` | rodlunt | - | 2026-06-24 | chore: Sat 20 Jun meeting agenda + admin cleanup |
+| #104 | `docs/postman-trip-screenshots-section-6` | LDMasina | rodlunt | 2026-06-24 | docs: add Section 6.1 trip CRUD and State pattern Postman figures (issue #90) |
+| #105 | `docs/postman-activity-screenshots` | jrmilburn | LDMasina, rodlunt | 2026-06-28 | Postman: activity CRUD + weather test scripts (#91) |
+| #106 | `chore/ci-pr-test-gate` | rodlunt | LDMasina | 2026-06-24 | ci: add PR Checks workflow to gate pull requests with tests |
+| #107 | `docs/contributing-multi-pr` | rodlunt | jrmilburn | 2026-06-24 | docs: allow multiple concurrent PRs in contributing guide |
+| #108 | `docs/srs-port-2-1-2-7` | rodlunt | jrmilburn | 2026-06-24 | docs: assemble SRS 2.1-2.7 into the report draft |
+| #109 | `docs/fix-video-duration-30min` | rodlunt | jrmilburn | 2026-06-24 | docs: correct team video duration to 30 min (10 min per member) |
+| #110 | `test/c8-coverage` | rodlunt | jrmilburn | 2026-06-24 | test: add c8 code coverage to the backend |
+| #111 | `docs/video-runsheet` | rodlunt | jrmilburn, LDMasina | 2026-06-27 | docs: add 30-min team video runsheet (per-member segment plan) |
+| #112 | `test/fill-coverage-gaps` | rodlunt | LDMasina | 2026-06-24 | test: cover getProfile and updateUserProfile (authController 62% -> 100%) |
+| #114 | `docs/fix-2-10-https-claim` | rodlunt | LDMasina | 2026-06-24 | docs: correct 2.10 HTTPS claim to match the live HTTP deployment |
+| #115 | `test/lighthouse-audits` | rodlunt | LDMasina | 2026-06-24 | test: add local Lighthouse audit layer (beyond-rubric, not CI) |
+| #116 | `docs/loadtest-evidence` | rodlunt | jrmilburn | 2026-06-28 | docs: add load-test evidence screenshots (NFR-01 / Module 7) |
+| #117 | `fix/pr-checks-frontend-yarn` | rodlunt | - | 2026-06-24 | fix(ci): PR Checks frontend step fails on npm ci - use yarn to match deploy |
+| #118 | `docs/contributing-frontend-yarn` | rodlunt | - | 2026-06-25 | docs: correct CONTRIBUTING - frontend is yarn-managed, not npm |
+| #119 | `docs/section-7-cicd-writeup` | LDMasina | - | 2026-06-24 | docs: draft Section 7 CI/CD write-up with two-workflow architecture |
+| #120 | `docs/discussion-and-conclusion` | jrmilburn | rodlunt | 2026-06-28 | docs: discussion and conclusion write-up (Step 8) |
+| #121 | `docs/genai-disclosure-joe` | jrmilburn | rodlunt | 2026-06-28 | docs: GenAI disclosure dot points (Joe — Adapter + Builder) |
+| #122 | `docs/113-test-numbers-coverage` | rodlunt | jrmilburn | 2026-06-28 | docs: update 5.1/3.1 test numbers to 177 + coverage evidence |
+| #123 | `docs/tidy-figure-labels` | rodlunt | jrmilburn | 2026-06-28 | docs: shorten figure captions + tidy formatting |
+| #124 | `test/weatheradapter-branch-coverage` | rodlunt | jrmilburn | 2026-06-28 | test: cover weatherAdapter defensive branches (branches 97.78% -> 99.26%) |
+| #125 | `test/15-postman-response-time` | rodlunt | - | 2026-06-28 | test(postman): response-time assertions on every request (#15) |
+| #127 | `fix/postman-trip-delete-ordering` | rodlunt | - | 2026-06-28 | fix(postman): make the full collection run green end-to-end (#126) |
+| #128 | `fix/ipv4-outbound-weather-geocoding` | rodlunt | - | 2026-06-28 | fix(backend): prefer IPv4 outbound so weather geocoding works |
+| #129 | `fix/postman-trip-dates-in-window` | rodlunt | - | 2026-06-28 | fix(postman): in-window trip dates for a real weather forecast |
+| #130 | `docs/genai-disclosure` | rodlunt | - | - (open) | docs: 9a Use of GenAI - combined team disclosure table |
+| #131 | `docs/reflection` | rodlunt | - | - (open) | docs: 9b Reflection - conversational, per-member |
+| #132 | `docs/postman-live-evidence` | rodlunt | - | - (open) | docs: live green-run evidence for the Postman collection (Fig 6.1.0) |
+
+### Merge-conflict resolution records
+
+Genuine conflicts arising from parallel work, resolved on record (commit + message):
+
+| Commit | Resolution |
+|---|---|
+| `3ce58f0` | resolve conflicts with main - keep Shvets suffixes, nine unit tests, APA hanging indent |
+| `ed9d9c5` | resolve conflict with main - integrate completed pattern rows into meeting-2 branch |
+| `95e0963` | resolve conflicts with main - integrate State pattern and weather route |
+| `9630c61` | resolve conflict with main - merge State pattern into adapter branch |
+| `caf4d93` | resolve conflict with main - keep fuller meeting-2 notes |
+| `4e2d810` | resolve conflicts with main - keep CoR and Facade checklist rows, add Facade and CoR references |
+| `394d5e5` | resolve conflicts with main - keep Builder and Factory Method entries in all three files |
