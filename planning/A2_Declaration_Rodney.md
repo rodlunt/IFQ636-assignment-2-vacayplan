@@ -9,8 +9,8 @@ This document supports transparency and accountability for Assignment 2. The tea
 | Full name | Student ID | Detailed description of contribution |
 |---|---|---|
 | Rodney Lunt | n12555941 | See the detailed statement below. |
-| [Lance Masina] | [student ID] | [to be completed by Lance] |
-| [Joseph Milburn] | [student ID] | [to be completed by Joseph] |
+| Lance Masina | [student ID] | See the detailed statement below. |
+| Joseph Milburn | [student ID] | See the detailed statement below. |
 
 ### Rodney Lunt - detailed description of contribution
 
@@ -24,7 +24,27 @@ This document supports transparency and accountability for Assignment 2. The tea
 
 **Report and SRS sections.** Wrote the design-patterns (3.1) and OOP (3.2) sections, the functional/unit-testing (Section 5) and API-testing (Section 6) write-ups, the SRS safety (2.10) and risk-management/STRIDE (2.11) sections, the system and use-case diagrams (2.9) and wireframes (2.8), assembled SRS 2.1-2.7 into the draft, and embedded the Section 4.2 collaboration figures.
 
-**Project coordination.** Created and set up the shared repository, imported the VacayPlan base, and authored the team scaffolding (CONTRIBUTING guide, gitignore, project board and VS Code issue queries, `backend/.env.example` and dev-setup notes, README). Logged meetings and agendas, maintained the planning documents, and is responsible for stitching and uploading the team video. Across the project I contributed 93 commits and 42 merged pull requests, reviewed teammates' pull requests, and resolved several genuine merge conflicts on record.
+**Project coordination.** Created and set up the shared repository, imported the VacayPlan base, and authored the team scaffolding (CONTRIBUTING guide, gitignore, project board and VS Code issue queries, `backend/.env.example` and dev-setup notes, README). Logged meetings and agendas, maintained the planning documents, and is responsible for stitching and uploading the team video. Across the project I contributed more than 90 commits and over 40 merged pull requests, reviewed teammates' pull requests, and resolved several genuine merge conflicts on record.
+
+### Lance Masina - detailed description of contribution
+
+**Design patterns implemented.** Authored three of the team's design patterns: the Factory Method (centralising user-response construction, PR #66), the Facade (a service layer for cascade-delete operations, PR #76), and the State pattern (the trip status lifecycle, FR-10, PR #78). Also restored the admin response `_id` field to match the frontend contract (PR #69).
+
+**SRS requirements.** Wrote the functional and non-functional requirements - SRS sections 2.6 and 2.7 (PRs #65, #75).
+
+**CI/CD and deployment.** Stood up the deployment pipeline and the AWS EC2 instance, set the deploy target (PR #77), and wrote the Section 7 CI/CD report (PR #119).
+
+**API testing.** Captured the trip CRUD and State-pattern Postman figures for Section 6.1 (PR #104).
+
+### Joseph Milburn - detailed description of contribution
+
+**Design patterns implemented.** Authored two of the team's design patterns: the Builder (trip update/query assembler, PRs #64 and #83) and the Adapter (the Open-Meteo weather forecast integration, PR #71).
+
+**SRS and report.** Wrote SRS sections 2.1-2.5 (purpose, problem, scope, user characteristics, constraints, PR #95), the Project overview (PR #84), and the Discussion and conclusion (PR #120).
+
+**API testing.** Built the activities and weather folders of the Postman collection with test scripts and captured the Section 6.1 figures (PR #105).
+
+*Lance and Joseph: confirm the above reflects your work, then add your student ID and signature below. Drafted from your merged pull requests (cited) - adjust as needed.*
 
 ## Declaration
 
