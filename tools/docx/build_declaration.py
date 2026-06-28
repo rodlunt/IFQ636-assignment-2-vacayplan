@@ -7,10 +7,9 @@ grounding each contribution description in the committed PR/commit record
 [AWAITING ...] for the team to complete. Forces body text black and adds an
 unlinked, page-numbered TOC.
 """
-import os, json
+import os
 from docx import Document
 from docx.shared import RGBColor, Inches
-from docx.enum.text import WD_TAB_ALIGNMENT, WD_TAB_LEADER
 from docx.oxml.ns import qn
 from docx.oxml import OxmlElement
 
@@ -78,33 +77,6 @@ def trim_rows(table, keep):
         row._element.getparent().remove(row._element)
 
 
-def _mk_par(style=None):
-    p = OxmlElement("w:p")
-    if style:
-        pPr = OxmlElement("w:pPr"); ps = OxmlElement("w:pStyle")
-        ps.set(qn("w:val"), style); pPr.append(ps); p.append(pPr)
-    return p
-
-def add_static_toc(doc):
-    """Static, page-numbered, NON-hyperlinked TOC before the first Heading 1."""
-    here = os.path.dirname(os.path.abspath(__file__))
-    mapf = os.path.join(here, "declmap.json")
-    entries = json.load(open(mapf)) if os.path.exists(mapf) else []
-    anchor = doc.paragraphs[2]._p          # "Team member details" Heading 1
-    head = _mk_par("Heading1")
-    hr = OxmlElement("w:r"); ht = OxmlElement("w:t"); ht.text = "Contents"
-    hr.append(ht); head.append(hr)
-    anchor.addprevious(head)
-    # build each entry paragraph via python-docx for tab stops, then move it
-    for e in entries:
-        para = doc.add_paragraph()
-        para.paragraph_format.tab_stops.add_tab_stop(
-            Inches(6.3), WD_TAB_ALIGNMENT.RIGHT, WD_TAB_LEADER.DOTS)
-        r = para.add_run(e["text"]); set_black(r); r.bold = True
-        rp = para.add_run("\t" + (str(e["page"]) if e.get("page") else "")); set_black(rp)
-        anchor.addprevious(para._p)        # move into place before the anchor
-
-
 def force_update_fields(doc):
     s = doc.settings.element
     el = s.find(qn("w:updateFields"))
@@ -142,7 +114,6 @@ def build():
         set_cell(cells[2], "[AWAITING: date]")
     trim_rows(sign, keep=1 + len(MEMBERS))
 
-    add_static_toc(doc)
     blacken_all(doc)
     force_update_fields(doc)
     doc.save(OUT)
