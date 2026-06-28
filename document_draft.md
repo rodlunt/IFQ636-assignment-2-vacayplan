@@ -66,7 +66,7 @@ Low-fidelity wireframes for Dashboard, Trip Detail, and Edit Trip at desktop and
 ![Fig 4b](planning/diagrams/wireframe-edit-trip-mobile.png)
 
 ### 2.9 Complete system diagram (~20 words + figure)
-Figure 1 shows the complete VacayPlan architecture. The React SPA talks over HTTP through an Nginx reverse proxy to the Express backend on AWS EC2, which connects to MongoDB Atlas and the Open-Meteo weather API, deployed via a GitHub Actions CI/CD pipeline.
+Figure 1 shows the complete architecture: the React SPA talks over HTTP through an Nginx reverse proxy to the Express backend on AWS EC2, which connects to MongoDB Atlas and the Open-Meteo weather API, deployed via GitHub Actions CI/CD.
 
 ![Figure 1: VacayPlan complete system diagram](planning/diagrams/A2_system_diagram_2.9.png)
 
@@ -117,7 +117,7 @@ State, a behavioural pattern, enforces the trip lifecycle in FR-10 (planning -> 
 **Fig 3.2.1** - `Database` class with `getInstance()` (db.js)
 ![Fig 3.2.1](planning/screenshots/2026-06-19-oop-classes-db-rodlunt.png)
 
-**Encapsulation.** `OpenMeteoWeatherAdapter` in `backend/adapters/weatherAdapter.js` exposes one public method, `getForecast()`, and hides five internal methods behind the underscore convention: `_geocode()`, `_getJson()`, `_normaliseDaily()`, `_formatPlaceName()`, and `_pickBestMatch()`. Geocoding, HTTP handling, and WMO-code translation are implementation details callers never see. Controllers call `getForecast()` without knowing the vendor response shape; if Open-Meteo changed format, only the adapter would need updating (Fig 3.2.2).
+**Encapsulation.** `OpenMeteoWeatherAdapter` in `backend/adapters/weatherAdapter.js` exposes one public method, `getForecast()`, and hides five internal methods (`_geocode()`, `_getJson()`, `_normaliseDaily()`, `_formatPlaceName()`, `_pickBestMatch()`). Geocoding, HTTP handling, and WMO-code translation stay hidden; controllers call `getForecast()` without knowing the vendor response shape, so a format change would touch only the adapter (Fig 3.2.2).
 
 **Fig 3.2.2** - `getForecast()` delegating to private helpers (weatherAdapter.js)
 ![Fig 3.2.2](planning/screenshots/2026-06-19-oop-encapsulation-weather-rodlunt.png)
@@ -127,7 +127,7 @@ State, a behavioural pattern, enforces the trip lifecycle in FR-10 (planning -> 
 **Fig 3.2.3** - `TripState` base class and subclasses (tripState.js)
 ![Fig 3.2.3](planning/screenshots/2026-06-19-oop-inheritance-tripstate-rodlunt.png)
 
-**Polymorphism.** The State hierarchy shows runtime polymorphism. `isValidTransition()` in `tripState.js` calls `state.canTransitionTo(newStatus)` without knowing the concrete class: in `PlanningState` it returns true only for `'active'`, while the same call on `CompletedState` always returns false. The signature is identical across all three subclasses; the right implementation is resolved at runtime from the actual object (Fig 3.2.4).
+**Polymorphism.** The State hierarchy shows runtime polymorphism. `isValidTransition()` in `tripState.js` calls `state.canTransitionTo(newStatus)` without knowing the concrete class: `PlanningState` returns true only for `'active'`, while `CompletedState` always returns false. The signature is identical across the three subclasses, and the right implementation is resolved at runtime (Fig 3.2.4).
 
 **Fig 3.2.4** - `isValidTransition()` calling `canTransitionTo()` (tripState.js)
 ![Fig 3.2.4](planning/screenshots/2026-06-19-oop-polymorphism-tripstate-rodlunt.png)
