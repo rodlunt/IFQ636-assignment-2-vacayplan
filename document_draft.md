@@ -300,7 +300,7 @@ All three used Claude Code (Anthropic, 2026; Opus 4.8) as the sole AI assistant;
 | Aspect | Detail |
 |---|---|
 | **Sample prompts** | Pattern/feature implementation; debugging; rubric and code audits; Postman authoring; SRS/diagram drafting; copyediting; Git/PR workflow. |
-| **AI-assisted tasks** | Code and tests for the seven patterns; backend fixes; coverage; the Postman collection; rubric/code audits; SRS/diagram drafting; 3.1 copyedit; board scaffolding. |
+| **AI-assisted tasks** | Code and tests for the eight patterns; backend fixes; coverage; the Postman collection; rubric/code audits; SRS/diagram drafting; 3.1 copyedit; board scaffolding. |
 | **How verified** | `npm test` between changes; code checked against the codebase; CI green; Postman/Newman re-runs. |
 
 **Boundary:** AI drafted under student direction; design, scope and content decisions were the team's. No AI-attribution in commits or code.
