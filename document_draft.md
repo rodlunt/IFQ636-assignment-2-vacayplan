@@ -246,7 +246,9 @@ Representative results are below, one per response type and pattern; the full se
 
 ### 6.2 Exported collection
 
-*(GitHub link to committed collection JSON - populate after export)*
+The Postman collection and environment are committed to the repository:
+[`VacayPlan-A2-Collection.json`](https://github.com/rodlunt/IFQ636-assignment-2-vacayplan/blob/main/postman/VacayPlan-A2-Collection.json)
+and [`VacayPlan-A2-Environment.json`](https://github.com/rodlunt/IFQ636-assignment-2-vacayplan/blob/main/postman/VacayPlan-A2-Environment.json).
 
 ---
 
