@@ -224,7 +224,7 @@ State is used as a behavioural pattern to enforce the trip lifecycle defined in 
 ## Team collaboration via GitHub (~200-250 words)
 
 ### 4.1 Team collaboration statement
-*(draft here)*
+We organised every piece of work as a GitHub issue, labelled by report section and assigned to a single owner, then tracked it on a shared Project board through Todo, In progress, In review and Done. Each task was developed on its own short-lived feature branch taken from main, with several pull requests open at once so the queue stayed short and each change stayed small and reviewable. Every pull request was reviewed and approved by at least one other member before it merged, and we used ordinary merge commits rather than squashing or rebasing so that per-author history and our resolved merge conflicts remained on record. All three of us committed under our own identity. We coordinated through a Tuesday email check-in, a standing Saturday call, and a WhatsApp group for day-to-day questions and blockers.
 
 ### 4.2 Team collaboration evidence
 *Feature branches; PRs; minimum 2 resolved merge conflicts; commit history graph; meeting times/dates. Meeting log + merge-conflict log are kept in `planning/A2_Report_Notes.md` §4.2.*

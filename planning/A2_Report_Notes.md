@@ -150,7 +150,7 @@ Demonstrate Classes, Objects, Inheritance, Encapsulation, Polymorphism with code
 ## Section 4: Team collaboration via GitHub (~200–250 words)
 
 ### 4.1 Team collaboration statement
-*(populate, how the team organised work, branching model, review rules)*
+*Written directly in `document_draft.md` §4.1 (the canonical text). Covers issue/board workflow, branch-per-task, PR review rules, no-squash merge policy, own-identity commits, and meeting cadence.*
 
 ### 4.2 Team collaboration evidence
 Needs: feature branches; PRs; **minimum 2 merge conflicts resolved**; commit history graph; team meeting times and dates. All commits attributable to individuals.
