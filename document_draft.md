@@ -23,40 +23,40 @@ straight into the template on build day.
 ## Project overview (~150-200 words)
 *Real-world application, what it does, who it serves, why VacayPlan was chosen as the base to extend.*
 
-VacayPlan is a full-stack vacation-planning web app for travellers organising multi-day trips. The backend is Node.js, Express and MongoDB; the frontend is React and TailwindCSS; CI/CD runs through GitHub Actions to an AWS EC2 instance. An authenticated user creates a trip with a destination and date range, schedules activities, and reviews the day-by-day itinerary. As an extension, a user can also see the destination weather forecast for the trip dates. A separate administrator role moderates the platform, managing user accounts and viewing all trips. So the app serves two audiences: travellers planning holidays and an admin overseeing the platform.
+VacayPlan is a full-stack vacation-planning web app for travellers organising multi-day trips. The backend is Node.js, Express and MongoDB; the frontend is React and TailwindCSS; CI/CD runs through GitHub Actions to an AWS EC2 instance. An authenticated user creates a trip with a destination and date range, schedules activities, reviews the day-by-day itinerary, and (as an extension) sees the destination forecast for the trip dates. A separate administrator role manages user accounts and views all trips. It serves two audiences: travellers planning holidays and an admin overseeing the platform.
 
-We extended this base because its structure made extension straightforward. Trips, activities and user management are cleanly separated, so each part can be reasoned about and changed in isolation. That gave each domain a home for new design patterns such as Builder, Adapter and Decorator, letting us strengthen the architecture and apply object-oriented principles without reworking the foundations.
+We extended this base because its structure made that straightforward: trips, activities and user management are cleanly separated, so each part can be reasoned about and changed in isolation. That gave each domain a home for new design patterns, letting us strengthen the architecture and apply object-oriented principles without reworking the foundations.
 
 ---
 
 ## SRS documentation (~600-800 words total across 2.1-2.11)
 
 ### 2.1 Purpose (~40 words)
-VacayPlan lets independent travellers plan a trip in one place: record it, schedule activities within its dates, check the destination forecast, and review it all as a day-by-day itinerary. An administrator manages platform accounts.
+VacayPlan lets independent travellers plan a trip in one place: record it, schedule activities within its dates, check the forecast, and review it as a day-by-day itinerary. An administrator manages platform accounts.
 
 ### 2.2 Problem statement (~80 words)
-Planning a multi-day trip gets scattered across tools never built for it - notes apps, spreadsheets, booking emails, group chats, a weather site. None treat a trip as an object. Activities come loose of their days, the itinerary never exists as one view, and the forecast sits separately. Travellers hold the plan together in their heads. VacayPlan gives trip planning a single, trip-shaped home.
+Planning a multi-day trip scatters across tools never built for it - notes apps, spreadsheets, booking emails, group chats, a weather site. None treat a trip as an object: activities come loose of their days, the itinerary never exists as one view, and the forecast sits separately. Travellers hold the plan in their heads. VacayPlan gives trip planning a single, trip-shaped home.
 
 ### 2.3 Scope (~60 words)
-In scope: traveller authentication (register, log in, log out, update profile); full trip CRUD; activities scheduled within a trip's date range; the day-by-day itinerary view; a destination weather forecast; and an admin panel for account management and trip visibility.
-Out of scope: bookings, payments, and reservations; multi-user sharing or collaboration; native mobile apps; and email or push notifications. VacayPlan is a planning record, not a booking engine.
+In scope: traveller authentication (register, log in, log out, update profile); full trip CRUD; activities within a trip's date range; the day-by-day itinerary; a destination weather forecast; and an admin panel for account management and trip visibility.
+Out of scope: bookings, payments, reservations; multi-user sharing or collaboration; native mobile apps; email or push notifications. VacayPlan is a planning record, not a booking engine.
 
 ### 2.4 User characteristics (~50 words)
-VacayPlan has two actors (use case diagram, Figure 2). The Traveller is a non-technical end user planning personal holidays, expecting a fast, self-explanatory interface on desktop or mobile, and owns only their own trips and activities. The Administrator is a trusted operator who manages accounts and can view all trips for moderation.
+VacayPlan has two actors (Figure 2). The Traveller is a non-technical end user planning personal holidays, expecting a fast, self-explanatory interface on desktop or mobile, and owns only their trips and activities. The Administrator is a trusted operator who manages accounts and views all trips for moderation.
 
 ![Figure 2: VacayPlan use case diagram](planning/diagrams/A2_system_diagram_use_case.png)
 
 ### 2.5 Constraints (~50 words)
-The build extends the existing VacayPlan base, so the stack is fixed: Node.js/Express, MongoDB Atlas, and React, deployed to a single AWS EC2 instance via a GitHub Actions CI/CD pipeline. External services such as Open-Meteo (no API key) must be free-tier. Academic requirements include at least seven backend design patterns, OOP principles, and unit and API testing. Three people, roughly four weeks. Open-Meteo forecasts up to 16 days ahead, so trips beyond that have no forecast.
+The build extends the existing base, so the stack is fixed: Node.js/Express, MongoDB Atlas, and React on a single AWS EC2 instance via GitHub Actions CI/CD. External services like Open-Meteo (no API key) must be free-tier. Academic requirements: at least seven backend design patterns, OOP principles, and unit and API testing. Three people, roughly four weeks. Open-Meteo forecasts up to 16 days ahead, so trips beyond that have no forecast.
 
 ### 2.6 Functional requirements (~30 words + table)
-VacayPlan defines 23 functional requirements across four domains, written as "shall" statements per IEEE Std 830-1998 (Institute of Electrical and Electronics Engineers, 1998). Authentication (FR-01-FR-04) covers registration, JSON Web Token (JWT) login (Jones et al., 2015), protected-route access, and logout. Trip management (FR-05-FR-11) provides full CRUD plus the planning-active-completed status lifecycle (FR-09/FR-10) and cascade deletion of activities (FR-11). Activity management (FR-12-FR-15) adds date-constrained activities organised by day. Administration (FR-16-FR-23) covers account management, cross-account trip visibility, deactivation enforcement, a consistent JSON response shape, and request validation. The full table is in Appendix C.
+VacayPlan defines 23 functional requirements as "shall" statements per IEEE Std 830-1998 (Institute of Electrical and Electronics Engineers, 1998). Authentication (FR-01-FR-04): registration, JSON Web Token (JWT) login (Jones et al., 2015), protected-route access, and logout. Trip management (FR-05-FR-11): full CRUD plus the planning-active-completed lifecycle (FR-09/FR-10) and cascade deletion of activities (FR-11). Activity management (FR-12-FR-15): date-constrained activities by day. Administration (FR-16-FR-23): account management, cross-account trip visibility, deactivation enforcement, a consistent JSON shape, and request validation. Full table in Appendix C.
 
 ### 2.7 Non-functional requirements (~30 words + table)
-Fourteen non-functional requirements define VacayPlan's quality attributes (Sommerville, 2016). Performance (NFR-01/02): sub-500ms CRUD responses and a two-second dashboard render. Reliability (NFR-03/04): 99% uptime via PM2 and automatic CI/CD redeploy on every push. Security (NFR-05-NFR-08, NFR-13): bcrypt password hashing (Provos & Mazières, 1999), JWT expiry, admin-only middleware, no secrets in version control, and a single shared database connection. Usability (NFR-09/10): a responsive UI and safe error messaging. Scalability (NFR-11/12): stateless horizontal scaling and schema-free collection growth. Availability (NFR-14): core planning stays usable when external services fail. The full table is in Appendix C.
+Fourteen non-functional requirements define the quality attributes (Sommerville, 2016). Performance (NFR-01/02): sub-500ms CRUD responses and a two-second dashboard render. Reliability (NFR-03/04): 99% uptime via PM2 and automatic CI/CD redeploy on every push. Security (NFR-05-NFR-08, NFR-13): bcrypt password hashing (Provos & Mazières, 1999), JWT expiry, admin-only middleware, no secrets in version control, and a single shared database connection. Usability (NFR-09/10): a responsive UI and safe error messaging. Scalability (NFR-11/12): stateless horizontal scaling and schema-free collection growth. Availability (NFR-14): core planning stays usable when external services fail. Full table in Appendix C.
 
 ### 2.8 User interface mockups/wireframes (~20 words + figure)
-Low-fidelity wireframes for Dashboard, Trip Detail, and Edit Trip at desktop and mobile breakpoints. Red boxes mark pattern-backed additions.
+Low-fidelity wireframes for Dashboard, Trip Detail, and Edit Trip at desktop and mobile breakpoints; red boxes mark pattern-backed additions.
 
 ![Fig 2a](planning/diagrams/wireframe-dashboard-desktop.png)
 ![Fig 2b](planning/diagrams/wireframe-dashboard-mobile.png)
@@ -66,15 +66,15 @@ Low-fidelity wireframes for Dashboard, Trip Detail, and Edit Trip at desktop and
 ![Fig 4b](planning/diagrams/wireframe-edit-trip-mobile.png)
 
 ### 2.9 Complete system diagram (~20 words + figure)
-Figure 1 shows the complete architecture: the React SPA talks over HTTP through an Nginx reverse proxy to the Express backend on AWS EC2, which connects to MongoDB Atlas and the Open-Meteo weather API, deployed via GitHub Actions CI/CD.
+Figure 1 shows the architecture: the React SPA reaches the Express backend on AWS EC2 over HTTP via an Nginx reverse proxy, which connects to MongoDB Atlas and the Open-Meteo weather API, deployed via GitHub Actions CI/CD.
 
 ![Figure 1: VacayPlan complete system diagram](planning/diagrams/A2_system_diagram_2.9.png)
 
 ### 2.10 Safety considerations (~100 words)
-VacayPlan's safety approach has three layers. At the network layer, Nginx serves the app and reverse-proxies API calls to the Express backend, which reaches MongoDB Atlas over TLS; the public endpoint is HTTP (the unit's bare-IP model), with client-facing TLS a future step. At the application layer, every authenticated route passes through the middleware chain (`protect`, `adminProtect`, `validate`) before business logic runs, and `withOwnership` checks trip and activity ownership to block cross-user access. At the data layer, the Facade cascades deletions across related models to avoid orphaned records, and the weather adapter enforces an 8-second timeout against hung external requests.
+VacayPlan's safety has three layers. At the network layer, Nginx serves the app and reverse-proxies API calls to the Express backend, which reaches MongoDB Atlas over TLS; the public endpoint is HTTP (the unit's bare-IP model), with client-facing TLS a future step. At the application layer, every authenticated route passes through the middleware chain (`protect`, `adminProtect`, `validate`) before business logic runs, and `withOwnership` checks ownership to block cross-user access. At the data layer, the Facade cascades deletions across related models to avoid orphaned records, and the weather adapter enforces an 8-second timeout on hung requests.
 
 ### 2.11 Risk management (~60 words + table)
-Risk management uses the STRIDE threat model (Shostack, 2014). Each category maps to a VacayPlan-specific risk and its control, or a gap where none exists.
+Risk management uses the STRIDE threat model (Shostack, 2014); each category maps to a VacayPlan-specific risk and its control, or a gap where none exists.
 
 | Threat                  | VacayPlan risk                                            | Mitigation                                                       | Status    |
 |:------------------------|:----------------------------------------------------------|:-----------------------------------------------------------------|:---------:|
@@ -93,41 +93,41 @@ Risk management uses the STRIDE threat model (Shostack, 2014). Each category map
 ### 3.1 Design pattern (~400-500 words)
 *Minimum 7 patterns, each justified and demonstrated in backend code. Pattern-count ladder: 7=HD, 6=D, 5=C, 4=P. Live committed list lives in `planning/A2_Checklist.md` pattern tracker.*
 
-Adapter, a structural pattern (Gamma et al., 1994), wraps the Open-Meteo weather service. `WeatherProvider` defines the forecast interface the app depends on, and `OpenMeteoWeatherAdapter` translates the vendor's coordinate-based, WMO-coded responses into a normalised forecast object. Changing providers means adding a new `WeatherProvider` subclass without touching controllers, routes, or frontend. Implementation: `backend/adapters/weatherAdapter.js`, serving `GET /api/trips/:id/weather` (commit `37b337c`).
+Adapter, a structural pattern (Gamma et al., 1994), wraps the Open-Meteo weather service. `WeatherProvider` defines the forecast interface the app depends on; `OpenMeteoWeatherAdapter` translates the vendor's coordinate-based, WMO-coded responses into a normalised forecast object. A new provider means a new `WeatherProvider` subclass, leaving controllers, routes, and frontend untouched. Implementation: `backend/adapters/weatherAdapter.js`, serving `GET /api/trips/:id/weather` (commit `37b337c`).
 
-Builder, a creational pattern, assembles trip queries and updates. `TripQueryBuilder` builds the authenticated user's trip-list filter with newest-first sort; `TripUpdateBuilder` builds partial updates without overwriting omitted fields. Both keep controllers on HTTP coordination rather than object-construction rules. Implementation: `backend/builders/tripBuilders.js`, used by `tripController.js` in `getTrips` and `updateTrip` (commit `6965ef3`).
+Builder, a creational pattern, assembles trip queries and updates. `TripQueryBuilder` builds the user's trip-list filter with newest-first sort; `TripUpdateBuilder` builds partial updates without overwriting omitted fields. Both keep controllers on HTTP coordination, not construction. Implementation: `backend/builders/tripBuilders.js`, used by `tripController.js` in `getTrips` and `updateTrip` (commit `6965ef3`).
 
-Factory Method, a creational pattern, centralises user-response construction. Previously `authController.js` and `adminController.js` built response objects inline, producing inconsistent field names (`id` vs `_id`) across five handlers. `UserResponseFactory.create()` returns a guaranteed shape, removing that inconsistency and decoupling creators from the objects they produce (Shvets, 2021c). Implementation: `backend/factories/userResponseFactory.js` (commit `e0b85f0`).
+Factory Method, a creational pattern, centralises user-response construction. Previously `authController.js` and `adminController.js` built responses inline, giving inconsistent field names (`id` vs `_id`) across five handlers. `UserResponseFactory.create()` returns a guaranteed shape, removing that inconsistency and decoupling creators from their objects (Shvets, 2021c). Implementation: `backend/factories/userResponseFactory.js` (commit `e0b85f0`).
 
-Facade, a structural pattern, hides multi-model cascade complexity behind a simple service interface. Previously `tripController.deleteTrip` and `adminController.deleteUser` coordinated Trip, Activity, and User models inline, coupling HTTP flow to data management. `TripService.deleteTripWithActivities()` and `UserService.deleteUserWithCascade()` wrap those cascades in single calls, leaving each controller only request handling. Implementation: `backend/services/` (commit `30fe755`).
+Facade, a structural pattern, hides multi-model cascade complexity behind a simple service interface. Previously `tripController.deleteTrip` and `adminController.deleteUser` coordinated Trip, Activity, and User models inline, coupling HTTP flow to data. `TripService.deleteTripWithActivities()` and `UserService.deleteUserWithCascade()` wrap those cascades in single calls, leaving each controller just request handling. Implementation: `backend/services/` (commit `30fe755`).
 
-Singleton, a creational pattern, enforces a single Mongoose connection. The prior `connectDB()` relied on a single call site rather than a guarantee; `Database.getInstance()` makes it explicit: constructing a second instance throws, and `connect()` reuses the stored connection on every call. Implementation: `backend/config/db.js` (commit `ccd56e0`), six unit tests in `backend/test/dbSingleton.test.js`.
+Singleton, a creational pattern, enforces a single Mongoose connection. The prior `connectDB()` relied on a single call site rather than a guarantee; `Database.getInstance()` makes it explicit: a second instance throws, and `connect()` reuses the stored connection. Implementation: `backend/config/db.js` (commit `ccd56e0`), six unit tests in `backend/test/dbSingleton.test.js`.
 
-Chain of Responsibility, a behavioural pattern, sequences authentication, authorisation, and validation before business logic runs. `protect` and `adminProtect` formed a latent chain; a new `validate(rules)` link completes it, each link stopping on failure or passing control via `next()` (Shvets, 2021a). Implementation: `backend/middleware/validateMiddleware.js`, wired per route in `adminRoutes.js` (commit `c42bf6d`).
+Chain of Responsibility, a behavioural pattern, sequences authentication, authorisation, and validation before business logic runs. `protect` and `adminProtect` formed a latent chain; a new `validate(rules)` link completes it, each link stopping on failure or calling `next()` (Shvets, 2021a). Implementation: `backend/middleware/validateMiddleware.js`, wired per route in `adminRoutes.js` (commit `c42bf6d`).
 
-Decorator, a structural pattern, removes the ownership check duplicated across eight trip and activity handlers, each of which fetched the trip, returned 404 if absent, and re-checked ownership inline. `withOwnership(handler)` in `backend/middleware/ownershipDecorator.js` wraps those three steps and delegates to the handler only when the guard passes, adding behaviour without changing the wrapped function (Shvets, 2021b). Implementation: `tripRoutes.js` and `activityRoutes.js` (commit `e64ca7d`).
+Decorator, a structural pattern, removes the ownership check duplicated across eight trip and activity handlers, each of which fetched the trip, returned 404 if absent, and re-checked ownership inline. `withOwnership(handler)` in `backend/middleware/ownershipDecorator.js` wraps those three steps and delegates only when the guard passes, adding behaviour without changing the wrapped function (Shvets, 2021b). Implementation: `tripRoutes.js` and `activityRoutes.js` (commit `e64ca7d`).
 
-State, a behavioural pattern, enforces the trip lifecycle in FR-10 (planning -> active -> completed, completed terminal). `PlanningState`, `ActiveState`, and `CompletedState` each implement `canTransitionTo(newStatus)`, holding state-specific behaviour rather than if/else chains in the controller (Shvets, 2021d). `tripController.updateTrip` rejects invalid transitions with a 400 response (NFR-10). Implementation: `backend/state/tripState.js` (commit `23a0d48`), nine unit tests across `backend/test/trip.test.js` (six API-level transition tests) and `backend/test/tripState.test.js` (three unit tests covering the base-class guard, unknown status handling, and the full lifecycle matrix).
+State, a behavioural pattern, enforces the trip lifecycle in FR-10 (planning -> active -> completed, completed terminal). `PlanningState`, `ActiveState`, and `CompletedState` each implement `canTransitionTo(newStatus)`, holding state-specific behaviour rather than if/else chains in the controller (Shvets, 2021d). `tripController.updateTrip` rejects invalid transitions with a 400 response (NFR-10). Implementation: `backend/state/tripState.js` (commit `23a0d48`), nine unit tests across `backend/test/trip.test.js` (six API-level transition tests) and `backend/test/tripState.test.js` (three covering the base-class guard, unknown status, and the full lifecycle matrix).
 
 ### 3.2 Implementation of OOP (~250-300 words)
 *Classes, Objects, Inheritance, Encapsulation, Polymorphism with code examples and justification.*
 
-**Classes and objects.** VacayPlan's backend is built around ES6 classes. `Database` in `backend/config/db.js` is a clear example: the class is the connection blueprint, and `Database.getInstance()` returns the single object holding the live Mongoose connection state. `TripService` and `UserService` in `backend/services/` follow the same shape: each is a class exported as a constructed object, bundling related operations (cascade deletion, ownership verification) around shared state rather than loose functions (Martin, 2017; Fig 3.2.1).
+**Classes and objects.** VacayPlan's backend is built around ES6 classes. `Database` in `backend/config/db.js` is one example: the class is the connection blueprint; `Database.getInstance()` returns the single object holding the live Mongoose connection. `TripService` and `UserService` in `backend/services/` follow the same shape: each is a class exported as a constructed object, bundling related operations (cascade deletion, ownership verification) around shared state rather than loose functions (Martin, 2017; Fig 3.2.1).
 
 **Fig 3.2.1** - `Database` class with `getInstance()` (db.js)
 ![Fig 3.2.1](planning/screenshots/2026-06-19-oop-classes-db-rodlunt.png)
 
-**Encapsulation.** `OpenMeteoWeatherAdapter` in `backend/adapters/weatherAdapter.js` exposes one public method, `getForecast()`, and hides five internal methods (`_geocode()`, `_getJson()`, `_normaliseDaily()`, `_formatPlaceName()`, `_pickBestMatch()`). Geocoding, HTTP handling, and WMO-code translation stay hidden; controllers call `getForecast()` without knowing the vendor response shape, so a format change would touch only the adapter (Fig 3.2.2).
+**Encapsulation.** `OpenMeteoWeatherAdapter` in `backend/adapters/weatherAdapter.js` exposes one public method, `getForecast()`, and hides five internal methods (`_geocode()`, `_getJson()`, `_normaliseDaily()`, `_formatPlaceName()`, `_pickBestMatch()`). Geocoding, HTTP handling, and WMO-code translation stay hidden; controllers call `getForecast()` without knowing the vendor response shape, so a format change touches only the adapter (Fig 3.2.2).
 
 **Fig 3.2.2** - `getForecast()` delegating to private helpers (weatherAdapter.js)
 ![Fig 3.2.2](planning/screenshots/2026-06-19-oop-encapsulation-weather-rodlunt.png)
 
-**Inheritance.** Two class hierarchies appear in the backend. `OpenMeteoWeatherAdapter extends WeatherProvider` in `backend/adapters/weatherAdapter.js`: `WeatherProvider` defines the `getForecast()` interface (throwing if not overridden), and the subclass supplies the Open-Meteo implementation. `PlanningState`, `ActiveState`, and `CompletedState` all extend `TripState` in `backend/state/tripState.js`, each overriding `canTransitionTo(newStatus)` with its own rules. Both use one approach: an abstract base class sets a contract and concrete subclasses implement it, programming to an interface rather than a concrete class (Gamma et al., 1994; Fig 3.2.3).
+**Inheritance.** Two class hierarchies appear. `OpenMeteoWeatherAdapter extends WeatherProvider` in `backend/adapters/weatherAdapter.js`: `WeatherProvider` defines the `getForecast()` interface (throwing if not overridden); the subclass supplies the Open-Meteo implementation. `PlanningState`, `ActiveState`, and `CompletedState` all extend `TripState` in `backend/state/tripState.js`, each overriding `canTransitionTo(newStatus)` with its own rules. Both follow one approach: an abstract base class sets a contract and concrete subclasses implement it, programming to an interface, not a concrete class (Gamma et al., 1994; Fig 3.2.3).
 
 **Fig 3.2.3** - `TripState` base class and subclasses (tripState.js)
 ![Fig 3.2.3](planning/screenshots/2026-06-19-oop-inheritance-tripstate-rodlunt.png)
 
-**Polymorphism.** The State hierarchy shows runtime polymorphism. `isValidTransition()` in `tripState.js` calls `state.canTransitionTo(newStatus)` without knowing the concrete class: `PlanningState` returns true only for `'active'`, while `CompletedState` always returns false. The signature is identical across the three subclasses, and the right implementation is resolved at runtime (Fig 3.2.4).
+**Polymorphism.** The State hierarchy shows runtime polymorphism. `isValidTransition()` in `tripState.js` calls `state.canTransitionTo(newStatus)` without knowing the concrete class: `PlanningState` returns true only for `'active'`, `CompletedState` always false. The signature is identical across the three subclasses, with the right implementation resolved at runtime (Fig 3.2.4).
 
 **Fig 3.2.4** - `isValidTransition()` calling `canTransitionTo()` (tripState.js)
 ![Fig 3.2.4](planning/screenshots/2026-06-19-oop-polymorphism-tripstate-rodlunt.png)
@@ -137,12 +137,12 @@ State, a behavioural pattern, enforces the trip lifecycle in FR-10 (planning -> 
 ## Team collaboration via GitHub (~200-250 words)
 
 ### 4.1 Team collaboration statement
-We organised every piece of work as a GitHub issue, labelled by report section and assigned to one owner, then tracked it on a shared Project board through Todo, In progress, In review and Done. Each task ran on its own short-lived feature branch from main (Chacon & Straub, 2014), with several pull requests open at once so the queue stayed short and each change stayed small and reviewable. At least one other member reviewed and approved every pull request before merge, and we used ordinary merge commits rather than squashing or rebasing so per-author history and resolved merge conflicts stayed on record. All three committed under our own identity. We coordinated through a Tuesday email check-in, a standing Saturday call, and a WhatsApp group for day-to-day questions.
+We organised work as GitHub issues, labelled by report section and assigned to one owner, tracked on a shared Project board (Todo, In progress, In review, Done). Each task ran on its own short-lived feature branch from main (Chacon & Straub, 2014), with several pull requests open at once so the queue stayed short and changes small and reviewable. At least one other member reviewed and approved every pull request before merge; we used ordinary merge commits, not squashing or rebasing, so per-author history and resolved merge conflicts stayed on record. All three committed under our own identity, coordinating through a Tuesday email check-in, a standing Saturday call, and a WhatsApp group.
 
 ### 4.2 Team collaboration evidence
 *Feature branches; PRs; minimum 2 resolved merge conflicts; commit history graph; meeting times/dates. Meeting log + merge-conflict log are kept in `planning/A2_Report_Notes.md` §4.2.*
 
-The commit graph below shows feature branches merging into `main` with authorship across all three members; Appendix A lists every pull request with its branch, author, and reviewer, plus the resolved merge conflicts.
+The commit graph shows feature branches merging into `main` with authorship across all three members; Appendix A lists every pull request (branch, author, reviewer) plus the resolved merge conflicts.
 
 **Fig 4.2.0** - Commit graph (VS Code Git Graph): feature branches merged into `main` via pull request, with per-commit authorship across the team
 ![Fig 4.2.0](planning/screenshots/2026-06-28-git-graph-vscode-rodlunt.png)
@@ -156,20 +156,39 @@ The commit graph below shows feature branches merging into `main` with authorshi
 **Fig 4.2.8** - Contributor graph for all three members
 ![Fig 4.2.8](planning/screenshots/2026-06-17-network-graph.png)
 
-Further collaboration screenshots (kanban, issues board, additional PR threads) are in Appendix D.
+Further collaboration screenshots (kanban, issues board, more PR threads) are in Appendix D.
 
 ## Functional testing (only unit testing) (~200-250 words)
 *Mocha/Chai unit tests for all CRUD functions.*
 
 ### 5.1 Unit test results
 
-The backend is tested with Mocha, Chai, and Sinon (stubbing MongoDB and external HTTP), organised by controller and middleware. Tests cover all CRUD operations for trips, activities, users, and auth, plus edge cases: missing fields, invalid status transitions, wrong-owner access, and weather-provider failures.
+The backend is tested with Mocha, Chai, and Sinon (stubbing MongoDB and external HTTP), organised by controller and middleware. Tests cover all CRUD operations for trips, activities, users, and auth, plus edge cases (Appendix E).
 
-The Chain of Responsibility middleware (`protect`, `adminProtect`, `validate`) is tested in isolation, each link passing control only when its conditions hold. Six tests cover the State pattern transitions (`planning → active → completed`), asserting valid moves and rejecting backward or skip ones. Fifteen tests cover the Adapter (`OpenMeteoWeatherAdapter`): geocoding, normalisation, timeout handling, and edge cases (blank destinations, unmatched regions, omitted metrics, out-of-range dates).
+The Chain of Responsibility middleware (`protect`, `adminProtect`, `validate`) is tested in isolation; six tests cover the State transitions and fifteen cover the Adapter (`OpenMeteoWeatherAdapter`): geocoding, normalisation, timeout handling, and edge cases (Appendix E).
 
 All 180 tests pass with no failures or pending cases (Figs 5.1.1-5.1.2), run in under a second, and run in CI on every push for regression coverage (Sommerville, 2016).
 
-c8 coverage is 99.54% of statements, 99.26% of branches, and 100% of functions (Fig 5.1.3); the only gaps are the `server.js` bootstrap guard and one unreachable branch in the weather adapter.
+c8 coverage is 99.54% of statements, 99.26% of branches, and 100% of functions (Fig 5.1.3); the only gaps are the `server.js` bootstrap guard and one unreachable adapter branch.
+
+Representative cases for the CRUD functions and each pattern are below; the full 51-case grid is in Appendix E.
+
+| Test Case ID | Function | Expected output | Actual output | Result |
+|---|---|---|---|---|
+| TC-CRUD-01 | `createTrip` valid body | 201 with created trip document | 201 returned | Pass |
+| TC-CRUD-02 | `getTrips` authenticated | 200 with user's trips, newest first | 200 ordered correctly | Pass |
+| TC-CRUD-06 | `updateTrip` partial body | Only supplied fields updated | Partial update applied | Pass |
+| TC-CRUD-07 | `deleteTrip` owned | 204; trip and activities removed | 204 returned | Pass |
+| TC-CRUD-09 | `addActivity` valid | 201 with activity document | 201 returned | Pass |
+| TC-CRUD-10 | `listActivitiesForTrip` | 200, sorted by date then time | 200 sorted correctly | Pass |
+| TC-CRUD-04 | `getTripById` not owned | 404 (no resource enumeration) | 404 returned | Pass |
+| TC-SIN-01 | `Database.getInstance()` (Singleton) | Same instance on every call | Same reference returned | Pass |
+| TC-BLD-02 | `TripUpdateBuilder.build()` (Builder) | Only present fields applied; falsey values preserved | Partial update applied | Pass |
+| TC-FM-01 | `UserResponseFactory.create('auth')` (Factory) | Response with id, name, email, token, isAdmin | Correct auth shape | Pass |
+| TC-COR-02 | `validate([rules])` rule fails (CoR) | 400; `next()` not called; chain stops | 400; chain stopped | Pass |
+| TC-FAC-03 | `UserService.deleteUserWithCascade()` (Facade) | Activities, trips, then user deleted in order | Correct cascade order | Pass |
+| TC-ADP-11 | `getForecast()` vendor timeout (Adapter) | Aborts and reports timeout | Timeout error thrown | Pass |
+| TC-DEC-03 | `withOwnership` not owner (Decorator) | 404; wrapped handler not called | 404; handler not called | Pass |
 
 **Fig 5.1.1** - Test suite output (top)
 ![Fig 5.1.1](planning/screenshots/2026-06-28-backend-tests-top-rodlunt.png)
@@ -185,18 +204,18 @@ c8 coverage is 99.54% of statements, 99.26% of branches, and 100% of functions (
 ## API testing using Postman (~150-200 words)
 *All endpoints incl. error handling; exported collection committed.*
 
-Using Postman, we tested all REST endpoints (Fielding, 2000) across happy paths and error cases. The collection was shared in the repository so each member could run the tests independently; Rodney covered auth (`/api/auth/*`) and admin/CoR (`/api/admin/*`).
+Using Postman, we tested all REST endpoints (Fielding, 2000) across happy paths and error cases. The shared repository collection let each member run it independently; Rodney covered auth (`/api/auth/*`) and admin/CoR (`/api/admin/*`).
 
-The admin endpoints show the Chain of Responsibility: `protect` validates the JWT (Figs 6.1.10-6.1.11) and `adminProtect` checks admin privileges (Fig 6.1.12) before the request reaches the handler, each figure showing one link rejecting requests.
+The admin endpoints show the Chain of Responsibility: `protect` validates the JWT (Figs 6.1.10-6.1.11) and `adminProtect` checks admin privileges (Fig 6.1.12) before the request reaches the handler.
 
-The collection uses environment variables (`{{base_url}}`, `{{token}}`, `{{adminToken}}`) and scripts that save tokens from login responses, so members can import and run it without setup. A full run against the live deployment passes end to end: 41 requests, every assertion green, including the live weather forecast (Fig 6.1.0).
+The collection uses environment variables (`{{base_url}}`, `{{token}}`, `{{adminToken}}`) and scripts that save login tokens. A full run against the live deployment passes end to end: 41 requests, every assertion green, including the live weather forecast (Fig 6.1.0).
 
 **Fig 6.1.0** - Full collection run against the live deployment (`http://3.26.14.122`), all assertions passing
 ![Fig 6.1.0](planning/screenshots/2026-06-28-postman-newman-green-live-rodlunt.png)
 
 ### 6.1 Request/response screenshots
 
-Representative results are below, one per response type and pattern. The full set of 40 captures across all endpoints (happy paths and error handling) is in Appendix B.
+Representative results are below, one per response type and pattern; the full set of 40 captures across all endpoints (happy paths and errors) is in Appendix B.
 
 **Fig 6.1.1** - POST /api/auth/register - 201
 ![Fig 6.1.1](planning/screenshots/2026-06-18-postman-auth-register-201-rodlunt.png)
@@ -234,9 +253,9 @@ Representative results are below, one per response type and pattern. The full se
 ## CI/CD pipeline setup (~150-200 words)
 *GitHub Actions build/test/deploy on push; public URL; pm2 status.*
 
-VacayPlan uses two GitHub Actions workflows. `pr-checks.yml` runs on every pull request to main, running the backend test suite and a frontend production build on a GitHub-hosted runner with no deployment or secret access, restoring the PR-time test gating the original single-workflow setup lacked (Laster, 2023, Ch. 2).
+VacayPlan uses two GitHub Actions workflows. `pr-checks.yml` runs on every pull request to main: the backend test suite and a frontend production build on a GitHub-hosted runner with no deployment or secret access, restoring the PR-time test gate the original single-workflow setup lacked (Laster, 2023, Ch. 2).
 
-`ci.yml` does continuous deployment via a self-hosted runner on an AWS EC2 t3.medium instance (Ubuntu 24.04 LTS, public IP 3.26.14.122): every merge to main triggers an automated build, test, and deploy with no manual approval gate (Queensland University of Technology, 2026a). It covers Node 22 setup, dependency install, React build, Mocha/Chai tests, rsync deployment, nginx sync, and PM2 restart, forming the deployment pipeline (Humble & Farley, 2010). Credentials come from GitHub Actions Secrets rather than the workflow file, and are never echoed to the public logs (Laster, 2023, Ch. 9; GitHub Inc., 2026). The instance runs as Infrastructure as a Service, the team managing all configuration above the provider layer (Queensland University of Technology, 2026b). PM2 uses systemd startup to survive reboots; nginx proxies port 80 to the frontend (3000) and backend API (5001).
+`ci.yml` does continuous deployment via a self-hosted runner on an AWS EC2 t3.medium instance (Ubuntu 24.04 LTS, public IP 3.26.14.122): every merge to main triggers an automated build, test, and deploy, with no manual approval gate (Queensland University of Technology, 2026a). It covers Node 22 setup, dependency install, React build, Mocha/Chai tests, rsync deploy, nginx sync, and PM2 restart, forming the deployment pipeline (Humble & Farley, 2010). Credentials come from GitHub Actions Secrets, never the workflow file, and are never echoed to public logs (Laster, 2023, Ch. 9; GitHub Inc., 2026). It runs as Infrastructure as a Service, the team managing all configuration above the provider layer (Queensland University of Technology, 2026b). PM2 uses systemd startup to survive reboots; nginx proxies port 80 to the frontend (3000) and backend API (5001).
 
 **Fig 7.1** - CI/CD workflow YML
 ![Fig 7.1](planning/screenshots/2026-06-17-cicd-workflow-yml-ldmasina.png)
@@ -255,11 +274,11 @@ VacayPlan uses two GitHub Actions workflows. `pr-checks.yml` runs on every pull 
 ## Discussion and conclusion (369 words)
 *Team discussion of the development process; conclusion.*
 
-Short-lived feature branches and pull requests let the three of us work in parallel while keeping main deployable, every merge reviewed by another member. A post-merge review of PR #66 caught a frontend regression both test suites had missed, showing backend unit tests do not guarantee API contract safety. Merge conflicts were similarly useful: resolving conflict #2, between Rodney's Chain of Responsibility entry and Lance's Facade branch, brought the implementation references up to date and left the documentation more accurate than either branch.
+Short-lived feature branches and pull requests let us work in parallel while keeping main deployable, every merge reviewed by another member. A post-merge review of PR #66 caught a frontend regression both test suites had missed, showing backend unit tests do not guarantee API contract safety. Merge conflicts helped too: resolving conflict #2, between Rodney's Chain of Responsibility entry and Lance's Facade branch, brought the implementation references up to date and made the documentation more accurate than either branch.
 
-Collaboration widened the design too: the weather adapter gave the Adapter pattern a home the existing code lacked, and the pipeline was split into pr-checks.yml and ci.yml once a deploy-time gate proved too weak as the only test gate.
+Collaboration widened the design: the weather adapter gave the Adapter pattern a home the existing code lacked, and the pipeline split into pr-checks.yml and ci.yml once a deploy-time gate proved too weak alone.
 
-We checked performance against NFR-01 with a load test on the live EC2 deployment (GET /api/trips, authenticated). At normal load (3 users) the median was 25ms with no errors, well inside the 500ms target; under stress (10 users) the median held at 30ms but the 95th-percentile tail rose to 892ms (Figs 8.1-8.2). Every request succeeded and throughput stayed flat near 52 requests per second, pointing to the single EC2 node, not the code, as the limit. Because the API is stateless and authenticates through self-contained JWTs, it scales horizontally (NFR-11): more instances can sit behind a load balancer without session affinity, and indexing trip queries on userId would cut the database time dominating the tail (Queensland University of Technology, 2026b). The single-instance deployment meets the median target with a clear, low-risk path to higher concurrency.
+We load-tested NFR-01 on the live EC2 deployment (GET /api/trips, authenticated). At normal load (3 users) the median was 25ms with no errors, well inside the 500ms target; under stress (10 users) it held at 30ms but the 95th-percentile tail rose to 892ms (Figs 8.1-8.2). Every request succeeded and throughput held near 52 requests per second, pointing to the single EC2 node, not the code, as the limit. Being stateless with self-contained JWTs, the API scales horizontally (NFR-11): more instances can sit behind a load balancer without session affinity, and indexing trip queries on userId would cut the tail's database time (Queensland University of Technology, 2026b). The single instance meets the median target with a clear, low-risk path to higher concurrency.
 
 **Fig 8.1** - Load test, 3 concurrent users (normal load): p50 25ms, p95 557ms, 0% errors over 520 requests
 ![Fig 8.1](planning/screenshots/2026-06-24-loadtest-normal-3vu-rodlunt.png)
@@ -267,7 +286,7 @@ We checked performance against NFR-01 with a load test on the live EC2 deploymen
 **Fig 8.2** - Load test, 10 concurrent users (stress): p50 30ms, p95 892ms, 0% errors over 572 requests
 ![Fig 8.2](planning/screenshots/2026-06-24-loadtest-stress-10vu-rodlunt.png)
 
-Overall, VacayPlan is a working full-stack trip-planning app built on documented design patterns and OOP principles, tested with unit and Postman API checks, and deployed on every push through an automated CI/CD pipeline. 
+Overall, VacayPlan is a working full-stack trip-planning app built on documented design patterns and OOP principles, tested with unit and Postman checks, and deployed on every push via automated CI/CD. 
 
 ---
 
@@ -291,9 +310,9 @@ All three used Claude Code (Anthropic, 2026; Opus 4.8) as the sole AI assistant;
 ## 9b. Reflection
 *Conversational, one genuine insight each, ~40 words per member. (9a + 9b together ~150-200 words.)*
 
-Rodney - I assumed two green test suites meant the API was safe. PR #66 proved otherwise: a frontend regression slipped straight through, because unit tests show a handler behaves, not that the contract still holds. I now check contract changes across the stack, not with unit tests alone.
+Rodney - I assumed two green test suites meant the API was safe. PR #66 proved otherwise: a frontend regression slipped through, because unit tests show a handler behaves, not that the contract still holds. I now check contract changes across the stack, not unit tests alone.
 
-Lance - I thought the trip status-transition checks belonged inside the TripUpdateBuilder. Building them there would have broken its single responsibility, so I moved them to a separate validation layer in front of the builder. Keeping each component to one job is how I work now.
+Lance - I thought the trip status-transition checks belonged inside the TripUpdateBuilder. Building them there would have broken its single responsibility, so I moved them to a separate validation layer before the builder. Keeping each component to one job is how I work now.
 
 *Joseph - add yours here (~25-40 words; aim ~25 to keep 9a+9b within the 200 budget), conversational like the two above: what you expected going in, what actually happened, and how it changes the way you work.*
 
@@ -452,9 +471,9 @@ Every code change was developed on a dedicated feature branch (one branch per ta
 | #127 | `fix/postman-trip-delete-ordering` | rodlunt | - | 2026-06-28 | fix(postman): make the full collection run green end-to-end (#126) |
 | #128 | `fix/ipv4-outbound-weather-geocoding` | rodlunt | - | 2026-06-28 | fix(backend): prefer IPv4 outbound so weather geocoding works |
 | #129 | `fix/postman-trip-dates-in-window` | rodlunt | - | 2026-06-28 | fix(postman): in-window trip dates for a real weather forecast |
-| #130 | `docs/genai-disclosure` | rodlunt | - | - (open) | docs: 9a Use of GenAI - combined team disclosure table |
-| #131 | `docs/reflection` | rodlunt | - | - (open) | docs: 9b Reflection - conversational, per-member |
-| #132 | `docs/postman-live-evidence` | rodlunt | - | - (open) | docs: live green-run evidence for the Postman collection (Fig 6.1.0) |
+| #130 | `docs/genai-disclosure` | rodlunt | - | 2026-06-28 | docs: 9a Use of GenAI - combined team disclosure table |
+| #131 | `docs/reflection` | rodlunt | - | 2026-06-28 | docs: 9b Reflection - conversational, per-member |
+| #132 | `docs/postman-live-evidence` | rodlunt | - | 2026-06-28 | docs: live green-run evidence for the Postman collection (Fig 6.1.0) |
 
 ### Merge-conflict resolution records
 
@@ -682,3 +701,60 @@ Supplementary evidence supporting section 4.2.
 **Fig 4.2.7** - PR #81 word-count coordination comment
 ![Fig 4.2.7](planning/screenshots/2026-06-17-pr81-team-comms.png)
 
+## Appendix E: Complete test-case grid
+
+All 51 unit test cases (representative subset in section 5.1). Test Case ID, function, expected output, actual output, result.
+
+| Test Case ID | Function | Expected Output | Actual Output | Pass/Fail |
+|--------------|----------|-----------------|---------------|-----------|
+| TC-SIN-01 | `Database.getInstance()` | Same instance returned on every call | Same object reference returned | Pass |
+| TC-SIN-02 | `new Database()` after instance exists | Throws on direct construction | Error thrown | Pass |
+| TC-SIN-03 | `db.connect()` called twice | `mongoose.connect` called exactly once | One connection opened | Pass |
+| TC-SIN-04 | `db.connect()` after established | Returns same connection promise | Existing promise reused | Pass |
+| TC-BLD-01 | `TripQueryBuilder.build()` | Filter `{ userId }` and sort `{ createdAt: -1 }` | Correct filter and sort | Pass |
+| TC-BLD-02 | `TripUpdateBuilder.build()` | Only present fields applied; falsey values (0, '') preserved | Partial update applied correctly | Pass |
+| TC-FM-01 | `UserResponseFactory.create('auth')` | Response with `id`, `name`, `email`, `token`, `isAdmin` (boolean) | Correct auth shape returned | Pass |
+| TC-FM-02 | `UserResponseFactory.create('auth')` isAdmin cast | `isAdmin` is strict boolean regardless of source type | Boolean cast applied | Pass |
+| TC-FM-03 | `UserResponseFactory.create('admin')` | Response with `_id`, `name`, `email`, `isAdmin`; no `token` | Correct admin shape returned | Pass |
+| TC-FM-04 | `UserResponseFactory.create('admin')` isAdmin cast | `isAdmin` is strict boolean | Boolean cast applied | Pass |
+| TC-FM-05 | `UserResponseFactory.create('unknown')` | Throws for unrecognised type | Error thrown | Pass |
+| TC-COR-01 | `validate([rules])` - all rules pass | `next()` called once; no error response sent | next() called; no status/json | Pass |
+| TC-COR-02 | `validate([rules])` - rule fails | 400 returned; `next()` not called; chain stops | 400 JSON; chain stopped | Pass |
+| TC-COR-03 | `requireUserFields` | Returns null when all fields present; error string when any missing | Correct per-field validation | Pass |
+| TC-COR-04 | `requireValidStatus` | Returns null for `active`/`deactivated`; error string otherwise | Correct status validation | Pass |
+| TC-FAC-01 | `TripService.deleteTripWithActivities()` | `Activity.deleteMany` and `trip.deleteOne` both called | Both called | Pass |
+| TC-FAC-02 | `TripService.deleteTripWithActivities()` ordering | `Activity.deleteMany` called before `trip.deleteOne` | Correct deletion order | Pass |
+| TC-FAC-03 | `UserService.deleteUserWithCascade()` | Activities, trips, then user deleted in sequence | Correct cascade order | Pass |
+| TC-FAC-04 | `UserService.deleteUserWithCascade()` audit | `[AUDIT]` log written with user and admin identity | Audit log written | Pass |
+| TC-ADP-01 | `OpenMeteoWeatherAdapter.getForecast()` nominal | Normalised forecast DTO with geocoded destination and daily data | Correct DTO returned | Pass |
+| TC-ADP-02 | `getForecast()` destination parsing | Uses leading segment of "City, Country" for geocoding | Leading segment used | Pass |
+| TC-ADP-03 | `getForecast()` country disambiguation | Country segment used to select correct geocoding candidate | Correct candidate selected | Pass |
+| TC-ADP-04 | `getForecast()` no country given | Falls back to most populous geocoding candidate | Most populous selected | Pass |
+| TC-ADP-05 | `getForecast()` unmapped WMO code | Maps unknown codes to "Unknown"; preserves zero precipitation | Unknown mapped; 0 preserved | Pass |
+| TC-ADP-06 | `getForecast()` vendor omits daily data | Returns empty daily array | Empty array returned | Pass |
+| TC-ADP-07 | `getForecast()` blank destination | Throws without making network call | Error thrown pre-network | Pass |
+| TC-ADP-08 | `getForecast()` no location found | Throws when geocoding returns no match | Error thrown | Pass |
+| TC-ADP-09 | `getForecast()` dates outside forecast window | Returns empty forecast | Empty forecast returned | Pass |
+| TC-ADP-10 | `getForecast()` forecast request fails | Surfaces vendor error reason | Vendor error surfaced | Pass |
+| TC-ADP-11 | `getForecast()` vendor timeout | Aborts and reports timeout | Timeout error thrown | Pass |
+| TC-ADP-12 | `WeatherProvider` base class | Refuses direct use; error thrown on direct instantiation | Error thrown | Pass |
+| TC-ADP-13 | `GET /api/trips/:id/weather` owned trip | 200 with forecast DTO | 200 with forecast | Pass |
+| TC-ADP-14 | `GET /api/trips/:id/weather?q=place` | Uses `q` param as destination instead of trip destination | Override destination used | Pass |
+| TC-ADP-15 | `GET /api/trips/:id/weather` trip not found | 404; provider not called | 404 returned | Pass |
+| TC-ADP-16 | `GET /api/trips/:id/weather` another user's trip | 404 (no resource enumeration) | 404 returned | Pass |
+| TC-ADP-17 | `GET /api/trips/:id/weather` no auth | 401 | 401 returned | Pass |
+| TC-ADP-18 | `GET /api/trips/:id/weather` provider fails | 502 | 502 returned | Pass |
+| TC-DEC-01 | `withOwnership` - user owns trip | Attaches trip to `req.trip`; calls wrapped handler | req.trip set; handler called once | Pass |
+| TC-DEC-02 | `withOwnership` - trip not found | 404 `{ message: 'Trip not found' }`; handler not called | 404 returned; handler not called | Pass |
+| TC-DEC-03 | `withOwnership` - user does not own trip | 404 `{ message: 'Trip not found' }`; handler not called | 404 returned; handler not called | Pass |
+| TC-DEC-04 | `withOwnership` - activity route (`req.params.tripId`) | Resolves trip via `tripId` param; attaches to `req.trip`; calls handler | req.trip set; handler called once | Pass |
+| TC-CRUD-01 | `createTrip` valid body | 201 with created trip document | 201 returned | Pass |
+| TC-CRUD-02 | `getTrips` authenticated | 200 with user's trips ordered newest first | 200 ordered correctly | Pass |
+| TC-CRUD-03 | `getTripById` owned | 200 with matching trip | 200 returned | Pass |
+| TC-CRUD-04 | `getTripById` not owned | 404 (no resource enumeration) | 404 returned | Pass |
+| TC-CRUD-05 | `updateTrip` owned | 200 with updated trip | 200 returned | Pass |
+| TC-CRUD-06 | `updateTrip` partial body | Only supplied fields updated; omitted fields unchanged | Partial update applied | Pass |
+| TC-CRUD-07 | `deleteTrip` owned | 204 No Content; trip and activities removed | 204 returned | Pass |
+| TC-CRUD-08 | `deleteTrip` cascade ordering | Activities deleted before trip document | Correct cascade order | Pass |
+| TC-CRUD-09 | `addActivity` valid | 201 with activity document | 201 returned | Pass |
+| TC-CRUD-10 | `listActivitiesForTrip` | 200 with activities sorted by date then time | 200 sorted correctly | Pass |
