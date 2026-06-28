@@ -6,6 +6,11 @@ const connectDB = require('./config/db');
 
 dotenv.config();
 
+// Prefer IPv4 for outbound requests. Open-Meteo's geocoding host advertises an
+// IPv6 address this deployment cannot route, and Node's fetch does not fall back
+// to IPv4 on its own, so the weather lookup times out unless we force the order.
+require('dns').setDefaultResultOrder('ipv4first');
+require('net').setDefaultAutoSelectFamily(false);
 
 const app = express();
 
