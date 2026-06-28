@@ -19,6 +19,7 @@ TEMPLATE = os.path.join(ROOT, "documents",
                         "IFQ636 Assignment 2 - Declaration of contribution.docx")
 OUT = os.path.join(ROOT, "IFQ636 Assignment 2 - Declaration of contribution.docx")
 BLACK = RGBColor(0, 0, 0)
+RED = RGBColor(0xC0, 0x00, 0x00)
 FONT = "Open Sans"
 
 MEMBERS = [
@@ -49,26 +50,34 @@ def set_black(run):
     run.font.name = FONT
 
 
+def _is_red(run):
+    c = run.font.color
+    return c is not None and c.rgb is not None and str(c.rgb) == "C00000"
+
+
 def blacken_all(doc):
     for p in doc.paragraphs:
         if p.style.name.startswith("Heading") or p.style.name == "Title":
             continue
         for r in p.runs:
-            set_black(r)
+            if not _is_red(r):
+                set_black(r)
     for t in doc.tables:
         for row in t.rows:
             for cell in row.cells:
                 for p in cell.paragraphs:
                     for r in p.runs:
-                        set_black(r)
+                        if not _is_red(r):       # keep [PLACEHOLDER] runs red
+                            set_black(r)
 
 
-def set_cell(cell, text, bold=False):
+def set_cell(cell, text, bold=False, red=False):
     cell.text = ""
     p = cell.paragraphs[0]
     r = p.add_run(text)
-    r.bold = bold
-    set_black(r)
+    r.bold = bold or red
+    r.font.name = FONT
+    r.font.color.rgb = RED if red else BLACK
 
 
 def trim_rows(table, keep):
@@ -93,7 +102,7 @@ def build():
     for idx, (name, desc) in enumerate(MEMBERS, start=1):
         cells = contrib.rows[idx].cells
         set_cell(cells[0], name)
-        set_cell(cells[1], "[AWAITING: student ID]")
+        set_cell(cells[1], "[PLACEHOLDER: student ID]", red=True)
         set_cell(cells[2], desc)
     trim_rows(contrib, keep=1 + len(MEMBERS))
     # rebalance columns: name / id narrow, description wide (dxa: 1in = 1440)
@@ -110,8 +119,8 @@ def build():
     for idx, (name, _) in enumerate(MEMBERS, start=1):
         cells = sign.rows[idx].cells
         set_cell(cells[0], name)
-        set_cell(cells[1], "[AWAITING: signature]")
-        set_cell(cells[2], "[AWAITING: date]")
+        set_cell(cells[1], "[PLACEHOLDER: signature]", red=True)
+        set_cell(cells[2], "[PLACEHOLDER: date]", red=True)
     trim_rows(sign, keep=1 + len(MEMBERS))
 
     blacken_all(doc)
