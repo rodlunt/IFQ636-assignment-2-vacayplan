@@ -79,3 +79,9 @@ planning/local/
 
 # Lighthouse audit reports (local, beyond-rubric)
 frontend/lighthouse-report/
+
+# docx build tooling
+tools/docx/.venv/
+tools/docx/__pycache__/
+tools/docx/headmap.json
+tools/docx/declmap.json
