@@ -20,11 +20,13 @@ This document supports transparency and accountability for Assignment 2. The tea
 
 **Continuous integration.** Added the PR Checks workflow (`.github/workflows/pr-checks.yml`) that gates every pull request on the backend test suite and the frontend build, and later corrected its frontend step to use yarn so it matches the deployment. Captured the CI/CD run evidence (Section 7.3) for the report.
 
-**API testing (Postman).** Built the Authentication and Admin folders of the team's Postman collection, including the negative cases (401/403), and resolved collection issues so the full run passes end to end. Fixed a double-response crash in the `protect` middleware uncovered during this work.
+**API testing (Postman).** Built the Authentication and Admin folders of the team's Postman collection, including the negative cases (401/403), and resolved collection issues so the full run passes end to end.
+
+**Code review, audits and bug fixes.** Carried out ad-hoc code reviews and audits beyond my own tasks - including the post-merge review of PR #66 that caught a frontend regression both test suites had missed, and rubric and code audits of the team's deliverables. Fixed bugs surfaced along the way: the `protect` middleware double-response crash, the weather adapter's outbound-IPv4 geocoding failure, and several Postman collection issues that blocked a full clean run.
 
 **Report and SRS sections.** Wrote the design-patterns (3.1) and OOP (3.2) sections, the functional/unit-testing (Section 5) and API-testing (Section 6) write-ups, the SRS safety (2.10) and risk-management/STRIDE (2.11) sections, the system and use-case diagrams (2.9) and wireframes (2.8), assembled SRS 2.1-2.7 into the draft, and embedded the Section 4.2 collaboration figures.
 
-**Project coordination.** Created and set up the shared repository, imported the VacayPlan base, and authored the team scaffolding (CONTRIBUTING guide, gitignore, project board and VS Code issue queries, `backend/.env.example` and dev-setup notes, README). Logged meetings and agendas, maintained the planning documents, and is responsible for stitching and uploading the team video. Across the project I contributed more than 90 commits and over 40 merged pull requests, reviewed teammates' pull requests, and resolved several genuine merge conflicts on record.
+**Project coordination.** Created and set up the shared repository, imported the VacayPlan base, and authored the team scaffolding (CONTRIBUTING guide, gitignore, project board and VS Code issue queries, `backend/.env.example` and dev-setup notes, README). Logged meetings and agendas, maintained the planning documents, and is responsible for stitching and uploading the team video. Managed the assignment against the rubric - tracking deliverables, triaging issues and EPICs, and keeping the project board current - and am assembling the final report document. Across the project I contributed more than 120 commits and over 40 merged pull requests, reviewed teammates' pull requests, and resolved several genuine merge conflicts on record.
 
 ### Lance Masina - detailed description of contribution
 
@@ -36,6 +38,8 @@ This document supports transparency and accountability for Assignment 2. The tea
 
 **API testing.** Captured the trip CRUD and State-pattern Postman figures for Section 6.1 (PR #104).
 
+**Collaboration.** Reviewed teammates' pull requests before merge and helped resolve merge conflicts. Contributed more than 50 commits and 9 merged pull requests.
+
 ### Joseph Milburn - detailed description of contribution
 
 **Design patterns implemented.** Authored two of the team's design patterns: the Builder (trip update/query assembler, PRs #64 and #83) and the Adapter (the Open-Meteo weather forecast integration, PR #71).
@@ -43,6 +47,8 @@ This document supports transparency and accountability for Assignment 2. The tea
 **SRS and report.** Wrote SRS sections 2.1-2.5 (purpose, problem, scope, user characteristics, constraints, PR #95), the Project overview (PR #84), and the Discussion and conclusion (PR #120).
 
 **API testing.** Built the activities and weather folders of the Postman collection with test scripts and captured the Section 6.1 figures (PR #105).
+
+**Collaboration.** Reviewed teammates' pull requests before merge. Contributed more than 30 commits and 8 merged pull requests.
 
 *Lance and Joseph: confirm the above reflects your work, then add your student ID and signature below. Drafted from your merged pull requests (cited) - adjust as needed.*
 
