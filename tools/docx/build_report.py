@@ -211,6 +211,24 @@ def place_image(doc, path):
     run.add_picture(full, width=Inches(target_w))
     return "wide" if ar > 1.6 else "portrait"
 
+def add_wireframe_grid(doc, items, cols=2, cell_w=2.85, max_h=2.0):
+    """Compact borderless grid for the low-fidelity wireframes (glance only)."""
+    rows = (len(items) + cols - 1) // cols
+    t = doc.add_table(rows=rows, cols=cols)      # no style -> borderless
+    for idx, (cap, img) in enumerate(items):
+        r, c = divmod(idx, cols)
+        cell = t.cell(r, c)
+        p = cell.paragraphs[0]; p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        full = os.path.join(ROOT, img) if img else None
+        if full and os.path.exists(full):
+            _, _, ar = img_dims_in(full)
+            w = min(cell_w, max_h * ar)          # fit cell width AND max height
+            p.add_run().add_picture(full, width=Inches(w))
+        cp = cell.add_paragraph(); cp.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        cr = cp.add_run(cap); cr.italic = True; cr.font.size = Pt(8); set_black(cr)
+        cr.italic = True
+    doc.add_paragraph()
+
 def style_para_black(p):
     for r in p.runs:
         set_black(r)
@@ -303,8 +321,26 @@ def build():
     else:
         add_toc(doc)
 
+    # merge consecutive wireframe figures into one compact grid block
+    merged = []
+    i = 0
+    while i < len(blocks):
+        k, p = blocks[i]
+        if k == "fig" and p[1] and "wireframe" in p[1]:
+            group = []
+            while (i < len(blocks) and blocks[i][0] == "fig"
+                   and blocks[i][1][1] and "wireframe" in blocks[i][1][1]):
+                group.append(blocks[i][1]); i += 1
+            merged.append(("figgrid", group))
+        else:
+            merged.append((k, p)); i += 1
+    blocks = merged
+
     in_refs = False
     for kind, payload in blocks:
+        if kind == "figgrid":
+            add_wireframe_grid(doc, payload)
+            continue
         if kind == "h1":
             in_refs = payload.lower().startswith("references")
             doc.add_paragraph(payload, style="Heading 1")
