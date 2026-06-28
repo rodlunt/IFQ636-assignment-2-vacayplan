@@ -12,7 +12,7 @@ from docx.shared import Pt, Inches, RGBColor, Emu
 from docx.oxml.ns import qn
 from docx.oxml import OxmlElement
 from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_TAB_ALIGNMENT, WD_TAB_LEADER
-from PIL import Image
+from PIL import Image, ImageFilter
 import json
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -26,9 +26,14 @@ HEADMAP = os.path.join(HERE, "headmap.json")
 TITLE = "IFQ636 Assignment 2 - VacayPlan"
 
 BLACK = RGBColor(0x00, 0x00, 0x00)
+RED = RGBColor(0xC0, 0x00, 0x00)         # placeholder highlight
 BODY_FONT = "Open Sans"
 CONTENT_WIDTH_IN = 6.27          # A4 portrait, 1in margins
-MAX_IMG_HEIGHT_IN = 8.4          # leave room for caption on the page
+MAX_IMG_HEIGHT_IN = 8.2          # leave room for caption on the page
+SHADOW_DIR = os.path.join(HERE, ".shadow_cache")   # baked drop-shadow copies
+# Optional layout hints from the measured pass (layout_pass.py): headings to
+# force onto a new page, and per-image height caps to avoid lone-on-a-page shots.
+LAYOUT = os.path.join(HERE, "layout.json")
 
 # ---------------------------------------------------------------- parsing ----
 def strip_heading_annotation(text):
@@ -193,22 +198,47 @@ def img_dims_in(path):
         dy = dpi[1] if dpi and dpi[1] else 96
     return w / dx, h / dy, w / h
 
+_LAYOUT = None
+def layout_hints():
+    global _LAYOUT
+    if _LAYOUT is None:
+        _LAYOUT = json.load(open(LAYOUT)) if os.path.exists(LAYOUT) else {}
+    return _LAYOUT
+
+def shadow_image(src):
+    """Bake a subtle bottom-right drop shadow; return a cached PNG path."""
+    os.makedirs(SHADOW_DIR, exist_ok=True)
+    out = os.path.join(SHADOW_DIR, os.path.basename(src) + ".shadow.png")
+    if os.path.exists(out) and os.path.getmtime(out) >= os.path.getmtime(src):
+        return out
+    im = Image.open(src).convert("RGBA")
+    w, h = im.size
+    off = max(6, int(w * 0.007)); blur = off; margin = 3 * off
+    canvas = Image.new("RGBA", (w + margin, h + margin), (0, 0, 0, 0))
+    shadow = Image.new("RGBA", canvas.size, (0, 0, 0, 0))
+    shadow.paste(Image.new("RGBA", (w, h), (0, 0, 0, 110)), (2 * off, 2 * off))
+    shadow = shadow.filter(ImageFilter.GaussianBlur(blur))
+    canvas = Image.alpha_composite(canvas, shadow)
+    canvas.alpha_composite(im, (0, 0))        # image flush top-left; shadow bottom-right
+    canvas.save(out)
+    return out
+
 def place_image(doc, path):
-    """Add an image sized to fit the content box; returns ('portrait'|'wide')."""
+    """Add a shadowed image sized to fit the content box; honours layout hints."""
     full = os.path.join(ROOT, path)
     if not os.path.exists(full):
         p = doc.add_paragraph(); set_black(p.add_run("[MISSING IMAGE: %s]" % path))
         return "missing"
-    win, hin, ar = img_dims_in(full)
-    # target width = content width; cap height
+    shadowed = shadow_image(full)
+    win, hin, ar = img_dims_in(shadowed)
+    cap_h = layout_hints().get("shrink_images", {}).get(path, MAX_IMG_HEIGHT_IN)
     target_w = CONTENT_WIDTH_IN
     target_h = target_w / ar
-    if target_h > MAX_IMG_HEIGHT_IN:
-        target_h = MAX_IMG_HEIGHT_IN
+    if target_h > cap_h:
+        target_h = cap_h
         target_w = target_h * ar
     p = doc.add_paragraph(); p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    run = p.add_run()
-    run.add_picture(full, width=Inches(target_w))
+    p.add_run().add_picture(shadowed, width=Inches(target_w))
     return "wide" if ar > 1.6 else "portrait"
 
 def add_wireframe_grid(doc, items, cols=2, cell_w=2.85, max_h=2.0):
@@ -221,9 +251,10 @@ def add_wireframe_grid(doc, items, cols=2, cell_w=2.85, max_h=2.0):
         p = cell.paragraphs[0]; p.alignment = WD_ALIGN_PARAGRAPH.CENTER
         full = os.path.join(ROOT, img) if img else None
         if full and os.path.exists(full):
-            _, _, ar = img_dims_in(full)
+            shadowed = shadow_image(full)
+            _, _, ar = img_dims_in(shadowed)
             w = min(cell_w, max_h * ar)          # fit cell width AND max height
-            p.add_run().add_picture(full, width=Inches(w))
+            p.add_run().add_picture(shadowed, width=Inches(w))
         cp = cell.add_paragraph(); cp.alignment = WD_ALIGN_PARAGRAPH.CENTER
         cr = cp.add_run(cap); cr.italic = True; cr.font.size = Pt(8); set_black(cr)
         cr.italic = True
@@ -276,15 +307,23 @@ def force_update_fields(doc):
     el.set(qn("w:val"), "true")
 
 # ------------------------------------------------------------------- build ---
+def add_placeholder(paragraph, text):
+    r = paragraph.add_run(text)
+    r.bold = True
+    r.font.color.rgb = RED
+    r.font.name = BODY_FONT
+    return r
+
 def fill_cover(doc):
+    # (plain black value, placeholder-in-red) per cover field
     repls = {
-        "Full names of each team member:": " Rodney Lunt, Lance Masina, Joseph Milburn",
-        "Student IDs of each team member:": "  [AWAITING: student IDs]",
-        "Project title:": " VacayPlan",
-        "GitHub link:": " https://github.com/rodlunt/IFQ636-assignment-2-vacayplan",
-        "EC2 instance name and ID:": " 3.26.14.122  [AWAITING: instance name/ID]",
+        "Full names of each team member:": (" Rodney Lunt, Lance Masina, Joseph Milburn", None),
+        "Student IDs of each team member:": ("  ", "[PLACEHOLDER: student IDs]"),
+        "Project title:": (" VacayPlan", None),
+        "GitHub link:": (" https://github.com/rodlunt/IFQ636-assignment-2-vacayplan", None),
+        "EC2 instance name and ID:": (" 3.26.14.122  ", "[PLACEHOLDER: instance name/ID]"),
     }
-    for p in doc.paragraphs:
+    for p in list(doc.paragraphs):
         # set the cover title (drop the word "template")
         if p.style.name == "Title":
             for r in p.runs:
@@ -293,12 +332,19 @@ def fill_cover(doc):
             continue
         if p.style.name.startswith("Heading"):
             continue
-        for key, val in repls.items():
-            if p.text.strip().startswith(key):
-                set_black(p.add_run(val))
-        # blacken every existing cover run (kills the grey 808285 default)
+        # drop the template's "Please ensure all links..." note
+        if p.text.strip().startswith("Please ensure all links"):
+            p._element.getparent().remove(p._element)
+            continue
+        # blacken existing template runs first (kills the grey 808285 default)
         for r in p.runs:
             set_black(r)
+        # then append the field value (black) and any placeholder (bold red)
+        for key, (val, ph) in repls.items():
+            if p.text.strip().startswith(key):
+                set_black(p.add_run(val))
+                if ph:
+                    add_placeholder(p, ph)
 
 def clear_body_after_cover(doc):
     # remove everything from the first Heading 1 onward (keep cover paras)
@@ -313,6 +359,8 @@ def clear_body_after_cover(doc):
 def build():
     blocks = parse_draft(DRAFT)
     doc = Document(TEMPLATE)
+    # widen the top margin so page-top content clears the QUT header logo
+    doc.sections[0].top_margin = Inches(1.4)
     fill_cover(doc)
     clear_body_after_cover(doc)
     doc.add_page_break()
@@ -336,17 +384,29 @@ def build():
             merged.append((k, p)); i += 1
     blocks = merged
 
+    break_headings = set(layout_hints().get("break_headings", []))
     in_refs = False
+    prev_img = False                      # previous block was a figure/grid
     for kind, payload in blocks:
         if kind == "figgrid":
             add_wireframe_grid(doc, payload)
+            prev_img = True
             continue
-        if kind == "h1":
-            in_refs = payload.lower().startswith("references")
-            doc.add_paragraph(payload, style="Heading 1")
-        elif kind == "h2":
-            doc.add_paragraph(payload, style="Heading 2")
-        elif kind == "para":
+        if kind in ("h1", "h2"):
+            brk = prev_img or payload in break_headings
+            if kind == "h1":
+                in_refs = payload.lower().startswith("references")
+                if payload.lower().startswith(("references", "appendix")):
+                    brk = True       # references + each appendix start a new page
+                h = doc.add_paragraph(payload, style="Heading 1")
+            else:
+                h = doc.add_paragraph(payload, style="Heading 2")
+            h.paragraph_format.keep_with_next = True   # never strand a heading
+            if brk:
+                h.paragraph_format.page_break_before = True
+            prev_img = False
+            continue
+        if kind == "para":
             p = doc.add_paragraph()
             add_runs(p, payload)
             if in_refs:
@@ -364,8 +424,8 @@ def build():
                 add_runs(p, line)
         elif kind == "await":
             p = doc.add_paragraph()
-            r = p.add_run("[AWAITING TEAM INPUT] " + payload)
-            r.bold = True; r.font.color.rgb = RGBColor(0xB0, 0x00, 0x00)
+            r = p.add_run("[PLACEHOLDER] " + payload)
+            r.bold = True; r.font.color.rgb = RED; r.font.name = BODY_FONT
         elif kind == "fig":
             caption, img = payload
             if img:
@@ -373,6 +433,8 @@ def build():
             cp = doc.add_paragraph()
             cr = cp.add_run(caption); cr.italic = True; cr.font.size = Pt(9); set_black(cr); cr.italic = True
             cp.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            prev_img = True
+            continue
         elif kind == "table":
             cells = payload
             ncol = max(len(r) for r in cells)
@@ -388,6 +450,7 @@ def build():
                         for r in cp.runs:
                             r.bold = True
             doc.add_paragraph()
+        prev_img = False        # para / refpara / await / table are not images
     force_update_fields(doc)
     doc.save(OUT)
     return blocks

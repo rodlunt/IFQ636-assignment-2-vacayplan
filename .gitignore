@@ -85,3 +85,5 @@ tools/docx/.venv/
 tools/docx/__pycache__/
 tools/docx/headmap.json
 tools/docx/declmap.json
+tools/docx/.shadow_cache/
+tools/docx/layout.json

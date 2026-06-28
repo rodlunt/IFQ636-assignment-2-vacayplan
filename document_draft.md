@@ -169,7 +169,7 @@ The Chain of Responsibility middleware (`protect`, `adminProtect`, `validate`) i
 
 All 180 tests pass with no failures or pending cases (Figs 5.1.1-5.1.2), run in under a second, and run in CI on every push for regression coverage (Sommerville, 2016).
 
-c8 coverage is 99.54% of statements, 99.26% of branches, and 100% of functions (Fig 5.1.3); the only gaps are the `server.js` bootstrap guard and one unreachable adapter branch.
+c8 coverage is 99.54% of statements, 99.26% of branches, and 100% of functions (Fig 5.1.3); the only gaps are the `server.js` bootstrap guard and one unreachable adapter branch. We stopped there deliberately: the lone uncovered branch is the `server.js` startup guard, which only fires when the process is launched as the entry point. Writing a test purely to turn that branch green would game the coverage metric rather than add real assurance, so we left it visible at 50% instead of chasing a hollow 100%.
 
 Representative cases for the CRUD functions and each pattern are below; the full 51-case grid is in Appendix E.
 
@@ -196,7 +196,7 @@ Representative cases for the CRUD functions and each pattern are below; the full
 **Fig 5.1.2** - Test suite output, 180 passing (bottom)
 ![Fig 5.1.2](planning/screenshots/2026-06-28-backend-tests-bottom-rodlunt.png)
 
-**Fig 5.1.3** - c8 coverage summary
+**Fig 5.1.3** - c8 coverage summary. The single amber row (`backend`, 50% branches) is the `server.js` startup guard, left uncovered by design rather than tested just to reach 100% (see above).
 ![Fig 5.1.3](planning/screenshots/2026-06-28-backend-coverage-rodlunt.png)
 
 ---
