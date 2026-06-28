@@ -50,97 +50,10 @@ VacayPlan has two actors (use case diagram, Figure 2). The Traveller is a non-te
 The build extends the existing VacayPlan base, so the stack is fixed: Node.js/Express, MongoDB Atlas, and React, deployed to a single AWS EC2 instance via a GitHub Actions CI/CD pipeline. External services such as Open-Meteo (which requires no API key) must be free-tier. Academic requirements include at least seven backend design patterns, OOP principles, and unit and API testing. Three people, roughly four weeks. Open-Meteo provides a running weather forecast of up to 16 days into the future, so trips beyond that will not have a forecast available.
 
 ### 2.6 Functional requirements (~30 words + table)
-The following functional and non-functional requirements use "shall" statements per IEEE Std 830-1998 (Institute of Electrical and Electronics Engineers, 1998), grouped by domain across two user roles: traveller and administrator.
-
-**Authentication**
-
-| ID | Requirement |
-|---|---|
-| FR-01 | The system shall allow a user to register an account using a unique email address and password. |
-| FR-02 | The system shall authenticate a registered user via email and password and issue a JSON Web Token (JWT) upon successful login. |
-| FR-03 | The system shall restrict access to all protected routes to authenticated users only. |
-| FR-04 | The system shall allow a user to log out, invalidating their active session token. |
-
-**Trip management**
-
-| ID | Requirement |
-|---|---|
-| FR-05 | The system shall allow a regular user to create a trip record with a destination, date range, budget, and status. |
-| FR-06 | The system shall allow a regular user to view all trips associated with their account on a dashboard. |
-| FR-07 | The system shall allow a regular user to update the details of an existing trip. |
-| FR-08 | The system shall allow a regular user to delete a trip record from their account. |
-| FR-09 | The system shall assign one of three statuses to each trip: planning, active, or completed. |
-| FR-10 | The system shall enforce that trip status transitions follow the defined lifecycle: planning to active to completed. |
-| FR-11 | The system shall remove all activities associated with a trip when that trip is permanently deleted. |
-
-**Activity management**
-
-| ID | Requirement |
-|---|---|
-| FR-12 | The system shall allow a regular user to add an activity to an existing trip, specifying a name, date, and description. |
-| FR-13 | The system shall restrict activity dates to fall within the parent trip date range. |
-| FR-14 | The system shall allow a regular user to view all activities associated with a trip, organised by day. |
-| FR-15 | The system shall allow a regular user to update or delete an activity they have created. |
-
-**Administration**
-
-| ID | Requirement |
-|---|---|
-| FR-16 | The system shall provide an administrator with a user management panel listing all registered accounts. |
-| FR-17 | The system shall allow an administrator to deactivate or reactivate a user account. |
-| FR-18 | The system shall allow an administrator to permanently delete a user account. |
-| FR-19 | The system shall remove all trips and activities associated with a user account when that account is permanently deleted. |
-| FR-20 | The system shall allow an administrator to view all trips across all user accounts. |
-| FR-21 | The system shall prevent a deactivated user from accessing protected routes until their account is reactivated. |
-| FR-22 | The system shall return all API responses in a consistent JSON structure, with a standardised shape for user objects regardless of the operation type. |
-| FR-23 | The system shall validate all incoming API requests before they reach business logic handlers. |
+VacayPlan defines 23 functional requirements across four domains, written as "shall" statements per IEEE Std 830-1998 (Institute of Electrical and Electronics Engineers, 1998). Authentication (FR-01-FR-04) covers registration, JWT login, protected-route access, and logout. Trip management (FR-05-FR-11) provides full CRUD plus the planning-active-completed status lifecycle (FR-09/FR-10) and cascade deletion of activities (FR-11). Activity management (FR-12-FR-15) adds date-constrained activities organised by day. Administration (FR-16-FR-23) covers account management, cross-account trip visibility, deactivation enforcement, a consistent JSON response shape, and request validation. The complete requirement table is in Appendix C.
 
 ### 2.7 Non-functional requirements (~30 words + table)
-The following non-functional requirements define the quality attributes VacayPlan shall maintain across all operating conditions.
-
-**Performance**
-
-| ID | Requirement |
-|---|---|
-| NFR-01 | The system shall return API responses for standard CRUD operations within 500 milliseconds under normal load conditions. |
-| NFR-02 | The frontend dashboard shall render the full trip list within two seconds of a successful authentication event. |
-
-**Reliability**
-
-| ID | Requirement |
-|---|---|
-| NFR-03 | The system shall maintain a minimum uptime of 99% during the operational period, supported by PM2 process management on the EC2 deployment. |
-| NFR-04 | The CI/CD pipeline shall automatically redeploy the application on every push to the main branch, ensuring the live environment reflects the latest stable build. |
-
-**Security**
-
-| ID | Requirement |
-|---|---|
-| NFR-05 | The system shall encrypt all user passwords using bcrypt before storage in the database. |
-| NFR-06 | The system shall use JWT tokens with a defined expiry period to manage authenticated sessions, rejecting expired or malformed tokens. |
-| NFR-07 | The system shall restrict all administrative operations to users with a verified administrator role, enforced at the middleware layer. |
-| NFR-08 | The system shall not expose database credentials or JWT secrets in any client-accessible code or version control history. |
-| NFR-13 | The system shall initialise a single shared database connection instance at application startup, reusing it across all subsequent operations for the lifetime of the process. |
-
-**Usability**
-
-| ID | Requirement |
-|---|---|
-| NFR-09 | The system shall provide a responsive user interface accessible on desktop and mobile browsers without requiring a native application installation. |
-| NFR-10 | The system shall display meaningful error messages to the user when an operation fails, without exposing internal system details. |
-
-**Scalability**
-
-| ID | Requirement |
-|---|---|
-| NFR-11 | The system architecture shall support horizontal scaling by maintaining stateless API design, enabling additional backend instances to be added without session conflicts. |
-| NFR-12 | The MongoDB Atlas database layer shall support collection growth without requiring schema migration, accommodating an increasing number of users and trips over time. |
-
-**Availability**
-
-| ID | Requirement |
-|---|---|
-| NFR-14 | Core trip planning features shall remain available when external data services are unavailable. |
+Fourteen non-functional requirements define VacayPlan's quality attributes. Performance (NFR-01/02): sub-500ms CRUD responses and a two-second dashboard render. Reliability (NFR-03/04): 99% uptime via PM2 and automatic CI/CD redeploy on every push. Security (NFR-05-NFR-08, NFR-13): bcrypt password hashing, JWT expiry, admin-only middleware, no secrets in version control, and a single shared database connection. Usability (NFR-09/10): a responsive UI and safe error messaging. Scalability (NFR-11/12): stateless horizontal scaling and schema-free collection growth. Availability (NFR-14): core planning remains usable when external services fail. The complete requirement table is in Appendix C.
 
 ### 2.8 User interface mockups/wireframes (~20 words + figure)
 Low-fidelity wireframes for Dashboard, Trip Detail, and Edit Trip at desktop and mobile breakpoints. Red boxes mark pattern-backed additions.
@@ -648,3 +561,98 @@ Complete Postman request/response evidence for every endpoint (happy paths and e
 
 **Fig 6.1.40** - GET /api/trips/:id/weather - beyond forecast window - 200
 ![Fig 6.1.40](planning/screenshots/2026-06-23-postman-weather-beyond-window-200-jrmilburn.png)
+
+## Appendix C: Complete requirement tables
+
+Full functional and non-functional requirement tables for the SRS (sections 2.6 and 2.7); summaries appear in the body.
+
+### Functional requirements
+
+**Authentication**
+
+| ID | Requirement |
+|---|---|
+| FR-01 | The system shall allow a user to register an account using a unique email address and password. |
+| FR-02 | The system shall authenticate a registered user via email and password and issue a JSON Web Token (JWT) upon successful login. |
+| FR-03 | The system shall restrict access to all protected routes to authenticated users only. |
+| FR-04 | The system shall allow a user to log out, invalidating their active session token. |
+
+**Trip management**
+
+| ID | Requirement |
+|---|---|
+| FR-05 | The system shall allow a regular user to create a trip record with a destination, date range, budget, and status. |
+| FR-06 | The system shall allow a regular user to view all trips associated with their account on a dashboard. |
+| FR-07 | The system shall allow a regular user to update the details of an existing trip. |
+| FR-08 | The system shall allow a regular user to delete a trip record from their account. |
+| FR-09 | The system shall assign one of three statuses to each trip: planning, active, or completed. |
+| FR-10 | The system shall enforce that trip status transitions follow the defined lifecycle: planning to active to completed. |
+| FR-11 | The system shall remove all activities associated with a trip when that trip is permanently deleted. |
+
+**Activity management**
+
+| ID | Requirement |
+|---|---|
+| FR-12 | The system shall allow a regular user to add an activity to an existing trip, specifying a name, date, and description. |
+| FR-13 | The system shall restrict activity dates to fall within the parent trip date range. |
+| FR-14 | The system shall allow a regular user to view all activities associated with a trip, organised by day. |
+| FR-15 | The system shall allow a regular user to update or delete an activity they have created. |
+
+**Administration**
+
+| ID | Requirement |
+|---|---|
+| FR-16 | The system shall provide an administrator with a user management panel listing all registered accounts. |
+| FR-17 | The system shall allow an administrator to deactivate or reactivate a user account. |
+| FR-18 | The system shall allow an administrator to permanently delete a user account. |
+| FR-19 | The system shall remove all trips and activities associated with a user account when that account is permanently deleted. |
+| FR-20 | The system shall allow an administrator to view all trips across all user accounts. |
+| FR-21 | The system shall prevent a deactivated user from accessing protected routes until their account is reactivated. |
+| FR-22 | The system shall return all API responses in a consistent JSON structure, with a standardised shape for user objects regardless of the operation type. |
+| FR-23 | The system shall validate all incoming API requests before they reach business logic handlers. |
+
+### Non-functional requirements
+
+**Performance**
+
+| ID | Requirement |
+|---|---|
+| NFR-01 | The system shall return API responses for standard CRUD operations within 500 milliseconds under normal load conditions. |
+| NFR-02 | The frontend dashboard shall render the full trip list within two seconds of a successful authentication event. |
+
+**Reliability**
+
+| ID | Requirement |
+|---|---|
+| NFR-03 | The system shall maintain a minimum uptime of 99% during the operational period, supported by PM2 process management on the EC2 deployment. |
+| NFR-04 | The CI/CD pipeline shall automatically redeploy the application on every push to the main branch, ensuring the live environment reflects the latest stable build. |
+
+**Security**
+
+| ID | Requirement |
+|---|---|
+| NFR-05 | The system shall encrypt all user passwords using bcrypt before storage in the database. |
+| NFR-06 | The system shall use JWT tokens with a defined expiry period to manage authenticated sessions, rejecting expired or malformed tokens. |
+| NFR-07 | The system shall restrict all administrative operations to users with a verified administrator role, enforced at the middleware layer. |
+| NFR-08 | The system shall not expose database credentials or JWT secrets in any client-accessible code or version control history. |
+| NFR-13 | The system shall initialise a single shared database connection instance at application startup, reusing it across all subsequent operations for the lifetime of the process. |
+
+**Usability**
+
+| ID | Requirement |
+|---|---|
+| NFR-09 | The system shall provide a responsive user interface accessible on desktop and mobile browsers without requiring a native application installation. |
+| NFR-10 | The system shall display meaningful error messages to the user when an operation fails, without exposing internal system details. |
+
+**Scalability**
+
+| ID | Requirement |
+|---|---|
+| NFR-11 | The system architecture shall support horizontal scaling by maintaining stateless API design, enabling additional backend instances to be added without session conflicts. |
+| NFR-12 | The MongoDB Atlas database layer shall support collection growth without requiring schema migration, accommodating an increasing number of users and trips over time. |
+
+**Availability**
+
+| ID | Requirement |
+|---|---|
+| NFR-14 | Core trip planning features shall remain available when external data services are unavailable. |
