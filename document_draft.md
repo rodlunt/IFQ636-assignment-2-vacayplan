@@ -246,7 +246,9 @@ Representative results are below, one per response type and pattern; the full se
 
 ### 6.2 Exported collection
 
-*(GitHub link to committed collection JSON - populate after export)*
+The Postman collection and environment are committed to the repository:
+[`VacayPlan-A2-Collection.json`](https://github.com/rodlunt/IFQ636-assignment-2-vacayplan/blob/main/postman/VacayPlan-A2-Collection.json)
+and [`VacayPlan-A2-Environment.json`](https://github.com/rodlunt/IFQ636-assignment-2-vacayplan/blob/main/postman/VacayPlan-A2-Environment.json).
 
 ---
 
@@ -298,7 +300,7 @@ All three used Claude Code (Anthropic, 2026; Opus 4.8) as the sole AI assistant;
 | Aspect | Detail |
 |---|---|
 | **Sample prompts** | Pattern/feature implementation; debugging; rubric and code audits; Postman authoring; SRS/diagram drafting; copyediting; Git/PR workflow. |
-| **AI-assisted tasks** | Code and tests for the seven patterns; backend fixes; coverage; the Postman collection; rubric/code audits; SRS/diagram drafting; 3.1 copyedit; board scaffolding. |
+| **AI-assisted tasks** | Code and tests for the eight patterns; backend fixes; coverage; the Postman collection; rubric/code audits; SRS/diagram drafting; 3.1 copyedit; board scaffolding. |
 | **How verified** | `npm test` between changes; code checked against the codebase; CI green; Postman/Newman re-runs. |
 
 **Boundary:** AI drafted under student direction; design, scope and content decisions were the team's. No AI-attribution in commits or code.
@@ -438,7 +440,7 @@ Every code change was developed on a dedicated feature branch (one branch per ta
 | #92 | `docs/readme-update` | rodlunt | LDMasina | 2026-06-17 | docs: update README - correct live URL and tidy stale references |
 | #93 | `hotfix/mocha-exit-hang` | rodlunt | - | 2026-06-17 | fix: mocha --exit --timeout to unblock CI runner |
 | #94 | `hotfix/jwt-secret-test-fallback` | rodlunt | - | 2026-06-17 | fix: mocha root hook JWT_SECRET fallback for local test runs |
-| #95 | `docs/srs-narrative` | jrmilburn | rodlunt | 2026-06-18 | SRS narrative 2.1–2.5 (purpose, problem, scope, users, constraints) |
+| #95 | `docs/srs-narrative` | jrmilburn | rodlunt | 2026-06-18 | SRS narrative 2.1-2.5 (purpose, problem, scope, users, constraints) |
 | #96 | `docs/cicd-evidence-7-3` | rodlunt | LDMasina | 2026-06-19 | docs: CI/CD evidence 7.3 + public IP |
 | #97 | `feat/postman-auth-admin-endpoints` | rodlunt | - | 2026-06-18 | fix: return guards in protect middleware prevent double-response crash |
 | #98 | `feat/postman-auth-admin-endpoints` | rodlunt | LDMasina | 2026-06-20 | docs: Postman collection + auth/admin screenshots for Section 6 |
@@ -463,7 +465,7 @@ Every code change was developed on a dedicated feature branch (one branch per ta
 | #118 | `docs/contributing-frontend-yarn` | rodlunt | - | 2026-06-25 | docs: correct CONTRIBUTING - frontend is yarn-managed, not npm |
 | #119 | `docs/section-7-cicd-writeup` | LDMasina | - | 2026-06-24 | docs: draft Section 7 CI/CD write-up with two-workflow architecture |
 | #120 | `docs/discussion-and-conclusion` | jrmilburn | rodlunt | 2026-06-28 | docs: discussion and conclusion write-up (Step 8) |
-| #121 | `docs/genai-disclosure-joe` | jrmilburn | rodlunt | 2026-06-28 | docs: GenAI disclosure dot points (Joe — Adapter + Builder) |
+| #121 | `docs/genai-disclosure-joe` | jrmilburn | rodlunt | 2026-06-28 | docs: GenAI disclosure dot points (Joe - Adapter + Builder) |
 | #122 | `docs/113-test-numbers-coverage` | rodlunt | jrmilburn | 2026-06-28 | docs: update 5.1/3.1 test numbers to 177 + coverage evidence |
 | #123 | `docs/tidy-figure-labels` | rodlunt | jrmilburn | 2026-06-28 | docs: shorten figure captions + tidy formatting |
 | #124 | `test/weatheradapter-branch-coverage` | rodlunt | jrmilburn | 2026-06-28 | test: cover weatherAdapter defensive branches (branches 97.78% -> 99.26%) |
