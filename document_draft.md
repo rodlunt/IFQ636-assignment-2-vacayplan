@@ -1,4 +1,4 @@
-# IFQ636 A2 — Working Report Draft
+# IFQ636 A2 - Working Report Draft
 
 Shared drafting surface for the team report. Headings below match the supplied
 template (`documents/IFQ636 Assignment 2 template.docx`) exactly, so prose drops
@@ -6,11 +6,11 @@ straight into the template on build day.
 
 **How to use this file**
 - Draft prose under each heading. One person can own a section; note your initials
-  in the heading while it is in progress (e.g. `## Project overview — RL drafting`).
+  in the heading while it is in progress (e.g. `## Project overview - RL drafting`).
 - Raw material (facts, decisions, talking points, sources, GenAI uses) is captured
   live in [`planning/A2_Report_Notes.md`](planning/A2_Report_Notes.md). Pull from
   there; don't reconstruct at the end.
-- Target ~3000 words (range 2700–3300). Per-section budgets are guides, not limits.
+- Target ~3000 words (range 2700-3300). Per-section budgets are guides, not limits.
 - Australian English. No AI-attribution anywhere. Cite in APA 7th. Page numbers on
   direct quotes and specific factual claims.
 - The final report is built into the template via the python-docx pipeline, not by
@@ -199,22 +199,22 @@ State is used as a behavioural pattern to enforce the trip lifecycle defined in 
 
 **Classes and objects.** VacayPlan's backend is structured around ES6 classes throughout. `Database` in `backend/config/db.js` is a clear example: the class defines the connection blueprint, and `Database.getInstance()` returns the single object that holds the live Mongoose connection state. `TripService` and `UserService` in `backend/services/` follow the same shape - each is defined as a class and exported as a constructed object instance, bundling related operations (cascade deletion, ownership verification) around shared state rather than scattering them as loose functions (Fig 3.2.1).
 
-**Fig 3.2.1** — `Database` class declaration, `constructor()`, and `static getInstance()` in `backend/config/db.js`
+**Fig 3.2.1** - `Database` class with `getInstance()` (db.js)
 ![Fig 3.2.1](planning/screenshots/2026-06-19-oop-classes-db-rodlunt.png)
 
 **Encapsulation.** `OpenMeteoWeatherAdapter` in `backend/adapters/weatherAdapter.js` exposes a single public method, `getForecast()`, and hides five internal methods behind the underscore convention: `_geocode()`, `_getJson()`, `_normaliseDaily()`, `_formatPlaceName()`, and `_pickBestMatch()`. The geocoding logic, HTTP request handling, and WMO-code translation are implementation details that callers never see. Controllers call `getForecast()` without knowing how the vendor response is structured - if Open-Meteo changed its format, only the adapter would need updating (Fig 3.2.2).
 
-**Fig 3.2.2** — `getForecast()` as the sole public interface delegating to private `_geocode()`, `_getJson()`, and `_normaliseDaily()` in `backend/adapters/weatherAdapter.js`
+**Fig 3.2.2** - `getForecast()` delegating to private helpers (weatherAdapter.js)
 ![Fig 3.2.2](planning/screenshots/2026-06-19-oop-encapsulation-weather-rodlunt.png)
 
 **Inheritance.** Two class hierarchies appear in the backend. `OpenMeteoWeatherAdapter extends WeatherProvider` in `backend/adapters/weatherAdapter.js`: `WeatherProvider` defines the `getForecast()` interface (throwing if not overridden), and the subclass provides the Open-Meteo implementation. `PlanningState`, `ActiveState`, and `CompletedState` all extend `TripState` in `backend/state/tripState.js`, each overriding `canTransitionTo(newStatus)` with its own rules. Both hierarchies use the same approach: an abstract base class enforces a contract; concrete subclasses provide the implementation (Fig 3.2.3).
 
-**Fig 3.2.3** — `TripState` base class and three subclasses with `extends TripState` in `backend/state/tripState.js`
+**Fig 3.2.3** - `TripState` base class and subclasses (tripState.js)
 ![Fig 3.2.3](planning/screenshots/2026-06-19-oop-inheritance-tripstate-rodlunt.png)
 
 **Polymorphism.** The State hierarchy demonstrates runtime polymorphism. `isValidTransition()` in `tripState.js` calls `state.canTransitionTo(newStatus)` without knowing the concrete class - when the trip is in `PlanningState`, the call returns true only for `'active'`; the same call on `CompletedState` always returns false. The method signature is identical across all three subclasses; the correct implementation is resolved at runtime based on the actual object (Fig 3.2.4).
 
-**Fig 3.2.4** — `isValidTransition()` delegating to `state.canTransitionTo(newStatus)` at runtime in `backend/state/tripState.js`
+**Fig 3.2.4** - `isValidTransition()` calling `canTransitionTo()` (tripState.js)
 ![Fig 3.2.4](planning/screenshots/2026-06-19-oop-polymorphism-tripstate-rodlunt.png)
 
 ---
@@ -227,30 +227,30 @@ State is used as a behavioural pattern to enforce the trip lifecycle defined in 
 ### 4.2 Team collaboration evidence
 *Feature branches; PRs; minimum 2 resolved merge conflicts; commit history graph; meeting times/dates. Meeting log + merge-conflict log are kept in `planning/A2_Report_Notes.md` §4.2.*
 
-*(draft here — plus figures: commit graph, PR list, merge-conflict resolution)*
+*(draft here - plus figures: commit graph, PR list, merge-conflict resolution)*
 
-**Fig 4.2.1** — Kanban board (13 Jun) showing Blocked column in use with blocked-by comments and EPICs in flight
+**Fig 4.2.1** - Kanban board (13 Jun) with Blocked column in use
 ![Fig 4.2.1](planning/screenshots/2026-06-13-kanban-blocked-column.png)
 
-**Fig 4.2.2** — PR #66 review thread showing review flag raised, fix PR #69 created, and approval cross-references
+**Fig 4.2.2** - PR #66 review thread and fix PR #69
 ![Fig 4.2.2](planning/screenshots/2026-06-13-pr66-review-thread.png)
 
-**Fig 4.2.3** — PR #66 fix reference confirming PR #69 closed the flagged issue and was approved
+**Fig 4.2.3** - PR #66 fix closing the flagged issue
 ![Fig 4.2.3](planning/screenshots/2026-06-13-pr66-review-thread-fix-ref.png)
 
-**Fig 4.2.4** — Issues board showing open tasks with assignees across all three team members
+**Fig 4.2.4** - Issues board with assignees across the team
 ![Fig 4.2.4](planning/screenshots/2026-06-17-issues-board.png)
 
-**Fig 4.2.5** — PR #71 multi-turn review thread: Joe requests review, Rodney flags conflict concern, Joe confirms resolution
+**Fig 4.2.5** - PR #71 multi-turn review thread
 ![Fig 4.2.5](planning/screenshots/2026-06-17-pr71-discussion.png)
 
-**Fig 4.2.6** — PR #74 merge conflict resolution comment documenting how the A2_Report_Notes.md conflict was resolved
+**Fig 4.2.6** - PR #74 merge conflict resolution comment
 ![Fig 4.2.6](planning/screenshots/2026-06-17-pr74-conflict-resolution.png)
 
-**Fig 4.2.7** — PR #81 team coordination: cross-team word count targets communicated via PR comment
+**Fig 4.2.7** - PR #81 word-count coordination comment
 ![Fig 4.2.7](planning/screenshots/2026-06-17-pr81-team-comms.png)
 
-**Fig 4.2.8** — Contributor graph showing commit activity from all three team members
+**Fig 4.2.8** - Contributor graph for all three members
 ![Fig 4.2.8](planning/screenshots/2026-06-17-network-graph.png)
 
 ---
@@ -268,13 +268,13 @@ All 177 tests pass with no failures or pending cases (Figs 5.1.1-5.1.2). The sui
 
 Code coverage is measured with c8 and stands at 99.54% of statements, 97.78% of branches, and 100% of functions (Fig 5.1.3). The only uncovered code is the `server.js` bootstrap guard, which runs solely when the file is executed directly rather than under test, and a small number of defensive branches in the weather adapter.
 
-**Fig 5.1.1** — Backend test suite output (top)
+**Fig 5.1.1** - Test suite output (top)
 ![Fig 5.1.1](planning/screenshots/2026-06-28-backend-tests-top-rodlunt.png)
 
-**Fig 5.1.2** — Backend test suite output — 177 passing (bottom)
+**Fig 5.1.2** - Test suite output, 177 passing (bottom)
 ![Fig 5.1.2](planning/screenshots/2026-06-28-backend-tests-bottom-rodlunt.png)
 
-**Fig 5.1.3** — c8 code coverage summary (99.54% statements, 97.78% branches, 100% functions)
+**Fig 5.1.3** - c8 coverage summary
 ![Fig 5.1.3](planning/screenshots/2026-06-28-backend-coverage-rodlunt.png)
 
 ---
@@ -290,126 +290,126 @@ The collection uses environment variables (`{{base_url}}`, `{{token}}`, `{{admin
 
 ### 6.1 Request/response screenshots
 
-**Fig 6.1.1** — POST /api/auth/register — 201 Created
+**Fig 6.1.1** - POST /api/auth/register - 201
 ![Fig 6.1.1](planning/screenshots/2026-06-18-postman-auth-register-201-rodlunt.png)
 
-**Fig 6.1.2** — POST /api/auth/register — 400 missing fields
+**Fig 6.1.2** - POST /api/auth/register - 400 missing fields
 ![Fig 6.1.2](planning/screenshots/2026-06-18-postman-auth-register-400-rodlunt.png)
 
-**Fig 6.1.3** — POST /api/auth/register — 409 duplicate email
+**Fig 6.1.3** - POST /api/auth/register - 409 duplicate email
 ![Fig 6.1.3](planning/screenshots/2026-06-18-postman-auth-register-409-rodlunt.png)
 
-**Fig 6.1.4** — POST /api/auth/login — 200 happy path
+**Fig 6.1.4** - POST /api/auth/login - 200
 ![Fig 6.1.4](planning/screenshots/2026-06-18-postman-auth-login-200-rodlunt.png)
 
-**Fig 6.1.5** — POST /api/auth/login — 401 wrong password
+**Fig 6.1.5** - POST /api/auth/login - 401 wrong password
 ![Fig 6.1.5](planning/screenshots/2026-06-18-postman-auth-login-wrong-password-401-rodlunt.png)
 
-**Fig 6.1.6** — POST /api/auth/login — 401 unknown user
+**Fig 6.1.6** - POST /api/auth/login - 401 unknown user
 ![Fig 6.1.6](planning/screenshots/2026-06-18-postman-auth-login-unknown-user-401-rodlunt.png)
 
-**Fig 6.1.7** — GET /api/auth/profile — 401 no JWT (CoR step 1: protect blocks)
+**Fig 6.1.7** - GET /api/auth/profile - 401 no JWT (CoR protect)
 ![Fig 6.1.7](planning/screenshots/2026-06-18-postman-auth-profile-no-jwt-401-rodlunt.png)
 
-**Fig 6.1.8** — GET /api/auth/profile — 200 happy path
+**Fig 6.1.8** - GET /api/auth/profile - 200
 ![Fig 6.1.8](planning/screenshots/2026-06-18-postman-auth-profile-200-rodlunt.png)
 
-**Fig 6.1.9** — PUT /api/auth/profile — 200 update
+**Fig 6.1.9** - PUT /api/auth/profile - 200 update
 ![Fig 6.1.9](planning/screenshots/2026-06-18-postman-auth-profile-update-200-rodlunt.png)
 
-**Fig 6.1.10** — GET /api/admin/users — 401 no JWT (CoR step 1)
+**Fig 6.1.10** - GET /api/admin/users - 401 no JWT (CoR step 1)
 ![Fig 6.1.10](planning/screenshots/2026-06-18-postman-admin-no-jwt-401-rodlunt.png)
 
-**Fig 6.1.11** — GET /api/admin/users — 403 non-admin JWT (CoR step 2: adminProtect blocks)
+**Fig 6.1.11** - GET /api/admin/users - 403 non-admin (CoR step 2)
 ![Fig 6.1.11](planning/screenshots/2026-06-18-postman-admin-non-admin-403-rodlunt.png)
 
-**Fig 6.1.12** — POST /api/auth/login as admin — 200 (adminToken acquired)
+**Fig 6.1.12** - POST /api/auth/login as admin - 200
 ![Fig 6.1.12](planning/screenshots/2026-06-18-postman-admin-login-200-rodlunt.png)
 
-**Fig 6.1.13** — GET /api/admin/users — 200 all users
+**Fig 6.1.13** - GET /api/admin/users - 200 all users
 ![Fig 6.1.13](planning/screenshots/2026-06-18-postman-admin-list-users-200-rodlunt.png)
 
-**Fig 6.1.14** — GET /api/admin/users/:id — 200 single user
+**Fig 6.1.14** - GET /api/admin/users/:id - 200
 ![Fig 6.1.14](planning/screenshots/2026-06-18-postman-admin-get-user-200-rodlunt.png)
 
-**Fig 6.1.15** — POST /api/admin/users — 201 create user
+**Fig 6.1.15** - POST /api/admin/users - 201 create
 ![Fig 6.1.15](planning/screenshots/2026-06-18-postman-admin-create-user-201-rodlunt.png)
 
-**Fig 6.1.16** — PATCH /api/admin/users/:id — 200 status deactivated
+**Fig 6.1.16** - PATCH /api/admin/users/:id - 200 deactivated
 ![Fig 6.1.16](planning/screenshots/2026-06-18-postman-admin-update-status-200-rodlunt.png)
 
-**Fig 6.1.17** — GET /api/admin/trips — 200 all trips
+**Fig 6.1.17** - GET /api/admin/trips - 200 all trips
 ![Fig 6.1.17](planning/screenshots/2026-06-18-postman-admin-list-trips-200-rodlunt.png)
 
-**Fig 6.1.18** — DELETE /api/admin/users/:id — 204 no content
+**Fig 6.1.18** - DELETE /api/admin/users/:id - 204
 ![Fig 6.1.18](planning/screenshots/2026-06-18-postman-admin-delete-user-204-rodlunt.png)
 
-**Fig 6.1.19** — POST /api/auth/login — 200 happy path (token acquired)
+**Fig 6.1.19** - POST /api/auth/login - 200 (token acquired)
 ![Fig 6.1.19](planning/screenshots/2026-06-20-postman-auth-login-200-ldmasina.png)
 
-**Fig 6.1.20** — POST /api/trips — 201 Created
+**Fig 6.1.20** - POST /api/trips - 201
 ![Fig 6.1.20](planning/screenshots/2026-06-20-postman-trips-create-201-ldmasina.png)
 
-**Fig 6.1.21** — GET /api/trips — 200 all trips
+**Fig 6.1.21** - GET /api/trips - 200 all trips
 ![Fig 6.1.21](planning/screenshots/2026-06-20-postman-trips-list-200-ldmasina.png)
 
-**Fig 6.1.22** — GET /api/trips/:id — 200 single trip
+**Fig 6.1.22** - GET /api/trips/:id - 200
 ![Fig 6.1.22](planning/screenshots/2026-06-20-postman-trips-get-by-id-200-ldmasina.png)
 
-**Fig 6.1.23** — GET /api/trips/:id — 404 wrong owner (resource guard)
+**Fig 6.1.23** - GET /api/trips/:id - 404 wrong owner
 ![Fig 6.1.23](planning/screenshots/2026-06-20-postman-trips-wrong-owner-404-ldmasina.png)
 
-**Fig 6.1.24** — PUT /api/trips/:id — 200 update happy path
+**Fig 6.1.24** - PUT /api/trips/:id - 200 update
 ![Fig 6.1.24](planning/screenshots/2026-06-20-postman-trips-update-200-ldmasina.png)
 
-**Fig 6.1.25** — PUT /api/trips/:id — 400 State: planning -> completed INVALID skip
+**Fig 6.1.25** - PUT /api/trips/:id - 400 State planning->completed invalid
 ![Fig 6.1.25](planning/screenshots/2026-06-20-postman-state-planning-completed-invalid-400-ldmasina.png)
 
-**Fig 6.1.26** — PUT /api/trips/:id — 200 State: planning -> active VALID
+**Fig 6.1.26** - PUT /api/trips/:id - 200 State planning->active
 ![Fig 6.1.26](planning/screenshots/2026-06-20-postman-state-planning-active-valid-200-ldmasina.png)
 
-**Fig 6.1.27** — PUT /api/trips/:id — 400 State: active -> planning INVALID backward
+**Fig 6.1.27** - PUT /api/trips/:id - 400 State active->planning invalid
 ![Fig 6.1.27](planning/screenshots/2026-06-20-postman-state-active-planning-invalid-400-ldmasina.png)
 
-**Fig 6.1.28** — PUT /api/trips/:id — 200 State: active -> completed VALID
+**Fig 6.1.28** - PUT /api/trips/:id - 200 State active->completed
 ![Fig 6.1.28](planning/screenshots/2026-06-20-postman-state-active-completed-valid-200-ldmasina.png)
 
-**Fig 6.1.29** — PUT /api/trips/:id — 400 State: completed -> planning INVALID backward
+**Fig 6.1.29** - PUT /api/trips/:id - 400 State completed->planning invalid
 ![Fig 6.1.29](planning/screenshots/2026-06-20-postman-state-completed-planning-invalid-400-ldmasina.png)
 
-**Fig 6.1.30** — DELETE /api/trips/:id — 204 cascade via Facade
+**Fig 6.1.30** - DELETE /api/trips/:id - 204 cascade (Facade)
 ![Fig 6.1.30](planning/screenshots/2026-06-20-postman-trips-delete-204-ldmasina.png)
 
-**Fig 6.1.31** — GET /api/trips — 401 no JWT
+**Fig 6.1.31** - GET /api/trips - 401 no JWT
 ![Fig 6.1.31](planning/screenshots/2026-06-20-postman-trips-no-jwt-401-ldmasina.png)
 
-*(Figs 6.1.32-6.1.37 — Joe to fill in)*
+*(Figs 6.1.32-6.1.37 - Joe to fill in)*
 
 | Fig | Endpoint | Status needed | Screenshot |
 |-----|----------|---------------|------------|
-| 6.1.19 | POST /api/trips — create (Lance) | 201 | TODO |
-| 6.1.20 | GET /api/trips — list (Lance) | 200 | TODO |
+| 6.1.19 | POST /api/trips - create (Lance) | 201 | TODO |
+| 6.1.20 | GET /api/trips - list (Lance) | 200 | TODO |
 | 6.1.21 | GET /api/trips/:id (Lance) | 200 | TODO |
-| 6.1.22 | GET /api/trips/:id — wrong owner (Lance) | 404 | TODO |
-| 6.1.23 | PUT /api/trips/:id — update (Lance) | 200 | TODO |
-| 6.1.24 | PUT /api/trips/:id — planning→completed invalid (Lance) | 400 | TODO |
-| 6.1.25 | PUT /api/trips/:id — planning→active valid (Lance) | 200 | TODO |
-| 6.1.26 | PUT /api/trips/:id — active→planning invalid (Lance) | 400 | TODO |
-| 6.1.27 | PUT /api/trips/:id — active→completed valid (Lance) | 200 | TODO |
-| 6.1.28 | PUT /api/trips/:id — completed→planning invalid (Lance) | 400 | TODO |
-| 6.1.29 | DELETE /api/trips/:id — cascade Facade (Lance) | 204 | TODO |
-| 6.1.30 | POST /api/trips/:id/activities — create (Joe) | 201 | TODO |
-| 6.1.31 | GET /api/trips/:id/activities — list (Joe) | 200 | TODO |
-| 6.1.32 | PUT /api/trips/:id/activities/:actId — update (Joe) | 200 | TODO |
-| 6.1.33 | PATCH /api/trips/:id/activities/:actId/status — booked (Joe) | 200 | TODO |
-| 6.1.34 | PATCH /api/trips/:id/activities/:actId/status — invalid (Joe) | 400 | TODO |
-| 6.1.35 | GET /api/trips/:id/activities — wrong owner (Joe) | 404 | TODO |
+| 6.1.22 | GET /api/trips/:id - wrong owner (Lance) | 404 | TODO |
+| 6.1.23 | PUT /api/trips/:id - update (Lance) | 200 | TODO |
+| 6.1.24 | PUT /api/trips/:id - planning→completed invalid (Lance) | 400 | TODO |
+| 6.1.25 | PUT /api/trips/:id - planning→active valid (Lance) | 200 | TODO |
+| 6.1.26 | PUT /api/trips/:id - active→planning invalid (Lance) | 400 | TODO |
+| 6.1.27 | PUT /api/trips/:id - active→completed valid (Lance) | 200 | TODO |
+| 6.1.28 | PUT /api/trips/:id - completed→planning invalid (Lance) | 400 | TODO |
+| 6.1.29 | DELETE /api/trips/:id - cascade Facade (Lance) | 204 | TODO |
+| 6.1.30 | POST /api/trips/:id/activities - create (Joe) | 201 | TODO |
+| 6.1.31 | GET /api/trips/:id/activities - list (Joe) | 200 | TODO |
+| 6.1.32 | PUT /api/trips/:id/activities/:actId - update (Joe) | 200 | TODO |
+| 6.1.33 | PATCH /api/trips/:id/activities/:actId/status - booked (Joe) | 200 | TODO |
+| 6.1.34 | PATCH /api/trips/:id/activities/:actId/status - invalid (Joe) | 400 | TODO |
+| 6.1.35 | GET /api/trips/:id/activities - wrong owner (Joe) | 404 | TODO |
 | 6.1.36 | DELETE /api/trips/:id/activities/:actId (Joe) | 204 | TODO |
-| 6.1.37 | GET /api/trips/:id/weather — happy path (Joe) | 200 | TODO |
+| 6.1.37 | GET /api/trips/:id/weather - happy path (Joe) | 200 | TODO |
 
 ### 6.2 Exported collection
 
-*(GitHub link to committed collection JSON — populate after export)*
+*(GitHub link to committed collection JSON - populate after export)*
 
 ---
 
@@ -420,16 +420,16 @@ VacayPlan uses two GitHub Actions workflows with distinct responsibilities. `pr-
 
 `ci.yml` implements continuous deployment via a self-hosted runner on an AWS EC2 t3.medium instance running Ubuntu 24.04 LTS at public IP 3.26.14.122: every merge to main triggers an automated build, test, and deploy sequence without a manual approval gate (IFQ636 Module 1.14, 2026). The workflow covers Node 22 setup, dependency installation, React production build, Mocha and Chai test execution, rsync deployment, nginx synchronisation, and PM2 restart. Credentials are injected via GitHub Actions Secrets rather than hardcoded in the workflow file, consistent with security hardening practices that prohibit echoing secret values to public logs (Laster, 2023, Ch. 9; GitHub Inc., 2026). The instance is provisioned as Infrastructure as a Service, with the team managing all configuration above the cloud provider layer (IFQ636 Module 7.2, 2026). PM2 uses systemd startup to survive reboots, and nginx proxies port 80 to the frontend on port 3000 and the backend API on port 5001.
 
-**Fig 7.1** — CI/CD workflow YML
+**Fig 7.1** - CI/CD workflow YML
 ![Fig 7.1](planning/screenshots/2026-06-17-cicd-workflow-yml-ldmasina.png)
 
-**Fig 7.2** — EC2 PM2 status
+**Fig 7.2** - EC2 PM2 status
 ![Fig 7.2](planning/screenshots/2026-06-17-pm2-status-vacayplan-a2-ldmasina.png)
 
-**Fig 7.3** — GitHub Actions run test page
+**Fig 7.3** - GitHub Actions test run
 ![Fig 7.3](planning/screenshots/2026-06-18-cicd-run-job-steps-rodlunt.png)
 
-**Fig 7.4** — Application first page with public IP
+**Fig 7.4** - App first page with public IP
 ![Fig 7.4](planning/screenshots/2026-06-17-vacayplan-a2-live-browser-ldmasina.png)
 
 ---
