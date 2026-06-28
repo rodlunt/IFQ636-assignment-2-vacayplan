@@ -296,6 +296,23 @@
         },
         {
           "name": "Create User via Admin (201)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    // Point {{userId}} at the throwaway we just created, so the later",
+                  "    // Update/Delete act on it rather than the main test user.",
+                  "    pm.environment.set('userId', pm.response.json()._id);",
+                  "    pm.test('Status 201', () => pm.response.to.have.status(201));",
+                  "    pm.test('Created user id returned', () => pm.expect(pm.response.json()._id).to.be.a('string'));",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [
@@ -561,25 +578,12 @@
               "path": ["api", "trips", "{{tripId}}"]
             }
           }
-        },
-        {
-          "name": "Delete Trip - cascade via Facade (204)",
-          "description": "Deletes trip and all its activities via tripService.deleteTripWithActivities (Facade pattern).",
-          "request": {
-            "method": "DELETE",
-            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
-            "url": {
-              "raw": "{{base_url}}/api/trips/{{tripId}}",
-              "host": ["{{base_url}}"],
-              "path": ["api", "trips", "{{tripId}}"]
-            }
-          }
         }
       ]
     },
     {
       "name": "Activities + Weather (Joe #91)",
-      "description": "Activity CRUD and weather endpoint. Create a fresh trip first (re-run Create Trip from the Trips folder) to get a valid {{tripId}} in planning or active state before running these.",
+      "description": "Activity CRUD and weather endpoint, reusing {{tripId}} from the Trips folder. The trip is deleted at the end of this folder (cascade via Facade), so the Trips folder no longer removes it before these requests run.",
       "event": [
         {
           "listen": "prerequest",
@@ -641,7 +645,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"date\": \"2026-06-25\",\n  \"time\": \"10:00\",\n  \"location\": \"South Bank Parklands, Brisbane\",\n  \"description\": \"Morning visit to South Bank\",\n  \"status\": \"wishlist\"\n}",
+              "raw": "{\n  \"date\": \"2026-09-02\",\n  \"time\": \"10:00\",\n  \"location\": \"South Bank Parklands, Brisbane\",\n  \"description\": \"Morning visit to South Bank\",\n  \"status\": \"wishlist\"\n}",
               "options": { "raw": { "language": "json" } }
             },
             "url": {
@@ -924,6 +928,30 @@
               "raw": "{{base_url}}/api/trips/{{tripIdFar}}/weather",
               "host": ["{{base_url}}"],
               "path": ["api", "trips", "{{tripIdFar}}", "weather"]
+            }
+          }
+        },
+        {
+          "name": "Delete Trip - cascade via Facade (204)",
+          "description": "Deletes the trip and its activities via tripService.deleteTripWithActivities (Facade pattern). Runs last so the trip stays available for the activity and weather requests above, then cleans up.",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 204', () => pm.response.to.have.status(204));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{base_url}}/api/trips/{{tripId}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "trips", "{{tripId}}"]
             }
           }
         }
