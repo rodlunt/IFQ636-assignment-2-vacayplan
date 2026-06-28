@@ -83,3 +83,4 @@ frontend/lighthouse-report/
 # docx build tooling venv
 tools/docx/.venv/
 tools/docx/__pycache__/
+tools/docx/headmap.json

@@ -11,14 +11,19 @@ from docx import Document
 from docx.shared import Pt, Inches, RGBColor, Emu
 from docx.oxml.ns import qn
 from docx.oxml import OxmlElement
-from docx.enum.text import WD_ALIGN_PARAGRAPH
+from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_TAB_ALIGNMENT, WD_TAB_LEADER
 from PIL import Image
+import json
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, "..", ".."))
 DRAFT = os.path.join(ROOT, "document_draft.md")
 TEMPLATE = os.path.join(ROOT, "documents", "IFQ636 Assignment 2 template.docx")
 OUT = os.path.join(ROOT, "documents", "IFQ636 Assignment 2 - Report.docx")
+# Two-pass static TOC: build once (field TOC), render to PDF, run toc_map.py to
+# produce headmap.json next to this script, then rebuild to embed real page nums.
+HEADMAP = os.path.join(HERE, "headmap.json")
+TITLE = "IFQ636 Assignment 2 - VacayPlan"
 
 BLACK = RGBColor(0x00, 0x00, 0x00)
 BODY_FONT = "Open Sans"
@@ -44,6 +49,13 @@ def parse_draft(path):
     i = 0
     started = False
     table_buf = []
+    ref_buf = []
+    in_refs = [False]
+
+    def flush_ref():
+        if ref_buf:
+            blocks.append(("refpara", list(ref_buf)))
+            ref_buf.clear()
 
     def flush_table():
         nonlocal table_buf
@@ -76,6 +88,7 @@ def parse_draft(path):
         else:
             flush_table()
         if not s:
+            flush_ref()
             i += 1
             continue
         if s.startswith("---"):
@@ -85,7 +98,10 @@ def parse_draft(path):
             i += 1
             continue
         if s.startswith("## "):
-            blocks.append(("h1", strip_heading_annotation(s[3:])))
+            flush_ref()
+            title = strip_heading_annotation(s[3:])
+            in_refs[0] = title.lower().startswith("references")
+            blocks.append(("h1", title))
             i += 1
             continue
         if s.startswith("### "):
@@ -118,9 +134,13 @@ def parse_draft(path):
                 blocks.append(("await", s.strip("*").strip()))
             i += 1
             continue
-        # ordinary paragraph
-        blocks.append(("para", s))
+        # ordinary paragraph (references accumulate into one entry per blank-sep group)
+        if in_refs[0]:
+            ref_buf.append(s)
+        else:
+            blocks.append(("para", s))
         i += 1
+    flush_ref()
     flush_table()
     return blocks
 
@@ -213,6 +233,23 @@ def add_toc(doc):
     rend = OxmlElement("w:r"); rend.append(fld_end); p._p.append(rend)
     doc.add_page_break()
 
+def add_static_toc(doc, entries):
+    """Static, page-numbered, NON-hyperlinked TOC built from (level,text,page)."""
+    doc.add_paragraph("Contents", style="Heading 1")
+    for e in entries:
+        p = doc.add_paragraph()
+        pf = p.paragraph_format
+        indent = 0.3 if e["level"] == "h2" else 0.0
+        pf.left_indent = Inches(indent)
+        pf.tab_stops.add_tab_stop(Inches(CONTENT_WIDTH_IN),
+                                  WD_TAB_ALIGNMENT.RIGHT, WD_TAB_LEADER.DOTS)
+        r = p.add_run(e["text"]); set_black(r)
+        if e["level"] == "h1":
+            r.bold = True
+        pg = str(e["page"]) if e.get("page") else ""
+        rp = p.add_run("\t" + pg); set_black(rp)
+    doc.add_page_break()
+
 def force_update_fields(doc):
     settings = doc.settings.element
     el = settings.find(qn("w:updateFields"))
@@ -230,9 +267,20 @@ def fill_cover(doc):
         "EC2 instance name and ID:": " 3.26.14.122  [AWAITING: instance name/ID]",
     }
     for p in doc.paragraphs:
+        # set the cover title (drop the word "template")
+        if p.style.name == "Title":
+            for r in p.runs:
+                r.text = ""
+            (p.runs[0] if p.runs else p.add_run("")).text = TITLE
+            continue
+        if p.style.name.startswith("Heading"):
+            continue
         for key, val in repls.items():
             if p.text.strip().startswith(key):
                 set_black(p.add_run(val))
+        # blacken every existing cover run (kills the grey 808285 default)
+        for r in p.runs:
+            set_black(r)
 
 def clear_body_after_cover(doc):
     # remove everything from the first Heading 1 onward (keep cover paras)
@@ -250,7 +298,10 @@ def build():
     fill_cover(doc)
     clear_body_after_cover(doc)
     doc.add_page_break()
-    add_toc(doc)
+    if os.path.exists(HEADMAP):
+        add_static_toc(doc, json.load(open(HEADMAP)))
+    else:
+        add_toc(doc)
 
     in_refs = False
     for kind, payload in blocks:
@@ -266,6 +317,15 @@ def build():
                 pf = p.paragraph_format
                 pf.left_indent = Inches(0.5)
                 pf.first_line_indent = Inches(-0.5)
+        elif kind == "refpara":
+            p = doc.add_paragraph()
+            pf = p.paragraph_format
+            pf.left_indent = Inches(0.5)
+            pf.first_line_indent = Inches(-0.5)
+            for li, line in enumerate(payload):
+                if li:
+                    p.add_run().add_break()
+                add_runs(p, line)
         elif kind == "await":
             p = doc.add_paragraph()
             r = p.add_run("[AWAITING TEAM INPUT] " + payload)
