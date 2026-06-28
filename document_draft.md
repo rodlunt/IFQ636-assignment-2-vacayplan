@@ -186,7 +186,7 @@ Factory Method is used as a creational pattern to centralise user response const
 
 Facade is used as a structural pattern to hide multi-model cascade complexity behind a simplified service interface. Previously, `tripController.deleteTrip` and `adminController.deleteUser` each coordinated Trip, Activity, and User models inline, coupling HTTP flow logic to data management. `TripService.deleteTripWithActivities()` and `UserService.deleteUserWithCascade()` encapsulate those cascades behind single calls, leaving each controller responsible only for request handling. Implementation: `backend/services/` (commit `30fe755`).
 
-Singleton is used as a creational pattern to enforce a single Mongoose connection. The prior `connectDB()` relied on a single call site rather than an enforced guarantee; `Database.getInstance()` makes it explicit - direct construction of a second instance throws, and `connect()` reuses the stored connection on every call. Implementation: `backend/config/db.js` (commit `ccd56e0`), four unit tests in `backend/test/dbSingleton.test.js`.
+Singleton is used as a creational pattern to enforce a single Mongoose connection. The prior `connectDB()` relied on a single call site rather than an enforced guarantee; `Database.getInstance()` makes it explicit - direct construction of a second instance throws, and `connect()` reuses the stored connection on every call. Implementation: `backend/config/db.js` (commit `ccd56e0`), six unit tests in `backend/test/dbSingleton.test.js`.
 
 Chain of Responsibility is used as a behavioural pattern to sequence authentication, authorisation, and validation before business logic runs. `protect` and `adminProtect` formed a latent chain; a new `validate(rules)` link completes it, with each link terminating on failure or passing control via `next()` (Shvets, 2021a). Implementation: `backend/middleware/validateMiddleware.js`, wired per route in `adminRoutes.js` (commit `c42bf6d`).
 
@@ -262,15 +262,20 @@ State is used as a behavioural pattern to enforce the trip lifecycle defined in 
 
 VacayPlan's backend is tested using Mocha as the test runner and Chai for assertions, with Sinon providing stubs for MongoDB and external HTTP calls. The suite is organised by controller and middleware, with each file grouping related test cases under descriptive `describe` blocks. Tests cover the full set of CRUD operations for trips, activities, users, and auth, as well as edge cases including missing fields, invalid status transitions, wrong-owner access attempts, and upstream weather provider failures.
 
-The Chain of Responsibility middleware (`protect`, `adminProtect`, `validate`) is tested in isolation to verify each link handles its responsibility correctly and passes control to the next link only when its own conditions are met. The State pattern transitions (`planning → active → completed`) are covered by six dedicated tests that assert both valid forward progressions and rejected backward or skip moves. The Adapter pattern (`OpenMeteoWeatherAdapter`) includes eleven tests covering geocoding, normalisation, timeout handling, and edge cases such as blank destinations and out-of-range dates.
+The Chain of Responsibility middleware (`protect`, `adminProtect`, `validate`) is tested in isolation to verify each link handles its responsibility correctly and passes control to the next link only when its own conditions are met. The State pattern transitions (`planning → active → completed`) are covered by six dedicated tests that assert both valid forward progressions and rejected backward or skip moves. The Adapter pattern (`OpenMeteoWeatherAdapter`) includes twelve tests covering geocoding, normalisation, timeout handling, and edge cases such as blank destinations and out-of-range dates.
 
-All 142 tests pass with no failures or pending cases (Figs 5.1.1-5.1.2). The suite runs in under one second, confirming no test introduces blocking I/O. Tests are executed in CI on every push via GitHub Actions, providing continuous regression coverage across the team's branches.
+All 177 tests pass with no failures or pending cases (Figs 5.1.1-5.1.2). The suite runs in under one second, confirming no test introduces blocking I/O. Tests are executed in CI on every push via GitHub Actions, providing continuous regression coverage across the team's branches.
+
+Code coverage is measured with c8 and stands at 99.54% of statements, 97.78% of branches, and 100% of functions (Fig 5.1.3). The only uncovered code is the `server.js` bootstrap guard, which runs solely when the file is executed directly rather than under test, and a small number of defensive branches in the weather adapter.
 
 **Fig 5.1.1** — Backend test suite output (top)
-![Fig 5.1.1](planning/screenshots/2026-06-19-backend-tests-top-rodlunt.png)
+![Fig 5.1.1](planning/screenshots/2026-06-28-backend-tests-top-rodlunt.png)
 
-**Fig 5.1.2** — Backend test suite output — 142 passing (bottom)
-![Fig 5.1.2](planning/screenshots/2026-06-19-backend-tests-bottom-rodlunt.png)
+**Fig 5.1.2** — Backend test suite output — 177 passing (bottom)
+![Fig 5.1.2](planning/screenshots/2026-06-28-backend-tests-bottom-rodlunt.png)
+
+**Fig 5.1.3** — c8 code coverage summary (99.54% statements, 97.78% branches, 100% functions)
+![Fig 5.1.3](planning/screenshots/2026-06-28-backend-coverage-rodlunt.png)
 
 ---
 
