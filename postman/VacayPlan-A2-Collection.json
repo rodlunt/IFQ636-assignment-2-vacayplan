@@ -5,6 +5,23 @@
     "description": "IFQ636 Assignment 2 — full API test collection covering auth, admin, trips, activities and weather endpoints.\n\nFolders:\n- Auth (Rodney #89)\n- Admin / CoR (Rodney #89)\n- Trips + State (Lance #90)\n- Activities + Weather (Joe #91)\n\nRun requests in folder order. Login runs first to populate {{token}}; Create Trip populates {{tripId}}; Create Activity populates {{activityId}}.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
+  "event": [
+    {
+      "listen": "test",
+      "script": {
+        "exec": [
+          "// Response-time check applied to every request (NFR-01: standard CRUD under 500 ms).",
+          "// Weather endpoints proxy a live upstream (Open-Meteo), so they get more headroom.",
+          "const isWeather = pm.request.url.toString().includes('/weather');",
+          "const limitMs = isWeather ? 3000 : 500;",
+          "pm.test('Response time under ' + limitMs + ' ms', function () {",
+          "    pm.expect(pm.response.responseTime).to.be.below(limitMs);",
+          "});"
+        ],
+        "type": "text/javascript"
+      }
+    }
+  ],
   "item": [
     {
       "name": "Auth (Rodney #89)",
