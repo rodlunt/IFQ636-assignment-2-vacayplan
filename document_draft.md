@@ -163,13 +163,13 @@ Further collaboration screenshots (kanban, issues board, additional PR threads) 
 
 ### 5.1 Unit test results
 
-VacayPlan's backend is tested using Mocha as the test runner and Chai for assertions, with Sinon providing stubs for MongoDB and external HTTP calls. The suite is organised by controller and middleware, with each file grouping related test cases under descriptive `describe` blocks. Tests cover the full set of CRUD operations for trips, activities, users, and auth, as well as edge cases including missing fields, invalid status transitions, wrong-owner access attempts, and upstream weather provider failures.
+The backend is tested with Mocha, Chai, and Sinon (stubbing MongoDB and external HTTP), organised by controller and middleware. Tests cover all CRUD operations for trips, activities, users, and auth, plus edge cases: missing fields, invalid status transitions, wrong-owner access, and upstream weather-provider failures.
 
-The Chain of Responsibility middleware (`protect`, `adminProtect`, `validate`) is tested in isolation to verify each link handles its responsibility correctly and passes control to the next link only when its own conditions are met. The State pattern transitions (`planning → active → completed`) are covered by six dedicated tests that assert both valid forward progressions and rejected backward or skip moves. The Adapter pattern (`OpenMeteoWeatherAdapter`) includes fifteen tests covering geocoding, normalisation, timeout handling, and edge cases such as blank destinations, unmatched regions, omitted metrics, and out-of-range dates.
+The Chain of Responsibility middleware (`protect`, `adminProtect`, `validate`) is tested in isolation, each link passing control only when its conditions are met. Six tests cover the State pattern transitions (`planning → active → completed`), asserting valid progressions and rejected backward or skip moves. Fifteen tests cover the Adapter (`OpenMeteoWeatherAdapter`): geocoding, normalisation, timeout handling, and edge cases (blank destinations, unmatched regions, omitted metrics, out-of-range dates).
 
-All 180 tests pass with no failures or pending cases (Figs 5.1.1-5.1.2). The suite runs in under one second, confirming no test introduces blocking I/O. Tests are executed in CI on every push via GitHub Actions, providing continuous regression coverage across the team's branches.
+All 180 tests pass with no failures or pending cases (Figs 5.1.1-5.1.2), running in under a second and executed in CI on every push for continuous regression coverage.
 
-Code coverage is measured with c8 and stands at 99.54% of statements, 99.26% of branches, and 100% of functions (Fig 5.1.3). The only uncovered code is the `server.js` bootstrap guard, which runs solely when the file is executed directly rather than under test, and one unreachable fall-through branch in the weather adapter's request helper.
+c8 coverage is 99.54% of statements, 99.26% of branches, and 100% of functions (Fig 5.1.3); the only gaps are the `server.js` bootstrap guard and one unreachable branch in the weather adapter.
 
 **Fig 5.1.1** - Test suite output (top)
 ![Fig 5.1.1](planning/screenshots/2026-06-28-backend-tests-top-rodlunt.png)
