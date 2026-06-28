@@ -445,12 +445,20 @@ VacayPlan uses two GitHub Actions workflows with distinct responsibilities. `pr-
 
 ---
 
-## Discussion and conclusion (218 words)
+## Discussion and conclusion (369 words)
 *Team discussion of the development process; conclusion.*
 
 We organised development around short-lived feature branches and pull requests, which let the three of us work in parallel while keeping the main branch deployable. The benefit of this approach was that each merge into main was seen by at least 2 of the 3 members, significantly reducing the chance of issues. A post-merge review of PR #66 caught a frontend regression that both test suites had missed, which showed us that backend unit tests do not necessarily guarantee API contract safety. Resolving merge conflicts turned out to be productive in a similar way. When working through conflict #2, between Rodney's Chain of Responsibility entry and Lance's Facade branch, the reconciliation forced the implementation references up to date. The resulting documentation was more accurate than either branch in isolation.
 
 Collaboration widened the design as well. The weather adapter gave us a sensible place to apply the Adapter pattern, as the existing design had no obvious fit for it. Finally, the pipeline was split into pr-checks.yml and ci.yml once it was clear a deploy-time gate could not be the only test gate.
+
+We also verified performance against NFR-01 with a load test against the live EC2 deployment (GET /api/trips, authenticated). Under normal load (3 concurrent users) the median response was 25ms with no errors, well inside the 500ms target; under stress (10 concurrent users) the median held at 30ms but the 95th-percentile tail rose to 892ms (Figs 8.1-8.2). Every request still returned successfully and throughput stayed flat at roughly 52 requests per second, which points to the single EC2 node rather than the application code as the bottleneck. Because the API is stateless and authenticates through self-contained JWTs, it can scale horizontally (NFR-11): further backend instances can sit behind a load balancer without session affinity, and indexing the trip queries on userId would trim the database time that dominates the tail (Queensland University of Technology, 2026b). The current single-instance deployment meets the median target and has a clear, low-risk path to higher concurrency.
+
+**Fig 8.1** - Load test, 3 concurrent users (normal load): p50 25ms, p95 557ms, 0% errors over 520 requests
+![Fig 8.1](planning/screenshots/2026-06-24-loadtest-normal-3vu-rodlunt.png)
+
+**Fig 8.2** - Load test, 10 concurrent users (stress): p50 30ms, p95 892ms, 0% errors over 572 requests
+![Fig 8.2](planning/screenshots/2026-06-24-loadtest-stress-10vu-rodlunt.png)
 
 Overall, VacayPlan is a working full-stack trip-planning application. It has been built on documented design patterns and OOP principles. Testing involved unit tests and Postman API checks, and every push was deployed through an automated CI/CD pipeline. 
 
