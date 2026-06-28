@@ -18,8 +18,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, "..", ".."))
 TEMPLATE = os.path.join(ROOT, "documents",
                         "IFQ636 Assignment 2 - Declaration of contribution.docx")
-OUT = os.path.join(ROOT, "documents",
-                   "IFQ636 Assignment 2 - Declaration of contribution - FILLED.docx")
+OUT = os.path.join(ROOT, "IFQ636 Assignment 2 - Declaration of contribution.docx")
 BLACK = RGBColor(0, 0, 0)
 FONT = "Open Sans"
 
