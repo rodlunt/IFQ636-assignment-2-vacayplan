@@ -288,7 +288,10 @@ Using Postman, we tested all REST endpoints covering happy paths and error cases
 
 The endpoints in admin demonstrate the Chain of Responsibility (CoR) in action, where `protect` verifies a JWT has been issued and is valid (Figs 6.1.10-6.1.11) and `adminProtect` checks for admin privileges (Fig 6.1.12). At that point, the request reaches the handler. Each figure shows one link in the chain rejecting requests at the correct point.
 
-The collection uses environment variables (`{{base_url}}`, `{{token}}`, `{{adminToken}}`) and test scripts that save tokens from login responses, so team members can import and run their own endpoints without manual setup.
+The collection uses environment variables (`{{base_url}}`, `{{token}}`, `{{adminToken}}`) and test scripts that save tokens from login responses, so team members can import and run their own endpoints without manual setup. A full run against the live deployment passes end to end - 41 requests and every assertion green, including the live weather forecast (Fig 6.1.0).
+
+**Fig 6.1.0** - Full collection run against the live deployment (`http://3.26.14.122`), all assertions passing
+![Fig 6.1.0](planning/screenshots/2026-06-28-postman-newman-green-live-rodlunt.png)
 
 ### 6.1 Request/response screenshots
 
