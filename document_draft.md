@@ -442,20 +442,20 @@ VacayPlan uses two GitHub Actions workflows with distinct responsibilities. `pr-
 *(draft here)*
 
 Joe's GenAI disclosure
-Sample prompts (my work — Adapter + Builder):
+Sample prompts (joe's work — Adapter + Builder):
 - Design drafting — "draft a WeatherProvider interface and an Open-Meteo adapter so the app depends on a stable forecast contract, not the vendor's response shape"
 - Code drafting — "map Open-Meteo's WMO weather codes to short summaries"
 - Debugging — "guard the forecast call with a timeout/abort so a hung vendor request can't block a trip"
 - Refactoring — "fold trip-list filtering into a fluent TripQueryBuilder"
 - Copyediting and PR descriptions
 
-AI-assisted tasks (mine):
+AI-assisted tasks (joe):
 - Adapter pattern (weather integration) code
 - Builder pattern code
 - SRS 2.1–2.5 prose
 - Design-pattern paragraph copyedits (3.1)
 
-How verified (mine):
+How verified (joe):
 - Code claims checked against README, backend models/routes/controllers, and the use-case diagram
 - CI/CD pipeline tests
 - npm test run between changes (106 passing)
