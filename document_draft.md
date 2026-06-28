@@ -147,31 +147,16 @@ The team worked one feature branch per task, merged through reviewed pull reques
 **Fig 4.2.0** - Commit graph (VS Code Git Graph): feature branches merged into `main` via pull request, with per-commit authorship across the team
 ![Fig 4.2.0](planning/screenshots/2026-06-28-git-graph-vscode-rodlunt.png)
 
-**Fig 4.2.1** - Kanban board (13 Jun) with Blocked column in use
-![Fig 4.2.1](planning/screenshots/2026-06-13-kanban-blocked-column.png)
-
 **Fig 4.2.2** - PR #66 review thread and fix PR #69
 ![Fig 4.2.2](planning/screenshots/2026-06-13-pr66-review-thread.png)
-
-**Fig 4.2.3** - PR #66 fix closing the flagged issue
-![Fig 4.2.3](planning/screenshots/2026-06-13-pr66-review-thread-fix-ref.png)
-
-**Fig 4.2.4** - Issues board with assignees across the team
-![Fig 4.2.4](planning/screenshots/2026-06-17-issues-board.png)
-
-**Fig 4.2.5** - PR #71 multi-turn review thread
-![Fig 4.2.5](planning/screenshots/2026-06-17-pr71-discussion.png)
 
 **Fig 4.2.6** - PR #74 merge conflict resolution comment
 ![Fig 4.2.6](planning/screenshots/2026-06-17-pr74-conflict-resolution.png)
 
-**Fig 4.2.7** - PR #81 word-count coordination comment
-![Fig 4.2.7](planning/screenshots/2026-06-17-pr81-team-comms.png)
-
 **Fig 4.2.8** - Contributor graph for all three members
 ![Fig 4.2.8](planning/screenshots/2026-06-17-network-graph.png)
 
----
+Further collaboration screenshots (kanban, issues board, additional PR threads) are in Appendix D.
 
 ## Functional testing (only unit testing) (~200-250 words)
 *Mocha/Chai unit tests for all CRUD functions.*
@@ -656,3 +641,23 @@ Full functional and non-functional requirement tables for the SRS (sections 2.6 
 | ID | Requirement |
 |---|---|
 | NFR-14 | Core trip planning features shall remain available when external data services are unavailable. |
+
+## Appendix D: Additional collaboration screenshots
+
+Supplementary evidence supporting section 4.2.
+
+**Fig 4.2.1** - Kanban board (13 Jun) with Blocked column in use
+![Fig 4.2.1](planning/screenshots/2026-06-13-kanban-blocked-column.png)
+
+**Fig 4.2.3** - PR #66 fix closing the flagged issue
+![Fig 4.2.3](planning/screenshots/2026-06-13-pr66-review-thread-fix-ref.png)
+
+**Fig 4.2.4** - Issues board with assignees across the team
+![Fig 4.2.4](planning/screenshots/2026-06-17-issues-board.png)
+
+**Fig 4.2.5** - PR #71 multi-turn review thread
+![Fig 4.2.5](planning/screenshots/2026-06-17-pr71-discussion.png)
+
+**Fig 4.2.7** - PR #81 word-count coordination comment
+![Fig 4.2.7](planning/screenshots/2026-06-17-pr81-team-comms.png)
+
