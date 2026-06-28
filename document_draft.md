@@ -385,29 +385,32 @@ The collection uses environment variables (`{{base_url}}`, `{{token}}`, `{{admin
 **Fig 6.1.31** - GET /api/trips - 401 no JWT
 ![Fig 6.1.31](planning/screenshots/2026-06-20-postman-trips-no-jwt-401-ldmasina.png)
 
-*(Figs 6.1.32-6.1.37 - Joe to fill in)*
+**Fig 6.1.32** - POST /api/trips/:id/activities - create - 201
+![Fig 6.1.32](planning/screenshots/2026-06-23-postman-activities-create-201-jrmilburn.png)
 
-| Fig | Endpoint | Status needed | Screenshot |
-|-----|----------|---------------|------------|
-| 6.1.19 | POST /api/trips - create (Lance) | 201 | TODO |
-| 6.1.20 | GET /api/trips - list (Lance) | 200 | TODO |
-| 6.1.21 | GET /api/trips/:id (Lance) | 200 | TODO |
-| 6.1.22 | GET /api/trips/:id - wrong owner (Lance) | 404 | TODO |
-| 6.1.23 | PUT /api/trips/:id - update (Lance) | 200 | TODO |
-| 6.1.24 | PUT /api/trips/:id - planning→completed invalid (Lance) | 400 | TODO |
-| 6.1.25 | PUT /api/trips/:id - planning→active valid (Lance) | 200 | TODO |
-| 6.1.26 | PUT /api/trips/:id - active→planning invalid (Lance) | 400 | TODO |
-| 6.1.27 | PUT /api/trips/:id - active→completed valid (Lance) | 200 | TODO |
-| 6.1.28 | PUT /api/trips/:id - completed→planning invalid (Lance) | 400 | TODO |
-| 6.1.29 | DELETE /api/trips/:id - cascade Facade (Lance) | 204 | TODO |
-| 6.1.30 | POST /api/trips/:id/activities - create (Joe) | 201 | TODO |
-| 6.1.31 | GET /api/trips/:id/activities - list (Joe) | 200 | TODO |
-| 6.1.32 | PUT /api/trips/:id/activities/:actId - update (Joe) | 200 | TODO |
-| 6.1.33 | PATCH /api/trips/:id/activities/:actId/status - booked (Joe) | 200 | TODO |
-| 6.1.34 | PATCH /api/trips/:id/activities/:actId/status - invalid (Joe) | 400 | TODO |
-| 6.1.35 | GET /api/trips/:id/activities - wrong owner (Joe) | 404 | TODO |
-| 6.1.36 | DELETE /api/trips/:id/activities/:actId (Joe) | 204 | TODO |
-| 6.1.37 | GET /api/trips/:id/weather - happy path (Joe) | 200 | TODO |
+**Fig 6.1.33** - GET /api/trips/:id/activities - list - 200
+![Fig 6.1.33](planning/screenshots/2026-06-23-postman-activities-list-200-jrmilburn.png)
+
+**Fig 6.1.34** - PUT /api/trips/:id/activities/:actId - update - 200
+![Fig 6.1.34](planning/screenshots/2026-06-23-postman-activities-update-200-jrmilburn.png)
+
+**Fig 6.1.35** - PATCH /api/trips/:id/activities/:actId/status - booked - 200
+![Fig 6.1.35](planning/screenshots/2026-06-23-postman-activities-status-booked-200-jrmilburn.png)
+
+**Fig 6.1.36** - PATCH /api/trips/:id/activities/:actId/status - invalid - 400
+![Fig 6.1.36](planning/screenshots/2026-06-23-postman-activities-status-invalid-400-jrmilburn.png)
+
+**Fig 6.1.37** - GET /api/trips/:id/activities - wrong owner - 404
+![Fig 6.1.37](planning/screenshots/2026-06-23-postman-activities-wrong-owner-404-jrmilburn.png)
+
+**Fig 6.1.38** - DELETE /api/trips/:id/activities/:actId - 204
+![Fig 6.1.38](planning/screenshots/2026-06-23-postman-activities-delete-204-jrmilburn.png)
+
+**Fig 6.1.39** - GET /api/trips/:id/weather - happy path - 200
+![Fig 6.1.39](planning/screenshots/2026-06-23-postman-weather-happy-path-200-jrmilburn.png)
+
+**Fig 6.1.40** - GET /api/trips/:id/weather - beyond forecast window - 200
+![Fig 6.1.40](planning/screenshots/2026-06-23-postman-weather-beyond-window-200-jrmilburn.png)
 
 ### 6.2 Exported collection
 
