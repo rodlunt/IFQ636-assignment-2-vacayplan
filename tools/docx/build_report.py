@@ -19,7 +19,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, "..", ".."))
 DRAFT = os.path.join(ROOT, "document_draft.md")
 TEMPLATE = os.path.join(ROOT, "documents", "IFQ636 Assignment 2 template.docx")
-OUT = os.path.join(ROOT, "documents", "IFQ636 Assignment 2 - Report.docx")
+OUT = os.path.join(ROOT, "IFQ636 Assignment 2 - Report.docx")
 # Two-pass static TOC: build once (field TOC), render to PDF, run toc_map.py to
 # produce headmap.json next to this script, then rebuild to embed real page nums.
 HEADMAP = os.path.join(HERE, "headmap.json")
