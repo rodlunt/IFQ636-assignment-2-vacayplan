@@ -305,7 +305,7 @@ All three used Claude Code (Anthropic, 2026; Opus 4.8) as the sole AI assistant;
 
 **Boundary:** AI drafted under student direction; design, scope and content decisions were the team's. No AI-attribution in commits or code.
 
-*[Lance to confirm: you used Claude Code (or name your tool), and add any AI-assisted task specific to you - ~10-15 words if needed.]*
+Lance used Claude (claude.ai) for pattern scaffolding review and documentation; verified against the codebase before use.
 
 ---
 
