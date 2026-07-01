@@ -1,4 +1,4 @@
-// DESIGN PATTERN - FACTORY METHOD - Centralises user response construction so authController and adminController return a consistent object shape instead of building inline.
+// DESIGN PATTERN - SIMPLE FACTORY - Centralises user response construction so authController and adminController each build their response shape in one place instead of inline.
 
 class UserResponseFactory {
   static create(type, user, token = null) {
