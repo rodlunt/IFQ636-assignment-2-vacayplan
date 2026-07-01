@@ -61,7 +61,7 @@ Risk management uses the STRIDE threat model (Shostack, 2014); each category map
 |:------------------------|:----------------------------------------------------------|:-----------------------------------------------------------------|:---------:|
 | Spoofing                | Forged identity or stolen JWT accesses protected routes   | bcrypt hashing; JWT 30-day expiry; `protect` on every request    | Mitigated |
 | Tampering               | User modifies another user's trip or activity             | `withOwnership` checks ownership before write handlers run       | Mitigated |
-| Repudiation             | User denies a trip or activity change                     | No audit log implemented                                         | Gap       |
+| Repudiation             | User denies a trip or activity change                     | Admin account deletions logged via `[AUDIT]` entry; no general audit trail | Partial   |
 | Information disclosure  | Trip data exposed to wrong user; credentials leaked       | Ownership checks on all routes; TLS on Atlas; `.env` gitignored  | Mitigated |
 | Denial of service       | Unbounded requests exhaust server; weather API hangs      | 8-second timeout on weather adapter; no bulk endpoints           | Mitigated |
 | Elevation of privilege  | Regular user accesses admin-only routes                   | `adminProtect` checks `isAdmin`; admin routes mounted separately | Mitigated |
