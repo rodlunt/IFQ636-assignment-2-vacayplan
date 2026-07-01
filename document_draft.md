@@ -149,7 +149,7 @@ c8 coverage is 99.54% of statements, 99.26% of branches, and 100% of functions (
 
 Representative cases for the CRUD functions and each pattern are below; the full 51-case grid is in Appendix E.
 
-| Test Case ID | Function | Expected output | Actual output | Result |
+| Test Case ID | Function | Expected Output | Actual Output | Pass/Fail |
 |---|---|---|---|---|
 | TC-CRUD-01 | `createTrip` valid body | 201 with created trip document | 201 returned | Pass |
 | TC-CRUD-02 | `getTrips` authenticated | 200 with user's trips, newest first | 200 ordered correctly | Pass |
