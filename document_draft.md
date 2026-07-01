@@ -183,7 +183,7 @@ Using Postman, we tested all REST endpoints (Fielding, 2000) across happy paths 
 
 The admin endpoints show the Chain of Responsibility: `protect` validates the JWT (Figs 6.1.10-6.1.11) and `adminProtect` checks admin privileges (Fig 6.1.12) before the request reaches the handler.
 
-The collection uses environment variables (`{{base_url}}`, `{{token}}`, `{{adminToken}}`) and scripts that save login tokens. A full run against the live deployment passes end to end: 41 requests, every assertion green, including the live weather forecast (Fig 6.1.0).
+The collection uses environment variables (`{{base_url}}`, `{{token}}`, `{{adminToken}}`) and scripts that save login tokens. A full run against the live deployment passes end to end: 41 requests (38 collection requests plus 3 pre-request setup calls), every assertion green, including the live weather forecast (Fig 6.1.0).
 
 **Fig 6.1.0** - Full collection run against the live deployment (`http://3.26.14.122`), all assertions passing
 ![Fig 6.1.0](planning/screenshots/2026-06-28-postman-newman-green-live-rodlunt.png)
