@@ -182,7 +182,7 @@ def add_hyperlink(paragraph, url, text):
         is_external=True)
     hl = OxmlElement("w:hyperlink"); hl.set(qn("r:id"), r_id)
     run = OxmlElement("w:r"); rpr = OxmlElement("w:rPr")
-    col = OxmlElement("w:color"); col.set(qn("w:val"), "000000"); rpr.append(col)
+    col = OxmlElement("w:color"); col.set(qn("w:val"), "0563C1"); rpr.append(col)
     u = OxmlElement("w:u"); u.set(qn("w:val"), "single"); rpr.append(u)
     rf = OxmlElement("w:rFonts"); rf.set(qn("w:ascii"), BODY_FONT); rf.set(qn("w:hAnsi"), BODY_FONT); rpr.append(rf)
     run.append(rpr)
@@ -318,10 +318,10 @@ def fill_cover(doc):
     # (plain black value, placeholder-in-red) per cover field
     repls = {
         "Full names of each team member:": (" Rodney Lunt, Lance Masina, Joseph Milburn", None),
-        "Student IDs of each team member:": ("  ", "[PLACEHOLDER: student IDs]"),
+        "Student IDs of each team member:": (" n12555941, n8838411, n10813888", None),
         "Project title:": (" VacayPlan", None),
         "GitHub link:": (" https://github.com/rodlunt/IFQ636-assignment-2-vacayplan", None),
-        "EC2 instance name and ID:": (" 3.26.14.122  ", "[PLACEHOLDER: instance name/ID]"),
+        "EC2 instance name and ID:": (" VacayPlan_IFQ636_A2, i-06076d755ec7b3cbf (public IP 3.26.14.122)", None),
     }
     for p in list(doc.paragraphs):
         # set the cover title (drop the word "template")
