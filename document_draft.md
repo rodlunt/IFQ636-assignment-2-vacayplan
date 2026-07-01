@@ -590,7 +590,7 @@ Full functional and non-functional requirement tables for the SRS (sections 2.6 
 
 | ID | Requirement |
 |---|---|
-| FR-12 | The system shall allow a regular user to add an activity to an existing trip, specifying a name, date, and description. |
+| FR-12 | The system shall allow a regular user to add an activity to an existing trip, specifying a date within the trip's date range (required) and optionally a time, location, description, and status. |
 | FR-13 | The system shall restrict activity dates to fall within the parent trip date range. |
 | FR-14 | The system shall allow a regular user to view all activities associated with a trip, organised by day. |
 | FR-15 | The system shall allow a regular user to update or delete an activity they have created. |
