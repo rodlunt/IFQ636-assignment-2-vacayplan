@@ -23,9 +23,9 @@ In scope: traveller authentication (register, log in, log out, update profile); 
 Out of scope: bookings, payments, reservations; multi-user sharing or collaboration; native mobile apps; email or push notifications. VacayPlan is a planning record, not a booking engine.
 
 ### 2.4 User characteristics
-VacayPlan has two actors (Figure 2). The Traveller is a non-technical end user planning personal holidays, expecting a fast, self-explanatory interface on desktop or mobile, and owns only their trips and activities. The Administrator is a trusted operator who manages accounts and views all trips for moderation.
+VacayPlan has two actors (Fig 2.4.1). The Traveller is a non-technical end user planning personal holidays, expecting a fast, self-explanatory interface on desktop or mobile, and owns only their trips and activities. The Administrator is a trusted operator who manages accounts and views all trips for moderation.
 
-![Figure 2: VacayPlan use case diagram](planning/diagrams/A2_system_diagram_use_case.png)
+![Fig 2.4.1: VacayPlan use case diagram](planning/diagrams/A2_system_diagram_use_case.png)
 
 ### 2.5 Constraints
 The build extends the existing base, so the stack is fixed: Node.js/Express, MongoDB Atlas, and React on a single AWS EC2 instance via GitHub Actions CI/CD. External services like Open-Meteo (no API key) must be free-tier. Academic requirements: at least seven backend design patterns, OOP principles, and unit and API testing. Three people, roughly four weeks. Open-Meteo forecasts up to 16 days ahead, so trips beyond that have no forecast.
@@ -39,17 +39,17 @@ Fourteen non-functional requirements define the quality attributes (Sommerville,
 ### 2.8 User interface mockups/wireframes
 Low-fidelity wireframes for Dashboard, Trip Detail, and Edit Trip at desktop and mobile breakpoints; red boxes mark pattern-backed additions.
 
-![Fig 2a](planning/diagrams/wireframe-dashboard-desktop.png)
-![Fig 2b](planning/diagrams/wireframe-dashboard-mobile.png)
-![Fig 3a](planning/diagrams/wireframe-trip-detail-desktop.png)
-![Fig 3b](planning/diagrams/wireframe-trip-detail-mobile.png)
-![Fig 4a](planning/diagrams/wireframe-edit-trip-desktop.png)
-![Fig 4b](planning/diagrams/wireframe-edit-trip-mobile.png)
+![Fig 2.8.1](planning/diagrams/wireframe-dashboard-desktop.png)
+![Fig 2.8.2](planning/diagrams/wireframe-dashboard-mobile.png)
+![Fig 2.8.3](planning/diagrams/wireframe-trip-detail-desktop.png)
+![Fig 2.8.4](planning/diagrams/wireframe-trip-detail-mobile.png)
+![Fig 2.8.5](planning/diagrams/wireframe-edit-trip-desktop.png)
+![Fig 2.8.6](planning/diagrams/wireframe-edit-trip-mobile.png)
 
 ### 2.9 Complete system diagram
-Figure 1 shows the architecture: the React SPA reaches the Express backend on AWS EC2 over HTTP via an Nginx reverse proxy, which connects to MongoDB Atlas and the Open-Meteo weather API, deployed via GitHub Actions CI/CD.
+Fig 2.9.1 shows the architecture: the React SPA reaches the Express backend on AWS EC2 over HTTP via an Nginx reverse proxy, which connects to MongoDB Atlas and the Open-Meteo weather API, deployed via GitHub Actions CI/CD.
 
-![Figure 1: VacayPlan complete system diagram](planning/diagrams/A2_system_diagram_2.9.png)
+![Fig 2.9.1: VacayPlan complete system diagram](planning/diagrams/A2_system_diagram_2.9.png)
 
 ### 2.10 Safety considerations
 VacayPlan's safety has three layers. At the network layer, Nginx serves the app and reverse-proxies API calls to the Express backend, which reaches MongoDB Atlas over TLS; the public endpoint is HTTP (the unit's bare-IP model), with client-facing TLS a future step. At the application layer, every authenticated route passes through the middleware chain (`protect`, `adminProtect`, `validate`) before business logic runs, and `withOwnership` checks ownership to block cross-user access. At the data layer, the Facade cascades deletions across related models to avoid orphaned records, and the weather adapter enforces an 8-second timeout on hung requests.
