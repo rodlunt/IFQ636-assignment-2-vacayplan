@@ -283,7 +283,7 @@ Lance used Claude (claude.ai) for pattern scaffolding review and documentation; 
 
 ## 9b. Reflection
 
-Rodney - I assumed two green test suites meant the API was safe. PR #66 proved otherwise: a frontend regression slipped through, because unit tests show a handler behaves, not that the contract still holds. I now check contract changes across the stack, not unit tests alone.
+Rodney - I assumed our up-front rule, each author merges their own PR, would see us through. Timezones proved otherwise: approved PRs waited a day on absent authors, so we let any reviewer merge once approved. The lesson is to review and adapt a process in action, not set it once.
 
 Lance - I thought the trip status-transition checks belonged inside the TripUpdateBuilder. Building them there would have broken its single responsibility, so I moved them to a separate validation layer before the builder. Keeping each component to one job is how I work now.
 
