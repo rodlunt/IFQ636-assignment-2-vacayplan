@@ -572,7 +572,7 @@ Full functional and non-functional requirement tables for the SRS (sections 2.6 
 | FR-01 | The system shall allow a user to register an account using a unique email address and password. |
 | FR-02 | The system shall authenticate a registered user via email and password and issue a JSON Web Token (JWT) upon successful login. |
 | FR-03 | The system shall restrict access to all protected routes to authenticated users only. |
-| FR-04 | The system shall allow a user to log out, invalidating their active session token. |
+| FR-04 | The system shall allow a user to log out by discarding their client-side session token; server-side token revocation is out of scope and is mitigated by JWT expiry. |
 
 **Trip management**
 
