@@ -18,7 +18,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "e2e": "playwright test",
-    "e2e:live": "PLAYWRIGHT_BASE_URL=http://3.106.8.108 playwright test",
+    "e2e:live": "PLAYWRIGHT_BASE_URL=http://3.26.14.122 playwright test",
     "e2e:ui": "playwright test --ui",
     "test:lighthouse": "playwright test --config=playwright.lighthouse.config.js"
   },

@@ -22,7 +22,7 @@
                 <mxCell id="ec2" value="AWS EC2 - public IP (pm2 runtime)" style="rounded=1;html=1;verticalAlign=top;fontStyle=1;fillColor=#d5e8d4;strokeColor=#82b366;container=1;collapsible=0" parent="1" vertex="1">
                     <mxGeometry x="520" y="80" width="340" height="535" as="geometry"/>
                 </mxCell>
-                <mxCell id="nginx" value="Nginx (reverse proxy)&lt;br&gt;TLS termination · ports 80/443" style="rounded=1;html=1;fontStyle=1;whiteSpace=wrap" parent="ec2" vertex="1">
+                <mxCell id="nginx" value="Nginx (reverse proxy)&lt;br&gt;HTTP · port 80" style="rounded=1;html=1;fontStyle=1;whiteSpace=wrap" parent="ec2" vertex="1">
                     <mxGeometry x="20" y="45" width="300" height="40" as="geometry"/>
                 </mxCell>
                 <mxCell id="apiHdr" value="Express BackendAPI (Node.js) :5001" style="rounded=1;html=1;fontStyle=1;whiteSpace=wrap" parent="ec2" vertex="1">
@@ -31,7 +31,7 @@
                 <mxCell id="mw" value="Middleware chain (Chain of Responsibility):&lt;br&gt;protect -&gt; adminProtect -&gt; validate" style="rounded=1;html=1;whiteSpace=wrap" parent="ec2" vertex="1">
                     <mxGeometry x="20" y="180" width="300" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="ctrl" value="Controllers: auth | trip | activity | admin | weather&lt;br&gt;(Factory Method, Builder, Decorator, Facade)" style="rounded=1;html=1;whiteSpace=wrap" parent="ec2" vertex="1">
+                <mxCell id="ctrl" value="Controllers: auth | trip | activity | admin | weather&lt;br&gt;(Simple Factory, Builder, Decorator, Facade)" style="rounded=1;html=1;whiteSpace=wrap" parent="ec2" vertex="1">
                     <mxGeometry x="20" y="280" width="300" height="70" as="geometry"/>
                 </mxCell>
                 <mxCell id="wad" value="weatherAdapter (Adapter)&lt;br&gt;Open-Meteo wrapper + timeout guard" style="rounded=1;html=1;whiteSpace=wrap" parent="ec2" vertex="1">
@@ -58,13 +58,13 @@
                 <mxCell id="actions" value="GitHub Actions&lt;br&gt;test + deploy on push" style="rounded=1;html=1;whiteSpace=wrap" parent="cicd" vertex="1">
                     <mxGeometry x="380" y="30.769230769230774" width="260" height="53.84615384615385" as="geometry"/>
                 </mxCell>
-                <mxCell id="eU" value="HTTPS" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1" parent="1" source="actorUser" target="spa" edge="1">
+                <mxCell id="eU" value="HTTP" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1" parent="1" source="actorUser" target="spa" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="eA" value="HTTPS" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1" parent="1" source="actorAdmin" target="pages" edge="1">
+                <mxCell id="eA" value="HTTP" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1" parent="1" source="actorAdmin" target="pages" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="eApi" value="HTTPS / JSON + JWT" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1" parent="1" source="spa" target="nginx" edge="1">
+                <mxCell id="eApi" value="HTTP / JSON + JWT" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1" parent="1" source="spa" target="nginx" edge="1">
                     <mxGeometry x="0.0526" relative="1" as="geometry">
                         <mxPoint as="offset"/>
                     </mxGeometry>
