@@ -59,11 +59,11 @@ Risk management uses the STRIDE threat model (Shostack, 2014); each category map
 
 | Threat                  | VacayPlan risk                                            | Mitigation                                                       | Status    |
 |:------------------------|:----------------------------------------------------------|:-----------------------------------------------------------------|:---------:|
-| Spoofing                | Forged identity or stolen JWT accesses protected routes   | bcrypt hashing; `protect` on every request; JWT 30-day expiry, but no server-side revocation, so a stolen or post-deactivation token stays valid until it expires | Partial   |
+| Spoofing                | Forged identity or stolen JWT accesses protected routes   | bcrypt hashing; `protect` on every request; 30-day JWT with no server-side revocation, so a stolen or post-deactivation token is valid until expiry | Partial   |
 | Tampering               | User modifies another user's trip or activity             | `withOwnership` checks ownership before write handlers run       | Mitigated |
 | Repudiation             | User denies a trip or activity change                     | Admin account deletions logged via `[AUDIT]` entry; no general audit trail | Partial   |
 | Information disclosure  | Trip data exposed to wrong user; credentials leaked       | Ownership checks on all routes; TLS on Atlas; `.env` gitignored  | Mitigated |
-| Denial of service       | Unbounded requests exhaust server; weather API hangs      | 8-second timeout on weather adapter; no bulk endpoints; no inbound rate limiting, so a request flood is an accepted residual risk | Partial   |
+| Denial of service       | Unbounded requests exhaust server; weather API hangs      | 8-second outbound weather timeout; no bulk endpoints; no inbound rate limiting (residual flood risk) | Partial   |
 | Elevation of privilege  | Regular user accesses admin-only routes                   | `adminProtect` checks `isAdmin`; admin routes mounted separately | Mitigated |
 
 ---
