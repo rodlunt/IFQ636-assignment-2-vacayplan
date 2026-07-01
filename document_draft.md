@@ -190,7 +190,7 @@ The collection uses environment variables (`{{base_url}}`, `{{token}}`, `{{admin
 
 ### 6.1 Request/response screenshots
 
-Representative results are below, one per response type and pattern; the full set of 40 captures across all endpoints (happy paths and errors) is in Appendix B.
+Representative results are below, one per response type and pattern; the full set of 40 captures, covering every endpoint and spanning happy paths and the main error cases (400/401/403/404/409), is in Appendix B.
 
 **Fig 6.1.1** - POST /api/auth/register - 201
 ![Fig 6.1.1](planning/screenshots/2026-06-18-postman-auth-register-201-rodlunt.png)
