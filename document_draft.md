@@ -293,6 +293,8 @@ Joe - I expected the weather adapter to be simple HTTP requests. What I didn't c
 
 ## References
 
+Anthropic. (2026). *Claude Code* (Opus 4.8) [Large language model]. https://www.anthropic.com/claude-code
+
 Chacon, S., & Straub, B. (2014). *Pro Git* (2nd ed.). Apress.
 
 Fielding, R. T. (2000). *Architectural styles and the design of network-based software architectures* [Doctoral dissertation, University of California, Irvine].
