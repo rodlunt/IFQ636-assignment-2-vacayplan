@@ -114,7 +114,10 @@ Output lands in `frontend/build/` and is rsynced to the EC2 PM2-served path by t
 backend/      Express API + Mongoose models + Mocha suite
 frontend/     React + Tailwind + Playwright pack
 deploy/       Nginx site config used by the deploy job
-.github/      CI/CD workflows (ci.yml = test+deploy, e2e.yml = manual e2e)
+postman/      Postman collection + environment for API testing
+planning/     SRS, diagrams, wireframes, screenshots, meeting notes
+tools/        DOCX build pipeline for the report and declaration
+.github/      CI/CD workflows (pr-checks.yml = PR test gate, ci.yml = test+deploy, e2e.yml = manual e2e)
 ```
 
 ---
