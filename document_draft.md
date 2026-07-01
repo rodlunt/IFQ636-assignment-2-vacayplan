@@ -59,11 +59,11 @@ Risk management uses the STRIDE threat model (Shostack, 2014); each category map
 
 | Threat                  | VacayPlan risk                                            | Mitigation                                                       | Status    |
 |:------------------------|:----------------------------------------------------------|:-----------------------------------------------------------------|:---------:|
-| Spoofing                | Forged identity or stolen JWT accesses protected routes   | bcrypt hashing; JWT 30-day expiry; `protect` on every request    | Mitigated |
+| Spoofing                | Forged identity or stolen JWT accesses protected routes   | bcrypt hashing; `protect` on every request; 30-day JWT with no server-side revocation, so a stolen or post-deactivation token is valid until expiry | Partial   |
 | Tampering               | User modifies another user's trip or activity             | `withOwnership` checks ownership before write handlers run       | Mitigated |
 | Repudiation             | User denies a trip or activity change                     | Admin account deletions logged via `[AUDIT]` entry; no general audit trail | Partial   |
 | Information disclosure  | Trip data exposed to wrong user; credentials leaked       | Ownership checks on all routes; TLS on Atlas; `.env` gitignored  | Mitigated |
-| Denial of service       | Unbounded requests exhaust server; weather API hangs      | 8-second timeout on weather adapter; no bulk endpoints           | Mitigated |
+| Denial of service       | Unbounded requests exhaust server; weather API hangs      | 8-second outbound weather timeout; no bulk endpoints; no inbound rate limiting (residual flood risk) | Partial   |
 | Elevation of privilege  | Regular user accesses admin-only routes                   | `adminProtect` checks `isAdmin`; admin routes mounted separately | Mitigated |
 
 ---
@@ -115,7 +115,7 @@ State, a behavioural pattern, enforces the trip lifecycle in FR-10 (planning -> 
 ## Team collaboration via GitHub
 
 ### 4.1 Team collaboration statement
-We organised work as GitHub issues, labelled by report section and assigned to one owner, tracked on a shared Project board (Todo, In progress, In review, Done). Each task ran on its own short-lived feature branch from main (Chacon & Straub, 2014), with several pull requests open at once so the queue stayed short and changes small and reviewable. Every substantive code pull request was reviewed by at least one other member before merge; some chore, hotfix and late-stage documentation PRs were self-merged to keep the queue short. We used ordinary merge commits, not squashing or rebasing, so per-author history and resolved merge conflicts stayed on record. All three committed under our own identity, coordinating through a Tuesday email check-in, a standing Saturday call, and a WhatsApp group.
+We organised work as GitHub issues, labelled by report section and assigned to one owner, tracked on a shared Project board (Todo, In progress, In review, Done). Each task ran on its own short-lived feature branch from main (Chacon & Straub, 2014), with several pull requests open at once so the queue stayed short and changes small and reviewable. Most substantive code pull requests were reviewed by at least one other member before merge; some pattern, hotfix and late-stage documentation PRs were self-merged to keep the queue short. We used ordinary merge commits, not squashing or rebasing, so per-author history and resolved merge conflicts stayed on record. All three committed under our own identity, coordinating through a Tuesday email check-in, a standing Saturday call, and a WhatsApp group.
 
 ### 4.2 Team collaboration evidence
 
@@ -149,7 +149,7 @@ c8 coverage is 99.54% of statements, 99.26% of branches, and 100% of functions (
 
 Representative cases for the CRUD functions and each pattern are below; the full 51-case grid is in Appendix E.
 
-| Test Case ID | Function | Expected output | Actual output | Result |
+| Test Case ID | Function | Expected Output | Actual Output | Pass/Fail |
 |---|---|---|---|---|
 | TC-CRUD-01 | `createTrip` valid body | 201 with created trip document | 201 returned | Pass |
 | TC-CRUD-02 | `getTrips` authenticated | 200 with user's trips, newest first | 200 ordered correctly | Pass |
@@ -604,7 +604,7 @@ Full functional and non-functional requirement tables for the SRS (sections 2.6 
 | FR-18 | The system shall allow an administrator to permanently delete a user account. |
 | FR-19 | The system shall remove all trips and activities associated with a user account when that account is permanently deleted. |
 | FR-20 | The system shall allow an administrator to view all trips across all user accounts. |
-| FR-21 | The system shall prevent a deactivated user from accessing protected routes until their account is reactivated. |
+| FR-21 | The system shall prevent a deactivated user from logging in or obtaining a new session token; access via a token issued before deactivation ends when that token expires (server-side revocation is out of scope, as in FR-04). |
 | FR-22 | The system shall return all API responses in a consistent JSON structure, with a standardised shape for user objects regardless of the operation type. |
 | FR-23 | The system shall validate all incoming API requests before they reach business logic handlers. |
 
