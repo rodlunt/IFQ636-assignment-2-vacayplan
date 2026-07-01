@@ -61,6 +61,7 @@
         },
         {
           "name": "Register - missing fields (400)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Status 400', () => pm.response.to.have.status(400));"] } }],
           "request": {
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
@@ -78,6 +79,7 @@
         },
         {
           "name": "Register - duplicate email (409)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Status 409', () => pm.response.to.have.status(409));"] } }],
           "request": {
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
@@ -128,6 +130,7 @@
         },
         {
           "name": "Login - wrong password (401)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Status 401', () => pm.response.to.have.status(401));"] } }],
           "request": {
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
@@ -145,6 +148,7 @@
         },
         {
           "name": "Login - unknown user (401)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Status 401', () => pm.response.to.have.status(401));"] } }],
           "request": {
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
@@ -162,6 +166,7 @@
         },
         {
           "name": "Get Profile - no JWT (401)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Status 401', () => pm.response.to.have.status(401));"] } }],
           "description": "CoR step 1 — protect middleware blocks request with no token.",
           "request": {
             "method": "GET",
@@ -175,6 +180,7 @@
         },
         {
           "name": "Get Profile - happy path (200)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));"] } }],
           "request": {
             "method": "GET",
             "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
@@ -187,6 +193,7 @@
         },
         {
           "name": "Update Profile (200)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));"] } }],
           "request": {
             "method": "PUT",
             "header": [
@@ -245,6 +252,7 @@
         },
         {
           "name": "Non-admin JWT hits admin route (403)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Status 403', () => pm.response.to.have.status(403));"] } }],
           "description": "CoR step 2 — adminProtect blocks a valid but non-admin JWT.",
           "request": {
             "method": "GET",
@@ -258,6 +266,7 @@
         },
         {
           "name": "No JWT hits admin route (401)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Status 401', () => pm.response.to.have.status(401));"] } }],
           "description": "CoR step 1 — protect middleware blocks before adminProtect is reached.",
           "request": {
             "method": "GET",
@@ -300,6 +309,7 @@
         },
         {
           "name": "Get User Detail (200)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));"] } }],
           "description": "Uses {{userId}} set by List All Users test script.",
           "request": {
             "method": "GET",
@@ -350,6 +360,7 @@
         },
         {
           "name": "Update User Status (200)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));"] } }],
           "description": "Uses {{userId}}. Patch status to deactivated.",
           "request": {
             "method": "PATCH",
@@ -371,6 +382,7 @@
         },
         {
           "name": "List All Trips - admin (200)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));"] } }],
           "request": {
             "method": "GET",
             "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
@@ -383,6 +395,7 @@
         },
         {
           "name": "Delete User via Admin (204)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Status 204', () => pm.response.to.have.status(204));"] } }],
           "description": "Deletes {{userId}} — the test user created by register. Run last in this folder.",
           "request": {
             "method": "DELETE",
@@ -452,6 +465,7 @@
         },
         {
           "name": "List Trips (200)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));"] } }],
           "request": {
             "method": "GET",
             "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
@@ -464,6 +478,7 @@
         },
         {
           "name": "Get Trip by ID (200)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));"] } }],
           "request": {
             "method": "GET",
             "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
@@ -476,6 +491,7 @@
         },
         {
           "name": "Get Trip - wrong owner (404)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Status 404', () => pm.response.to.have.status(404));"] } }],
           "description": "Use a valid tripId that belongs to a different user. ownershipDecorator returns 404.",
           "request": {
             "method": "GET",
@@ -489,6 +505,7 @@
         },
         {
           "name": "Update Trip - happy path (200)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));"] } }],
           "request": {
             "method": "PUT",
             "header": [
@@ -509,6 +526,7 @@
         },
         {
           "name": "State: planning -> completed INVALID skip (400)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Status 400', () => pm.response.to.have.status(400));"] } }],
           "description": "Trip is in planning. Skipping active is not a valid transition.",
           "request": {
             "method": "PUT",
@@ -530,6 +548,7 @@
         },
         {
           "name": "State: planning -> active VALID (200)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));"] } }],
           "request": {
             "method": "PUT",
             "header": [
@@ -550,6 +569,7 @@
         },
         {
           "name": "State: active -> planning INVALID backward (400)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Status 400', () => pm.response.to.have.status(400));"] } }],
           "description": "Trip is now active. Going backward to planning is not allowed.",
           "request": {
             "method": "PUT",
@@ -571,6 +591,7 @@
         },
         {
           "name": "State: active -> completed VALID (200)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));"] } }],
           "request": {
             "method": "PUT",
             "header": [
@@ -591,6 +612,7 @@
         },
         {
           "name": "State: completed -> planning INVALID backward (400)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Status 400', () => pm.response.to.have.status(400));"] } }],
           "description": "Trip is now completed. Going backward to planning is not allowed.",
           "request": {
             "method": "PUT",
