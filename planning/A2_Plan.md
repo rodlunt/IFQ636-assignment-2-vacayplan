@@ -64,7 +64,7 @@ Until 2–3 resolve, only solo-prep (phase 0) is actionable.
 
 - [ ] Assemble report from `A2_Report_Notes.md` into the template via python-docx
 - [ ] Discussion + conclusion (§8); Use of GenAI (§9); Reflection (§9); References (§9)
-- [ ] Record single 10-min team video (~3:33 each), each member demos their own part; faces visible
+- [ ] Record single 10-min team video (~3:20 each), each member demos their own part; faces visible
 - [ ] Complete Part C declaration (names, IDs, contributions, signatures)
 
 ## Phase 7: Pre-submission (Mode 9 then Mode 10)
