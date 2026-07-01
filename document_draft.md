@@ -247,8 +247,8 @@ Representative results are below, one per response type and pattern; the full se
 ### 6.2 Exported collection
 
 The Postman collection and environment are committed to the repository:
-[`VacayPlan-A2-Collection.json`](https://github.com/rodlunt/IFQ636-assignment-2-vacayplan/blob/main/postman/VacayPlan-A2-Collection.json)
-and [`VacayPlan-A2-Environment.json`](https://github.com/rodlunt/IFQ636-assignment-2-vacayplan/blob/main/postman/VacayPlan-A2-Environment.json).
+[VacayPlan-A2-Collection.json](https://github.com/rodlunt/IFQ636-assignment-2-vacayplan/blob/main/postman/VacayPlan-A2-Collection.json)
+and [VacayPlan-A2-Environment.json](https://github.com/rodlunt/IFQ636-assignment-2-vacayplan/blob/main/postman/VacayPlan-A2-Environment.json).
 
 ---
 
@@ -316,7 +316,7 @@ Rodney - I assumed two green test suites meant the API was safe. PR #66 proved o
 
 Lance - I thought the trip status-transition checks belonged inside the TripUpdateBuilder. Building them there would have broken its single responsibility, so I moved them to a separate validation layer before the builder. Keeping each component to one job is how I work now.
 
-*Joseph - add yours here (~25-40 words; aim ~25 to keep 9a+9b within the 200 budget), conversational like the two above: what you expected going in, what actually happened, and how it changes the way you work.*
+Joe - I expected the weather adapter to be simple HTTP requests. What I didn't consider was telling an empty forecast apart from an API failure. I now design for the expected empty case first, then handle errors second.
 
 ---
 

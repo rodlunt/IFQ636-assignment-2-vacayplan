@@ -121,7 +121,6 @@ def main():
         json.dump(headmap, open(HEADMAP, "w"))
         new_breaks = breaks | measure_breaks(pdf, headmap)
         new_shrinks = measure_lone(pdf, figs, dict(shrinks))
-        lone_pages = sum(1 for f in figs if False)  # (info only)
         print(f"iter {it}: pages={npages} breaks={len(new_breaks)} "
               f"shrunk={len(new_shrinks)}")
         state = (sorted(new_breaks), sorted(new_shrinks.items()),
