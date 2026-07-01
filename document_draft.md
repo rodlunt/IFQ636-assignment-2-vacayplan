@@ -183,7 +183,7 @@ Using Postman, we tested all REST endpoints (Fielding, 2000) across happy paths 
 
 The admin endpoints show the Chain of Responsibility: `protect` validates the JWT (Figs 6.1.10-6.1.11) and `adminProtect` checks admin privileges (Fig 6.1.12) before the request reaches the handler.
 
-The collection uses environment variables (`{{base_url}}`, `{{token}}`, `{{adminToken}}`) and scripts that save login tokens. A full run against the live deployment passes end to end: 41 requests, every assertion green, including the live weather forecast (Fig 6.1.0).
+The collection uses environment variables (`{{base_url}}`, `{{token}}`, `{{adminToken}}`) and scripts that save login tokens. A full run against the live deployment passes end to end: 41 requests (38 collection requests plus 3 pre-request setup calls), every assertion green, including the live weather forecast (Fig 6.1.0).
 
 **Fig 6.1.0** - Full collection run against the live deployment (`http://3.26.14.122`), all assertions passing
 ![Fig 6.1.0](planning/screenshots/2026-06-28-postman-newman-green-live-rodlunt.png)
@@ -283,7 +283,7 @@ Lance used Claude (claude.ai) for pattern scaffolding review and documentation; 
 
 ## 9b. Reflection
 
-Rodney - I assumed two green test suites meant the API was safe. PR #66 proved otherwise: a frontend regression slipped through, because unit tests show a handler behaves, not that the contract still holds. I now check contract changes across the stack, not unit tests alone.
+Rodney - I assumed our up-front rule, each author merges their own PR, would see us through. Timezones proved otherwise: approved PRs waited a day on absent authors, so we let any reviewer merge once approved. The lesson is to review and adapt a process in action, not set it once.
 
 Lance - I thought the trip status-transition checks belonged inside the TripUpdateBuilder. Building them there would have broken its single responsibility, so I moved them to a separate validation layer before the builder. Keeping each component to one job is how I work now.
 
