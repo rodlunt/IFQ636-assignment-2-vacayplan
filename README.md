@@ -38,7 +38,7 @@ The `marker` account also has three canonical demo trips seeded (Bali active, To
 ### Prerequisites
 
 - Node.js 22.x (the deploy target — earlier versions may work for dev, untested)
-- npm (the project standardises on npm; pnpm and yarn are not supported by the `install-all` script)
+- npm for the root and backend, plus Yarn (Classic) for the frontend, which is Yarn-managed (`yarn.lock`) and built with Yarn in CI/CD. The root `install-all` script npm-installs all three as a dev convenience.
 - A MongoDB connection string (MongoDB Atlas free tier is the simplest option)
 
 ### Steps
