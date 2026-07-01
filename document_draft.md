@@ -72,7 +72,7 @@ Risk management uses the STRIDE threat model (Shostack, 2014); each category map
 
 ### 3.1 Design pattern
 
-Adapter, a structural pattern (Gamma et al., 1994), wraps the Open-Meteo weather service. `WeatherProvider` defines the forecast interface the app depends on; `OpenMeteoWeatherAdapter` translates the vendor's coordinate-based, WMO-coded responses into a normalised forecast object. A new provider means a new `WeatherProvider` subclass, leaving controllers, routes, and frontend untouched. Implementation: `backend/adapters/weatherAdapter.js`, serving `GET /api/trips/:id/weather` (commit `37b337c`).
+Adapter, a structural pattern (Gamma et al., 1994), wraps the Open-Meteo weather service. `WeatherProvider` defines the forecast interface the app depends on; `OpenMeteoWeatherAdapter` translates the vendor's coordinate-based, WMO-coded responses into a normalised forecast object. A new provider means a new `WeatherProvider` subclass, leaving controllers, routes, and frontend untouched. Implementation: `backend/adapters/weatherAdapter.js`, serving `GET /api/trips/:id/weather` (commit `7cfc0af`).
 
 Builder, a creational pattern, assembles trip queries and updates. `TripQueryBuilder` builds the user's trip-list filter with newest-first sort; `TripUpdateBuilder` builds partial updates without overwriting omitted fields. Both keep controllers on HTTP coordination, not construction. Implementation: `backend/builders/tripBuilders.js`, used by `tripController.js` in `getTrips` and `updateTrip` (commit `6965ef3`).
 
