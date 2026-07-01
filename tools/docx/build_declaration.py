@@ -48,7 +48,7 @@ MEMBERS = [
         "name": "Rodney Lunt",
         "sid": "n12555941",
         "sig": "signature-rodney",
-        "date": None,
+        "date": "01/07/2026",
         "desc": (
             "Coordinated the project and managed the GitHub workflow (issues, project board, "
             "branch/PR discipline, 118 commits across 59 pull requests). Implemented the Singleton "
@@ -76,7 +76,7 @@ MEMBERS = [
         "name": "Joseph Milburn",
         "sid": "n10813888",
         "sig": "signature-joseph",
-        "date": None,
+        "date": "30/06/2026",
         "desc": (
             "Implemented the Builder (trip query/update construction) and Adapter (Open-Meteo weather "
             "integration) patterns. Authored the project overview and SRS Sections 2.1-2.5 (purpose, "
@@ -184,6 +184,8 @@ def build(signed=False):
         sig_path = find_sig(m["sig"]) if signed else None
         if sig_path:
             set_cell_image(cells[1], sig_path)
+        elif signed:
+            set_cell(cells[1], "")   # blank cell to hand-sign in Acrobat
         else:
             set_cell(cells[1], "[PLACEHOLDER: signature]", red=True)
         if signed and m["date"]:
