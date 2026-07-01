@@ -289,11 +289,11 @@ Lance used Claude (claude.ai) for pattern scaffolding review and documentation; 
 
 ## 9b. Reflection
 
-Rodney - I assumed our up-front rule, each author merges their own PR, would see us through. Timezones proved otherwise: approved PRs waited a day on absent authors, so we let any reviewer merge once approved. The lesson is to review and adapt a process in action, not set it once.
+Rodney - I assumed our up-front rule, each author merges their own PR, would see us through. Timezones proved otherwise: approved PRs waited a day on absent authors. Keeping the rule would have protected authorship symmetry but stalled the queue, so we traded a little individual ownership for flow and let any reviewer merge once approved. Continuous delivery treats a fast, unblocked integration path as the priority (Humble & Farley, 2010); the lasting lesson is that a team process is something you review and adapt in action, not set once.
 
-Lance - I thought the trip status-transition checks belonged inside the TripUpdateBuilder. Building them there would have broken its single responsibility, so I moved them to a separate validation layer before the builder. Keeping each component to one job is how I work now.
+Lance - I first put the trip status-transition checks inside the TripUpdateBuilder. That would have meant fewer files, but it would have given the builder two jobs, construction and validation, and broken its single responsibility, so I moved the checks into a separate validation layer that runs before the builder. Trading a little extra structure for one clear responsibility per component (Martin, 2017) is now a deliberate call: a change to the transition rules can never destabilise how updates are built.
 
-Joe - I expected the weather adapter to be simple HTTP requests. What I didn't consider was telling an empty forecast apart from an API failure. I now design for the expected empty case first, then handle errors second.
+Joe - I expected the weather adapter to be simple HTTP requests. The quick version would have treated any missing forecast as an error, but I had not considered separating a legitimately empty forecast (trip dates beyond the 16-day window) from a genuine upstream failure, which need different handling. Designing the normal and degraded paths before writing the request, rather than bolting error handling on afterwards, gave a clearer contract for the calling code (Sommerville, 2016); I now map the expected empty case first and treat failures as their own path.
 
 ---
 
