@@ -12,7 +12,7 @@ camera. One member uploads the final cut to Canvas Studio.
 
 - **Runtime:** 30 minutes total (aim 28-30 to leave headroom). Per-member segments ~8.5 min each, plus a shared open and close.
 - **On camera:** each member's face must be visible while presenting their segment (rubric requirement).
-- **Live demo:** the running product must be shown live in a browser with the **public IP / live URL visible** in the address bar. Fill the current URL in here before recording: `[LIVE URL - confirm current EC2 address]`.
+- **Live demo:** the running product must be shown live in a browser with the **public IP / live URL visible** in the address bar. Fill the current URL in here before recording: `http://3.26.14.122/`.
 - **Recording approach:** each member records their own segment (screen share + webcam), then one member assembles the segments into a single file and uploads. This keeps the per-member "own part" requirement clean and avoids one long live take.
 - **Upload:** Canvas Studio, into "Assignment 2: Video submission". One member submits on behalf of the team.
 
@@ -39,19 +39,20 @@ camera. One member uploads the final cut to Canvas Studio.
 - **CI/CD pipeline + deploy (Step 7):** walk `.github/workflows/ci.yml`, show a green Actions run, `pm2 status` on the EC2 box, and the live URL serving the latest build. Mention the separate PR Checks workflow that gates pull requests.
 - **Unit testing (Step 5):** run the mocha suite (180 passing), then `npm run coverage` to show the c8 table (99.54% statements, 99.26% branches, 100% functions). Screenshot both for the report.
 - **Postman - auth + admin folder (Step 6):** run the Auth and Admin requests, including the failure cases (401/403).
-- **Patterns owned:** Singleton (`config/db.js`), Facade (`services/`), Chain of Responsibility (the `protect` -> `adminProtect` -> `validate` middleware chain).
+- **Patterns owned:** Singleton (`config/db.js`), Decorator (`middleware/ownershipDecorator.js` wrapping trip/activity handlers with ownership checks), Chain of Responsibility (the `protect` -> `adminProtect` -> `validate` middleware chain).
 
 ### 3. Lance - 8:30
 
 - **SRS highlights (Step 2):** walk the requirements (2.6 functional, 2.7 non-functional), the complete system diagram (2.9), and the STRIDE risk table (2.11).
 - **Trips + State pattern:** demo trip CRUD live, then the State pattern lifecycle (planning -> active -> completed) and show an invalid backward transition being rejected.
+- **Patterns owned:** State (`state/tripState.js`), Facade (`services/` cascade deletes for trip and user), Simple Factory (`factories/userResponseFactory.js` centralising auth/admin response shapes).
 - **Postman - trips folder (Step 6):** run the Trip requests including the state-transition validity cases and the wrong-owner 404.
 - **Report contribution:** the requirements write-up and the APA reference list.
 
 ### 4. Joe - 8:30
 
 - **Activities + weather:** demo adding an activity within a trip's date range, then the destination forecast.
-- **Patterns owned:** Adapter (`adapters/weatherAdapter.js` wrapping Open-Meteo) and Decorator (`middleware/ownershipDecorator.js` wrapping handlers with ownership checks).
+- **Patterns owned:** Adapter (`adapters/weatherAdapter.js` wrapping Open-Meteo) and Builder (`builders/tripBuilders.js` assembling trip queries and partial updates).
 - **OOP principles (Step 3.2):** use the State and Adapter hierarchies to show inheritance and polymorphism, and the adapter's public/private split for encapsulation.
 - **Postman - activities + weather folder (Step 6):** run the activity CRUD and weather requests, including the non-owner 404 and the out-of-window forecast case.
 - **Report contribution:** the discussion and conclusion.
