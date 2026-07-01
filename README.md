@@ -91,7 +91,7 @@ In production these are injected via the `PROD` GitHub Actions environment secre
 cd backend && npm test
 
 # Frontend e2e (Playwright, against the live deploy by default)
-cd frontend && npm run e2e:live
+cd frontend && yarn e2e:live
 ```
 
 The Playwright pack runs four browser projects (chromium, firefox, mobile-chromium, tablet-chromium) and asserts auth, CRUD, admin, and responsive flows against http://3.26.14.122.
