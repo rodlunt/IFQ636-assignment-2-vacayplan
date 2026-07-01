@@ -675,7 +675,7 @@ Supplementary evidence supporting section 4.2.
 
 ## Appendix E: Complete test-case grid
 
-All 51 unit test cases (representative subset in section 5.1). Test Case ID, function, expected output, actual output, result.
+A representative 51 of the 180 automated unit test cases (section 5.1 shows a smaller selection). Test Case ID, function, expected output, actual output, result.
 
 | Test Case ID | Function | Expected Output | Actual Output | Pass/Fail |
 |--------------|----------|-----------------|---------------|-----------|
