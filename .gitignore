@@ -77,6 +77,11 @@ planning/A2_GenAI_Log.md
 # shared by other means (email / WhatsApp), not via the repo.
 planning/local/
 
+# Local bundle of the final deliverables (report + declaration DOCX/PDF) for
+# handing to the team out-of-band (zip / email / WhatsApp). Not committed, so the
+# large DOCX/PDF blobs are not duplicated into the public repo history.
+share/
+
 # Lighthouse audit reports (local, beyond-rubric)
 frontend/lighthouse-report/
 
