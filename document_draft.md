@@ -604,7 +604,7 @@ Full functional and non-functional requirement tables for the SRS (sections 2.6 
 | FR-18 | The system shall allow an administrator to permanently delete a user account. |
 | FR-19 | The system shall remove all trips and activities associated with a user account when that account is permanently deleted. |
 | FR-20 | The system shall allow an administrator to view all trips across all user accounts. |
-| FR-21 | The system shall prevent a deactivated user from accessing protected routes until their account is reactivated. |
+| FR-21 | The system shall prevent a deactivated user from logging in or obtaining a new session token; access via a token issued before deactivation ends when that token expires (server-side revocation is out of scope, as in FR-04). |
 | FR-22 | The system shall return all API responses in a consistent JSON structure, with a standardised shape for user objects regardless of the operation type. |
 | FR-23 | The system shall validate all incoming API requests before they reach business logic handlers. |
 
