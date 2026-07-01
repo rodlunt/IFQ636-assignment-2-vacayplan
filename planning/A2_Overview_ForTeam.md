@@ -7,7 +7,7 @@
 We're a team of three extending **one** of our Assignment 1 projects into a more complete build. It's worth 50% of the unit and is due **Friday 3 July, 11:59pm**. Three things get submitted:
 
 1. A **team report** (PDF from the supplied template, around 3000 words)
-2. A **single 10-minute team video** (Canvas Studio, ~3:33 each), where each of us demonstrates our own part (faces on camera)
+2. A **single 10-minute team video** (Canvas Studio, ~3:20 each), where each of us demonstrates our own part (faces on camera)
 3. A **Declaration of Contribution** listing each member's work, with student IDs and signatures
 
 We create a **new shared GitHub repo** for it (not anyone's A1 repo), and the final report includes that project's GitHub link and public IP.
