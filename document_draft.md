@@ -1,27 +1,8 @@
-# IFQ636 A2 - Working Report Draft
-
-Shared drafting surface for the team report. Headings below match the supplied
-template (`documents/IFQ636 Assignment 2 template.docx`) exactly, so prose drops
-straight into the template on build day.
-
-**How to use this file**
-- Draft prose under each heading. One person can own a section; note your initials
-  in the heading while it is in progress (e.g. `## Project overview - RL drafting`).
-- Raw material (facts, decisions, talking points, sources, GenAI uses) is captured
-  live in [`planning/A2_Report_Notes.md`](planning/A2_Report_Notes.md). Pull from
-  there; don't reconstruct at the end.
-- Target ~3000 words (range 2700-3300). Per-section budgets are guides, not limits.
-- Australian English. No AI-attribution anywhere. Cite in APA 7th. Page numbers on
-  direct quotes and specific factual claims.
-- The final report is built into the template via the python-docx pipeline, not by
-  pasting from here into Word by hand.
-
-> Status: section 3.1 underway (Builder and Factory Method written). All other sections still to draft.
+# IFQ636 Assignment 2 - VacayPlan
 
 ---
 
-## Project overview (~150-200 words)
-*Real-world application, what it does, who it serves, why VacayPlan was chosen as the base to extend.*
+## Project overview
 
 VacayPlan is a full-stack vacation-planning web app for travellers organising multi-day trips. The backend is Node.js, Express and MongoDB; the frontend is React and TailwindCSS; CI/CD runs through GitHub Actions to an AWS EC2 instance. An authenticated user creates a trip with a destination and date range, schedules activities, reviews the day-by-day itinerary, and (as an extension) sees the destination forecast for the trip dates. A separate administrator role manages user accounts and views all trips. It serves two audiences: travellers planning holidays and an admin overseeing the platform.
 
@@ -29,33 +10,33 @@ We extended this base because its structure made that straightforward: trips, ac
 
 ---
 
-## SRS documentation (~600-800 words total across 2.1-2.11)
+## SRS documentation
 
-### 2.1 Purpose (~40 words)
+### 2.1 Purpose
 VacayPlan lets independent travellers plan a trip in one place: record it, schedule activities within its dates, check the forecast, and review it as a day-by-day itinerary. An administrator manages platform accounts.
 
-### 2.2 Problem statement (~80 words)
+### 2.2 Problem statement
 Planning a multi-day trip scatters across tools never built for it - notes apps, spreadsheets, booking emails, group chats, a weather site. None treat a trip as an object: activities come loose of their days, the itinerary never exists as one view, and the forecast sits separately. Travellers hold the plan in their heads. VacayPlan gives trip planning a single, trip-shaped home.
 
-### 2.3 Scope (~60 words)
+### 2.3 Scope
 In scope: traveller authentication (register, log in, log out, update profile); full trip CRUD; activities within a trip's date range; the day-by-day itinerary; a destination weather forecast; and an admin panel for account management and trip visibility.
 Out of scope: bookings, payments, reservations; multi-user sharing or collaboration; native mobile apps; email or push notifications. VacayPlan is a planning record, not a booking engine.
 
-### 2.4 User characteristics (~50 words)
+### 2.4 User characteristics
 VacayPlan has two actors (Figure 2). The Traveller is a non-technical end user planning personal holidays, expecting a fast, self-explanatory interface on desktop or mobile, and owns only their trips and activities. The Administrator is a trusted operator who manages accounts and views all trips for moderation.
 
 ![Figure 2: VacayPlan use case diagram](planning/diagrams/A2_system_diagram_use_case.png)
 
-### 2.5 Constraints (~50 words)
+### 2.5 Constraints
 The build extends the existing base, so the stack is fixed: Node.js/Express, MongoDB Atlas, and React on a single AWS EC2 instance via GitHub Actions CI/CD. External services like Open-Meteo (no API key) must be free-tier. Academic requirements: at least seven backend design patterns, OOP principles, and unit and API testing. Three people, roughly four weeks. Open-Meteo forecasts up to 16 days ahead, so trips beyond that have no forecast.
 
-### 2.6 Functional requirements (~30 words + table)
+### 2.6 Functional requirements
 VacayPlan defines 23 functional requirements as "shall" statements per IEEE Std 830-1998 (Institute of Electrical and Electronics Engineers, 1998). Authentication (FR-01-FR-04): registration, JSON Web Token (JWT) login (Jones et al., 2015), protected-route access, and logout. Trip management (FR-05-FR-11): full CRUD plus the planning-active-completed lifecycle (FR-09/FR-10) and cascade deletion of activities (FR-11). Activity management (FR-12-FR-15): date-constrained activities by day. Administration (FR-16-FR-23): account management, cross-account trip visibility, deactivation enforcement, a consistent JSON shape, and request validation. Full table in Appendix C.
 
-### 2.7 Non-functional requirements (~30 words + table)
+### 2.7 Non-functional requirements
 Fourteen non-functional requirements define the quality attributes (Sommerville, 2016). Performance (NFR-01/02): sub-500ms CRUD responses and a two-second dashboard render. Reliability (NFR-03/04): 99% uptime via PM2 and automatic CI/CD redeploy on every push. Security (NFR-05-NFR-08, NFR-13): bcrypt password hashing (Provos & Mazières, 1999), JWT expiry, admin-only middleware, no secrets in version control, and a single shared database connection. Usability (NFR-09/10): a responsive UI and safe error messaging. Scalability (NFR-11/12): stateless horizontal scaling and schema-free collection growth. Availability (NFR-14): core planning stays usable when external services fail. Full table in Appendix C.
 
-### 2.8 User interface mockups/wireframes (~20 words + figure)
+### 2.8 User interface mockups/wireframes
 Low-fidelity wireframes for Dashboard, Trip Detail, and Edit Trip at desktop and mobile breakpoints; red boxes mark pattern-backed additions.
 
 ![Fig 2a](planning/diagrams/wireframe-dashboard-desktop.png)
@@ -65,15 +46,15 @@ Low-fidelity wireframes for Dashboard, Trip Detail, and Edit Trip at desktop and
 ![Fig 4a](planning/diagrams/wireframe-edit-trip-desktop.png)
 ![Fig 4b](planning/diagrams/wireframe-edit-trip-mobile.png)
 
-### 2.9 Complete system diagram (~20 words + figure)
+### 2.9 Complete system diagram
 Figure 1 shows the architecture: the React SPA reaches the Express backend on AWS EC2 over HTTP via an Nginx reverse proxy, which connects to MongoDB Atlas and the Open-Meteo weather API, deployed via GitHub Actions CI/CD.
 
 ![Figure 1: VacayPlan complete system diagram](planning/diagrams/A2_system_diagram_2.9.png)
 
-### 2.10 Safety considerations (~100 words)
+### 2.10 Safety considerations
 VacayPlan's safety has three layers. At the network layer, Nginx serves the app and reverse-proxies API calls to the Express backend, which reaches MongoDB Atlas over TLS; the public endpoint is HTTP (the unit's bare-IP model), with client-facing TLS a future step. At the application layer, every authenticated route passes through the middleware chain (`protect`, `adminProtect`, `validate`) before business logic runs, and `withOwnership` checks ownership to block cross-user access. At the data layer, the Facade cascades deletions across related models to avoid orphaned records, and the weather adapter enforces an 8-second timeout on hung requests.
 
-### 2.11 Risk management (~60 words + table)
+### 2.11 Risk management
 Risk management uses the STRIDE threat model (Shostack, 2014); each category maps to a VacayPlan-specific risk and its control, or a gap where none exists.
 
 | Threat                  | VacayPlan risk                                            | Mitigation                                                       | Status    |
@@ -87,11 +68,9 @@ Risk management uses the STRIDE threat model (Shostack, 2014); each category map
 
 ---
 
-## Implementation (coding) using design pattern and OOP principles (~650-800 words)
-*This is the 28-pt criterion.*
+## Implementation (coding) using design pattern and OOP principles
 
-### 3.1 Design pattern (~400-500 words)
-*Minimum 7 patterns, each justified and demonstrated in backend code. Pattern-count ladder: 7=HD, 6=D, 5=C, 4=P. Live committed list lives in `planning/A2_Checklist.md` pattern tracker.*
+### 3.1 Design pattern
 
 Adapter, a structural pattern (Gamma et al., 1994), wraps the Open-Meteo weather service. `WeatherProvider` defines the forecast interface the app depends on; `OpenMeteoWeatherAdapter` translates the vendor's coordinate-based, WMO-coded responses into a normalised forecast object. A new provider means a new `WeatherProvider` subclass, leaving controllers, routes, and frontend untouched. Implementation: `backend/adapters/weatherAdapter.js`, serving `GET /api/trips/:id/weather` (commit `37b337c`).
 
@@ -109,8 +88,7 @@ Decorator, a structural pattern, removes the ownership check duplicated across e
 
 State, a behavioural pattern, enforces the trip lifecycle in FR-10 (planning -> active -> completed, completed terminal). Each trip status maps to its own state object, `PlanningState`, `ActiveState`, or `CompletedState`, and `isValidTransition` delegates `canTransitionTo(newStatus)` to that object rather than running if/else chains in the controller (Shvets, 2021d). `tripController.updateTrip` rejects invalid transitions with a 400 response (NFR-10). Implementation: `backend/state/tripState.js` (commit `23a0d48`), with nine unit tests across `trip.test.js` (six transition tests) and `tripState.test.js` (base-class guard, unknown status, and the full lifecycle matrix).
 
-### 3.2 Implementation of OOP (~250-300 words)
-*Classes, Objects, Inheritance, Encapsulation, Polymorphism with code examples and justification.*
+### 3.2 Implementation of OOP
 
 **Classes and objects.** VacayPlan's backend is built around ES6 classes. `Database` in `backend/config/db.js` is one example: the class is the connection blueprint; `Database.getInstance()` returns the single object holding the live Mongoose connection. `TripService` and `UserService` in `backend/services/` follow the same shape: each is a class exported as a constructed object, bundling related operations (cascade deletion, ownership verification) around shared state rather than loose functions (Martin, 2017; Fig 3.2.1).
 
@@ -134,13 +112,12 @@ State, a behavioural pattern, enforces the trip lifecycle in FR-10 (planning -> 
 
 ---
 
-## Team collaboration via GitHub (~200-250 words)
+## Team collaboration via GitHub
 
 ### 4.1 Team collaboration statement
 We organised work as GitHub issues, labelled by report section and assigned to one owner, tracked on a shared Project board (Todo, In progress, In review, Done). Each task ran on its own short-lived feature branch from main (Chacon & Straub, 2014), with several pull requests open at once so the queue stayed short and changes small and reviewable. At least one other member reviewed and approved every pull request before merge; we used ordinary merge commits, not squashing or rebasing, so per-author history and resolved merge conflicts stayed on record. All three committed under our own identity, coordinating through a Tuesday email check-in, a standing Saturday call, and a WhatsApp group.
 
 ### 4.2 Team collaboration evidence
-*Feature branches; PRs; minimum 2 resolved merge conflicts; commit history graph; meeting times/dates. Meeting log + merge-conflict log are kept in `planning/A2_Report_Notes.md` §4.2.*
 
 The commit graph shows feature branches merging into `main` with authorship across all three members; Appendix A lists every pull request (branch, author, reviewer) plus the resolved merge conflicts.
 
@@ -158,8 +135,7 @@ The commit graph shows feature branches merging into `main` with authorship acro
 
 Further collaboration screenshots (kanban, issues board, more PR threads) are in Appendix D.
 
-## Functional testing (only unit testing) (~200-250 words)
-*Mocha/Chai unit tests for all CRUD functions.*
+## Functional testing (only unit testing)
 
 ### 5.1 Unit test results
 
@@ -201,8 +177,7 @@ Representative cases for the CRUD functions and each pattern are below; the full
 
 ---
 
-## API testing using Postman (~150-200 words)
-*All endpoints incl. error handling; exported collection committed.*
+## API testing using Postman
 
 Using Postman, we tested all REST endpoints (Fielding, 2000) across happy paths and error cases. The shared repository collection let each member run it independently; Rodney covered auth (`/api/auth/*`) and admin/CoR (`/api/admin/*`).
 
@@ -252,8 +227,7 @@ and [VacayPlan-A2-Environment.json](https://github.com/rodlunt/IFQ636-assignment
 
 ---
 
-## CI/CD pipeline setup (~150-200 words)
-*GitHub Actions build/test/deploy on push; public URL; pm2 status.*
+## CI/CD pipeline setup
 
 VacayPlan uses two GitHub Actions workflows. `pr-checks.yml` runs on every pull request to main: the backend test suite and a frontend production build on a GitHub-hosted runner with no deployment or secret access, restoring the PR-time test gate the original single-workflow setup lacked (Laster, 2023, Ch. 2).
 
@@ -273,8 +247,7 @@ VacayPlan uses two GitHub Actions workflows. `pr-checks.yml` runs on every pull 
 
 ---
 
-## Discussion and conclusion (369 words)
-*Team discussion of the development process; conclusion.*
+## Discussion and conclusion
 
 Short-lived feature branches and pull requests let us work in parallel while keeping main deployable, every merge reviewed by another member. A post-merge review of PR #66 caught a frontend regression both test suites had missed, showing backend unit tests do not guarantee API contract safety. Merge conflicts helped too: resolving conflict #2, between Rodney's Chain of Responsibility entry and Lance's Facade branch, brought the implementation references up to date and made the documentation more accurate than either branch.
 
@@ -293,7 +266,6 @@ Overall, VacayPlan is a working full-stack trip-planning app built on documented
 ---
 
 ## 9a. Use of GenAI
-*Mandatory disclosure. Source table: `planning/A2_Report_Notes.md` §9. QUT CiteWrite AI-citation format. (9a + 9b together ~150-200 words.)*
 
 All three used Claude Code (Anthropic, 2026; Opus 4.8) as the sole AI assistant; uses overlap across the team. Logs available on request.
 
@@ -310,7 +282,6 @@ Lance used Claude (claude.ai) for pattern scaffolding review and documentation; 
 ---
 
 ## 9b. Reflection
-*Conversational, one genuine insight each, ~40 words per member. (9a + 9b together ~150-200 words.)*
 
 Rodney - I assumed two green test suites meant the API was safe. PR #66 proved otherwise: a frontend regression slipped through, because unit tests show a handler behaves, not that the contract still holds. I now check contract changes across the stack, not unit tests alone.
 
@@ -321,7 +292,6 @@ Joe - I expected the weather adapter to be simple HTTP requests. What I didn't c
 ---
 
 ## References
-*APA 7th. Alphabetical, hanging indent. No invented references.*
 
 Chacon, S., & Straub, B. (2014). *Pro Git* (2nd ed.). Apress.
 
@@ -369,7 +339,6 @@ Shvets, A. (2021d). *State*. Refactoring.Guru.
     https://refactoring.guru/design-patterns/state
 
 Sommerville, I. (2016). *Software engineering* (10th ed.). Pearson.
-
 
 ---
 
@@ -490,7 +459,6 @@ Genuine conflicts arising from parallel work, resolved on record (commit + messa
 | `caf4d93` | resolve conflict with main - keep fuller meeting-2 notes |
 | `4e2d810` | resolve conflicts with main - keep CoR and Facade checklist rows, add Facade and CoR references |
 | `394d5e5` | resolve conflicts with main - keep Builder and Factory Method entries in all three files |
-
 
 ## Appendix B: API test evidence (Postman)
 
