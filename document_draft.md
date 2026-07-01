@@ -141,7 +141,7 @@ Further collaboration screenshots (kanban, issues board, more PR threads) are in
 
 The backend is tested with Mocha, Chai, and Sinon (stubbing MongoDB and external HTTP), organised by controller and middleware. Tests cover all CRUD operations for trips, activities, users, and auth, plus edge cases (Appendix E).
 
-The Chain of Responsibility middleware (`protect`, `adminProtect`, `validate`) is tested in isolation; six tests cover the State transitions and fifteen cover the Adapter (`OpenMeteoWeatherAdapter`): geocoding, normalisation, timeout handling, and edge cases (Appendix E).
+The Chain of Responsibility middleware (`protect`, `adminProtect`, `validate`) is tested in isolation; six of the nine State-pattern tests cover the FR-10 transitions and fifteen cover the Adapter (`OpenMeteoWeatherAdapter`): geocoding, normalisation, timeout handling, and edge cases (Appendix E).
 
 All 180 tests pass with no failures or pending cases (Figs 5.1.1-5.1.2), run in under a second, and run in CI on every push for regression coverage (Sommerville, 2016).
 
@@ -590,7 +590,7 @@ Full functional and non-functional requirement tables for the SRS (sections 2.6 
 
 | ID | Requirement |
 |---|---|
-| FR-12 | The system shall allow a regular user to add an activity to an existing trip, specifying a name, date, and description. |
+| FR-12 | The system shall allow a regular user to add an activity to an existing trip, specifying a date within the trip's date range (required) and optionally a time, location, description, and status. |
 | FR-13 | The system shall restrict activity dates to fall within the parent trip date range. |
 | FR-14 | The system shall allow a regular user to view all activities associated with a trip, organised by day. |
 | FR-15 | The system shall allow a regular user to update or delete an activity they have created. |

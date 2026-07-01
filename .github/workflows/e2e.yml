@@ -15,7 +15,7 @@ on:
       base_url:
         description: 'Base URL to run Playwright against'
         required: false
-        default: 'http://3.106.8.108'
+        default: 'http://3.26.14.122'
         type: string
 
 jobs:
