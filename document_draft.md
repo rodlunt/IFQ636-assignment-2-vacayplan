@@ -141,7 +141,7 @@ Further collaboration screenshots (kanban, issues board, more PR threads) are in
 
 The backend is tested with Mocha, Chai, and Sinon (stubbing MongoDB and external HTTP), organised by controller and middleware. Tests cover all CRUD operations for trips, activities, users, and auth, plus edge cases (Appendix E).
 
-The Chain of Responsibility middleware (`protect`, `adminProtect`, `validate`) is tested in isolation; six tests cover the State transitions and fifteen cover the Adapter (`OpenMeteoWeatherAdapter`): geocoding, normalisation, timeout handling, and edge cases (Appendix E).
+The Chain of Responsibility middleware (`protect`, `adminProtect`, `validate`) is tested in isolation; six of the nine State-pattern tests cover the FR-10 transitions and fifteen cover the Adapter (`OpenMeteoWeatherAdapter`): geocoding, normalisation, timeout handling, and edge cases (Appendix E).
 
 All 180 tests pass with no failures or pending cases (Figs 5.1.1-5.1.2), run in under a second, and run in CI on every push for regression coverage (Sommerville, 2016).
 
