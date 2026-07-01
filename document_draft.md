@@ -31,7 +31,7 @@ VacayPlan has two actors (Fig 2.4.1). The Traveller is a non-technical end user 
 The build extends the existing base, so the stack is fixed: Node.js/Express, MongoDB Atlas, and React on a single AWS EC2 instance via GitHub Actions CI/CD. External services like Open-Meteo (no API key) must be free-tier. Academic requirements: at least seven backend design patterns, OOP principles, and unit and API testing. Three people, roughly four weeks. Open-Meteo forecasts up to 16 days ahead, so trips beyond that have no forecast.
 
 ### 2.6 Functional requirements
-VacayPlan defines 23 functional requirements as "shall" statements per IEEE Std 830-1998 (Institute of Electrical and Electronics Engineers, 1998). Authentication (FR-01-FR-04): registration, JSON Web Token (JWT) login (Jones et al., 2015), protected-route access, and logout. Trip management (FR-05-FR-11): full CRUD plus the planning-active-completed lifecycle (FR-09/FR-10) and cascade deletion of activities (FR-11). Activity management (FR-12-FR-15): date-constrained activities by day. Administration (FR-16-FR-23): account management, cross-account trip visibility, deactivation enforcement, a consistent JSON shape, and request validation. Full table in Appendix C.
+VacayPlan defines 24 functional requirements as "shall" statements per IEEE Std 830-1998 (Institute of Electrical and Electronics Engineers, 1998). Authentication (FR-01-FR-04): registration, JSON Web Token (JWT) login (Jones et al., 2015), protected-route access, and logout. Trip management (FR-05-FR-11): full CRUD plus the planning-active-completed lifecycle (FR-09/FR-10) and cascade deletion of activities (FR-11). Activity management (FR-12-FR-15): date-constrained activities by day. Administration (FR-16-FR-23): account management, cross-account trip visibility, deactivation enforcement, a consistent JSON shape, and request validation. Weather (FR-24): a destination forecast for the trip dates, degrading gracefully when the forecast service is unavailable (NFR-14). Full table in Appendix C.
 
 ### 2.7 Non-functional requirements
 Fourteen non-functional requirements define the quality attributes (Sommerville, 2016). Performance (NFR-01/02): sub-500ms CRUD responses and a two-second dashboard render. Reliability (NFR-03/04): 99% uptime via PM2 and automatic CI/CD redeploy on every push. Security (NFR-05-NFR-08, NFR-13): bcrypt password hashing (Provos & Mazières, 1999), JWT expiry, admin-only middleware, no secrets in version control, and a single shared database connection. Usability (NFR-09/10): a responsive UI and safe error messaging. Scalability (NFR-11/12): stateless horizontal scaling and schema-free collection growth. Availability (NFR-14): core planning stays usable when external services fail. Full table in Appendix C.
@@ -613,6 +613,12 @@ Full functional and non-functional requirement tables for the SRS (sections 2.6 
 | FR-21 | The system shall prevent a deactivated user from logging in or obtaining a new session token; access via a token issued before deactivation ends when that token expires (server-side revocation is out of scope, as in FR-04). |
 | FR-22 | The system shall return all API responses in a consistent JSON structure, with a standardised shape for user objects regardless of the operation type. |
 | FR-23 | The system shall validate all incoming API requests before they reach business logic handlers. |
+
+**Weather**
+
+| ID | Requirement |
+|---|---|
+| FR-24 | The system shall retrieve and display a destination weather forecast for the trip's dates, up to 16 days ahead, degrading gracefully when the external forecast service is unavailable (see NFR-14). |
 
 ### Non-functional requirements
 
